@@ -1,0 +1,509 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1333" width="1000" height="1333">
+  <defs>
+    <!-- Ocean Gradients -->
+    <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006994" />
+      <stop offset="40%" stop-color="#008080" />
+      <stop offset="80%" stop-color="#20B2AA" />
+      <stop offset="100%" stop-color="#00A896" />
+    </linearGradient>
+    <linearGradient id="deepOcean" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#004d61" />
+      <stop offset="100%" stop-color="#007791" />
+    </linearGradient>
+
+    <!-- Land & Beach Gradients -->
+    <linearGradient id="beachGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE8B6" />
+      <stop offset="50%" stop-color="#F3D5A5" />
+      <stop offset="100%" stop-color="#E2B980" />
+    </linearGradient>
+
+    <linearGradient id="lawnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#55A630" />
+      <stop offset="50%" stop-color="#2B9348" />
+      <stop offset="100%" stop-color="#184E77" />
+    </linearGradient>
+
+    <linearGradient id="hillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38B000" />
+      <stop offset="50%" stop-color="#007200" />
+      <stop offset="100%" stop-color="#004B23" />
+    </linearGradient>
+
+    <!-- Pool Water Gradient -->
+    <linearGradient id="poolGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2FF" />
+      <stop offset="50%" stop-color="#3A7BD5" />
+      <stop offset="100%" stop-color="#0052D4" />
+    </linearGradient>
+
+    <!-- Roof Gradients -->
+    <linearGradient id="terracottaRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E05A47" />
+      <stop offset="100%" stop-color="#B83B28" />
+    </linearGradient>
+    
+    <linearGradient id="blueRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A90E2" />
+      <stop offset="100%" stop-color="#1C5393" />
+    </linearGradient>
+
+    <linearGradient id="slateRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#718096" />
+      <stop offset="100%" stop-color="#2D3748" />
+    </linearGradient>
+
+    <linearGradient id="yellowCourt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ECC94B" />
+      <stop offset="100%" stop-color="#D69E2E" />
+    </linearGradient>
+
+    <linearGradient id="tennisCourt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3182CE" />
+      <stop offset="100%" stop-color="#2B6CB0" />
+    </linearGradient>
+
+    <!-- Shadows -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="3" dy="5" stdDeviation="4" flood-opacity="0.35" />
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- 1. BASE OCEAN (EAST SEA) -->
+  <rect width="1000" height="1333" fill="url(#oceanGrad)" />
+  
+  <!-- Ocean Waves & Foam Texture -->
+  <path d="M 0,0 L 1000,0 L 1000,320 Q 800,280 600,220 Q 350,150 0,220 Z" fill="url(#deepOcean)" opacity="0.6" />
+  
+  <!-- White Surf / Wave Lines -->
+  <path d="M 0,180 Q 250,120 500,160 T 1000,100" stroke="#FFFFFF" stroke-width="8" fill="none" opacity="0.4" filter="url(#dropShadow)" />
+  <path d="M 0,210 Q 300,140 600,190 T 1000,130" stroke="#FFFFFF" stroke-width="5" fill="none" opacity="0.3" />
+  <path d="M 0,240 Q 350,180 700,210 T 1000,260" stroke="#FFFFFF" stroke-width="12" fill="none" opacity="0.5" />
+
+  <!-- 2. COASTLINE & SANDY BEACH -->
+  <!-- Beach Curve -->
+  <path d="M 0,260 Q 200,210 400,190 Q 600,160 800,210 Q 920,240 1000,350 L 1000,1200 L 0,1200 Z" fill="url(#beachGrad)" />
+  
+  <!-- Rocky Cliffs (East Coast / Top Right) -->
+  <path d="M 750,180 C 850,150 950,220 1000,320 L 1000,450 C 960,380 880,320 780,300 Z" fill="#7A6855" opacity="0.8" />
+  <path d="M 800,120 L 1000,120 L 1000,250 Z" fill="#5C4D3E" opacity="0.9" />
+
+  <!-- Wooden Pier stretching into East Sea -->
+  <rect x="850" y="50" width="22" height="110" fill="#8C6D46" transform="rotate(25 850 50)" filter="url(#dropShadow)" />
+  <rect x="840" y="40" width="45" height="15" fill="#A07850" transform="rotate(25 850 50)" filter="url(#dropShadow)" />
+
+  <!-- 3. RESORT MAIN GREEN TERRAIN & HILLS -->
+  <path d="M 0,310 Q 220,250 450,230 Q 700,210 880,280 C 960,350 980,550 960,850 C 940,1100 800,1150 0,1100 Z" fill="url(#lawnGrad)" filter="url(#dropShadow)" />
+  
+  <!-- Terraced Hill Gradients -->
+  <path d="M 0,320 Q 300,260 550,260 Q 800,260 920,400 L 960,700 L 0,700 Z" fill="url(#hillGrad)" opacity="0.3" />
+
+  <!-- 4. ROADS & PATHWAYS -->
+  <!-- Main Entrance Road (Bottom Cliff Road) -->
+  <path d="M 0,610 Q 250,680 500,750 T 900,900" stroke="#4A5568" stroke-width="48" fill="none" />
+  <path d="M 0,610 Q 250,680 500,750 T 900,900" stroke="#718096" stroke-width="42" fill="none" />
+  <path d="M 0,610 Q 250,680 500,750 T 900,900" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="15,15" fill="none" />
+
+  <!-- Way Out / Lobby Entrance Driveway Loop -->
+  <path d="M 390,540 L 460,710 L 530,710 L 520,580 Z" fill="#CBD5E0" stroke="#A0AEC0" stroke-width="2" />
+  <text x="440" y="630" font-family="sans-serif" font-size="12" font-weight="bold" fill="#4A5568" transform="rotate(-75 440 630)">WAY OUT</text>
+  <text x="610" y="630" font-family="sans-serif" font-size="14" font-weight="extrabold" fill="#2D3748" transform="rotate(30 610 630)">ENTRANCE</text>
+
+  <!-- Winding Footpaths -->
+  <path d="M 320,430 C 350,320 480,310 520,380 C 550,420 580,480 650,450" stroke="#E2E8F0" stroke-width="12" fill="none" stroke-linecap="round" />
+  <path d="M 120,400 C 200,380 250,420 310,480" stroke="#E2E8F0" stroke-width="10" fill="none" />
+  <path d="M 520,310 L 720,260 L 820,320" stroke="#E2E8F0" stroke-width="10" fill="none" />
+
+  <!-- 5. TENNIS / PICKLEBALL COURT (YARD 2B) -->
+  <g transform="translate(315, 465) rotate(-12)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="125" height="70" rx="6" fill="url(#tennisCourt)" stroke="#1A365D" stroke-width="3" />
+    <rect x="10" y="8" width="105" height="54" fill="none" stroke="#FFFFFF" stroke-width="2" />
+    <line x1="62.5" y1="8" x2="62.5" y2="62" stroke="#FFFFFF" stroke-width="3" />
+    <text x="35" y="40" font-family="sans-serif" font-size="11" font-weight="extrabold" fill="#FFFFFF" opacity="0.8">YARD 2B</text>
+  </g>
+
+  <!-- 6. SWIMMING POOLS -->
+  <!-- Main Infinity Pool (BIG POOL - 4/10) -->
+  <g transform="translate(490, 340)" filter="url(#dropShadow)">
+    <!-- Pool Shell -->
+    <path d="M 0,30 Q 40,0 110,10 Q 180,20 190,60 Q 180,100 110,90 Q 30,80 0,30 Z" fill="url(#poolGrad)" stroke="#E2E8F0" stroke-width="4" />
+    <text x="75" y="55" font-family="sans-serif" font-size="16" font-weight="900" fill="#FFFFFF" letter-spacing="2">POOL</text>
+    <!-- Poolside Deck & Sun Loungers -->
+    <rect x="20" y="92" width="150" height="16" fill="#ECC94B" rx="3" />
+    <circle cx="15" cy="50" r="10" fill="#E53E3E" opacity="0.8" />
+    <circle cx="180" cy="40" r="10" fill="#E53E3E" opacity="0.8" />
+  </g>
+
+  <!-- Small Pool (11) -->
+  <g transform="translate(410, 395)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="55" height="35" rx="6" fill="url(#poolGrad)" stroke="#FFFFFF" stroke-width="3" />
+  </g>
+
+  <!-- Garden Pool (3 - Azul Garden View) -->
+  <g transform="translate(880, 690)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="45" height="30" rx="4" fill="url(#poolGrad)" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- Private Villa Plunge Pools -->
+  <rect x="375" y="195" width="22" height="15" rx="3" fill="url(#poolGrad)" />
+  <rect x="445" y="175" width="22" height="15" rx="3" fill="url(#poolGrad)" />
+  <rect x="205" y="225" width="22" height="15" rx="3" fill="url(#poolGrad)" />
+  <rect x="130" y="248" width="22" height="15" rx="3" fill="url(#poolGrad)" />
+
+  <!-- 7. BUILDINGS & CONDOS ARCHITECTURE -->
+
+  <!-- LOBBY & MAIN BUILDING COMPLEX (17, 18, 8, 9, 16) -->
+  <g transform="translate(500, 455)" filter="url(#dropShadow)">
+    <!-- Yellow Courtyard Base -->
+    <rect x="10" y="45" width="230" height="75" fill="url(#yellowCourt)" rx="4" stroke="#D69E2E" stroke-width="2" />
+    <text x="100" y="90" font-family="sans-serif" font-size="22" font-weight="900" fill="#1A365D" letter-spacing="3">LOBBY</text>
+
+    <!-- Main Blue Tile Roof (Lobby Top) -->
+    <rect x="20" y="5" width="140" height="42" fill="url(#blueRoof)" rx="4" stroke="#1A365D" stroke-width="2" />
+    <!-- Red Roof Wing (Vista Restaurant / Meeting Room) -->
+    <rect x="140" y="0" width="95" height="45" fill="url(#terracottaRoof)" rx="4" stroke="#9B2C2C" stroke-width="2" />
+  </g>
+
+  <!-- AZUL POOL / SEA VIEW BUILDING (1) -->
+  <g transform="translate(520, 440)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="110" height="25" fill="url(#blueRoof)" rx="3" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- TERRA / VERDE CONDOS (5 & 6) - Hillside Terraced Blocks -->
+  <g transform="translate(800, 310) rotate(15)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="55" height="280" rx="8" fill="#F7FAFC" stroke="#CBD5E0" stroke-width="3" />
+    <!-- Terraced Roof Steps -->
+    <rect x="5" y="10" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+    <rect x="5" y="50" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+    <rect x="5" y="90" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+    <rect x="5" y="130" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+    <rect x="5" y="170" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+    <rect x="5" y="210" width="45" height="35" fill="url(#terracottaRoof)" rx="2" />
+  </g>
+
+  <!-- AZUL DUPLEX (2) -->
+  <g transform="translate(380, 450)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="80" height="30" fill="url(#blueRoof)" rx="4" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- VILLA OCEAN FRONT (4B) & BUNGALOWS (4A) -->
+  <g transform="translate(360, 180)" filter="url(#dropShadow)">
+    <!-- Villa 1 -->
+    <rect x="0" y="10" width="48" height="38" fill="url(#terracottaRoof)" rx="3" stroke="#FFFFFF" stroke-width="2" />
+    <!-- Villa 2 -->
+    <rect x="70" y="0" width="48" height="38" fill="url(#terracottaRoof)" rx="3" stroke="#FFFFFF" stroke-width="2" />
+    <!-- Villa 3 -->
+    <rect x="140" y="-10" width="48" height="38" fill="url(#terracottaRoof)" rx="3" stroke="#FFFFFF" stroke-width="2" />
+  </g>
+
+  <!-- BUNGALOW GARDEN (4A) -->
+  <g transform="translate(540, 180)" filter="url(#dropShadow)">
+    <rect x="0" y="80" width="55" height="35" fill="url(#slateRoof)" rx="3" />
+    <rect x="70" y="80" width="55" height="35" fill="url(#slateRoof)" rx="3" />
+    <rect x="140" y="90" width="55" height="35" fill="url(#slateRoof)" rx="3" />
+    <rect x="0" y="10" width="60" height="40" fill="url(#slateRoof)" rx="3" />
+    <rect x="80" y="5" width="60" height="40" fill="url(#slateRoof)" rx="3" />
+    <rect x="160" y="5" width="60" height="40" fill="url(#slateRoof)" rx="3" />
+  </g>
+
+  <!-- BEACH CLUB (13) & ZEST SPA (12) -->
+  <g transform="translate(630, 105)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="170" height="35" fill="#8C6D46" rx="4" stroke="#4A3B2C" stroke-width="2" />
+    <text x="35" y="22" font-family="sans-serif" font-size="14" font-weight="900" fill="#FFFFFF" letter-spacing="2">BEACH CLUB</text>
+  </g>
+
+  <g transform="translate(820, 190)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="75" height="85" fill="#C5A059" rx="6" stroke="#FFFFFF" stroke-width="2" />
+    <text x="12" y="48" font-family="serif" font-size="16" font-weight="bold" fill="#FFFFFF">Zest Spa</text>
+  </g>
+
+  <!-- VELA VILLAS (7) -->
+  <g transform="translate(180, 220)" filter="url(#dropShadow)">
+    <rect x="0" y="0" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="55" y="10" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="110" y="-10" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="-60" y="90" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="0" y="100" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="60" y="110" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+    <rect x="120" y="115" width="45" height="30" fill="url(#terracottaRoof)" rx="3" />
+  </g>
+
+  <!-- 8. TROPICAL PALM TREES & GREENERY DECORATION -->
+  <g fill="#2D5A27">
+    <!-- Palm Groves around Beach & Pool -->
+    <circle cx="50" cy="280" r="18" opacity="0.8" />
+    <circle cx="80" cy="270" r="22" opacity="0.9" />
+    <circle cx="120" cy="260" r="16" opacity="0.8" />
+    <circle cx="180" cy="230" r="25" opacity="0.8" />
+    <circle cx="230" cy="210" r="20" opacity="0.9" opacity="0.8" />
+    <circle cx="310" cy="180" r="28" opacity="0.9" />
+    <circle cx="500" cy="160" r="22" opacity="0.8" />
+    <circle cx="540" cy="140" r="25" opacity="0.9" />
+    <circle cx="600" cy="120" r="30" opacity="0.8" />
+    <circle cx="750" cy="100" r="25" opacity="0.9" />
+    <circle cx="880" cy="150" r="22" opacity="0.8" />
+
+    <!-- Palm Trees along entrance road -->
+    <circle cx="100" cy="630" r="16" />
+    <circle cx="150" cy="650" r="18" />
+    <circle cx="200" cy="670" r="16" />
+    <circle cx="250" cy="690" r="20" />
+    <circle cx="300" cy="710" r="18" />
+    <circle cx="350" cy="730" r="16" />
+    <circle cx="680" cy="800" r="22" />
+    <circle cx="740" cy="820" r="20" />
+    <circle cx="800" cy="840" r="24" />
+  </g>
+
+  <!-- 9. BRANDING HEADER (Top Left) -->
+  <g transform="translate(40, 30)" filter="url(#dropShadow)">
+    <!-- Spiral Shell Logo -->
+    <path d="M 45,20 C 20,20 10,40 10,60 C 10,85 30,100 55,95 C 75,90 85,70 80,50 C 75,35 60,30 50,38 C 42,45 45,55 52,55" fill="#38A169" />
+    <path d="M 40,30 C 25,30 18,45 20,60 C 22,72 35,82 50,78 C 62,75 68,62 64,50" fill="#48BB78" />
+    <text x="95" y="55" font-family="sans-serif" font-size="28" font-weight="900" fill="#FFFFFF" letter-spacing="3">THE CLIFF</text>
+    <text x="96" y="75" font-family="serif" font-size="14" font-weight="normal" fill="#E2E8F0" letter-spacing="1">resort &amp; residences</text>
+  </g>
+
+  <!-- Ocean Name Label -->
+  <text x="870" y="45" font-family="sans-serif" font-size="16" font-weight="extrabold" fill="#FFFFFF" opacity="0.8" letter-spacing="2">EAST SEA</text>
+
+  <!-- 10. NUMBERED MAP PINS (1 - 18) EXACT PLACEMENTS -->
+  
+  <!-- Pin Helper Component macro style rendering -->
+  
+  <!-- Pin 1: AZUL POOL/ SEA VIEW -->
+  <g transform="translate(582, 448)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">1</text>
+  </g>
+
+  <!-- Pin 2: AZUL POOL/ SEA VIEW DUPLEX OCEAN -->
+  <g transform="translate(388, 462)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">2</text>
+  </g>
+
+  <!-- Pin 3: AZUL GARDEN VIEW -->
+  <g transform="translate(900, 700)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">3</text>
+  </g>
+
+  <!-- Pin 4: BIG POOL -->
+  <g transform="translate(580, 340)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">4</text>
+  </g>
+
+  <!-- Pin 4A: BUNGALOW GARDEN -->
+  <g transform="translate(650, 230)" filter="url(#dropShadow)">
+    <rect x="-18" y="-14" width="36" height="28" rx="8" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">4A</text>
+  </g>
+
+  <!-- Pin 4B: VILLA OCEAN FRONT -->
+  <g transform="translate(320, 210)" filter="url(#dropShadow)">
+    <rect x="-18" y="-14" width="36" height="28" rx="8" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">4B</text>
+  </g>
+
+  <!-- Pin 5 & 6: TERRA/ VERDE CONDOS -->
+  <g transform="translate(880, 410)" filter="url(#dropShadow)">
+    <circle cx="-12" cy="0" r="14" fill="#E53E3E" stroke="#FFFFFF" stroke-width="2.5" />
+    <text x="-12" y="4" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">5</text>
+    <circle cx="14" cy="0" r="14" fill="#E53E3E" stroke="#FFFFFF" stroke-width="2.5" />
+    <text x="14" y="4" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">6</text>
+  </g>
+
+  <!-- Pin 7: VELA -->
+  <g transform="translate(280, 380)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">7</text>
+  </g>
+
+  <!-- Pin 8: VISTA RESTAURANT -->
+  <g transform="translate(590, 490)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">8</text>
+  </g>
+
+  <!-- Pin 9: MEETING ROOM -->
+  <g transform="translate(670, 440)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">9</text>
+  </g>
+
+  <!-- Pin 11: SMALL POOL -->
+  <g transform="translate(440, 380)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">11</text>
+  </g>
+
+  <!-- Pin 12: ZEST SPA -->
+  <g transform="translate(850, 180)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">12</text>
+  </g>
+
+  <!-- Pin 13: BEACH CLUB -->
+  <g transform="translate(750, 90)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">13</text>
+  </g>
+
+  <!-- Pin 14: AQUA GARDEN -->
+  <g transform="translate(710, 30)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">14</text>
+  </g>
+
+  <!-- Pin 15: BEACH -->
+  <g transform="translate(400, 100)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">15</text>
+  </g>
+
+  <!-- Pin 16: GYM -->
+  <g transform="translate(720, 500)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">16</text>
+  </g>
+
+  <!-- Pin 17: GAME ROOM -->
+  <g transform="translate(550, 520)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">17</text>
+  </g>
+
+  <!-- Pin 18: SHOP -->
+  <g transform="translate(510, 510)" filter="url(#dropShadow)">
+    <circle cx="0" cy="0" r="16" fill="#E53E3E" stroke="#FFFFFF" stroke-width="3" />
+    <text x="0" y="5" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">18</text>
+  </g>
+
+
+  <!-- 11. LEGEND BAR (Bottom Overlay - Exact Match to Uploaded Image) -->
+  <g transform="translate(20, 980)" filter="url(#dropShadow)">
+    <!-- Legend Dark Glass Container -->
+    <rect x="0" y="0" width="960" height="320" rx="28" fill="#0F172A" opacity="0.92" stroke="#334155" stroke-width="2" />
+
+    <!-- Left Column Items (1 to 6) -->
+    <g transform="translate(35, 35)">
+      <!-- Item 1 -->
+      <circle cx="16" cy="12" r="14" fill="#E53E3E" />
+      <text x="16" y="16" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">1</text>
+      <text x="42" y="16" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">AZUL POOL/ SEA VIEW</text>
+
+      <!-- Item 2 -->
+      <circle cx="16" cy="52" r="14" fill="#E53E3E" />
+      <text x="16" y="56" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">2</text>
+      <text x="42" y="50" font-family="sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">AZUL POOL/ SEA VIEW</text>
+      <text x="42" y="66" font-family="sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">DUPLEX OCEAN</text>
+
+      <!-- Item 3 -->
+      <circle cx="16" cy="98" r="14" fill="#E53E3E" />
+      <text x="16" y="102" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">3</text>
+      <text x="42" y="102" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">AZUL GARDEN VIEW</text>
+
+      <!-- Item 4A -->
+      <rect x="2" y="128" width="28" height="22" rx="6" fill="#E53E3E" />
+      <text x="16" y="143" font-family="sans-serif" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">4A</text>
+      <text x="42" y="136" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">BUNGALOW GARDEN</text>
+      <text x="42" y="152" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">BUNGALOW BEACH FRONT</text>
+
+      <!-- Item 4B -->
+      <rect x="2" y="174" width="28" height="22" rx="6" fill="#E53E3E" />
+      <text x="16" y="189" font-family="sans-serif" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">4B</text>
+      <text x="42" y="188" font-family="sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">VILLA OCEAN FRONT</text>
+
+      <!-- Item 5 6 -->
+      <circle cx="10" cy="225" r="11" fill="#E53E3E" />
+      <text x="10" y="228" font-family="sans-serif" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">5</text>
+      <circle cx="26" cy="225" r="11" fill="#E53E3E" />
+      <text x="26" y="228" font-family="sans-serif" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">6</text>
+      <text x="42" y="229" font-family="sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF">TERRA/ VERDE CONDOS</text>
+    </g>
+
+    <!-- Center Column Items (7 to 11) -->
+    <g transform="translate(350, 35)">
+      <!-- Item 7 -->
+      <circle cx="16" cy="12" r="14" fill="#E53E3E" />
+      <text x="16" y="16" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">7</text>
+      <text x="42" y="16" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">VELA</text>
+
+      <!-- Item 8 -->
+      <circle cx="16" cy="52" r="14" fill="#E53E3E" />
+      <text x="16" y="56" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">8</text>
+      <text x="42" y="56" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">VISTA RESTAURANT</text>
+
+      <!-- Item 9 -->
+      <circle cx="16" cy="98" r="14" fill="#E53E3E" />
+      <text x="16" y="102" font-family="sans-serif" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">9</text>
+      <text x="42" y="102" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">MEETING ROOM</text>
+
+      <!-- Item 10 -->
+      <circle cx="16" cy="140" r="14" fill="#E53E3E" />
+      <text x="16" y="144" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">10</text>
+      <text x="42" y="144" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">BIG POOL</text>
+
+      <!-- Item 11 -->
+      <circle cx="16" cy="184" r="14" fill="#E53E3E" />
+      <text x="16" y="188" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">11</text>
+      <text x="42" y="188" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">SMALL POOL</text>
+    </g>
+
+    <!-- Right Column Items (12 to 18) -->
+    <g transform="translate(640, 35)">
+      <!-- Item 12 -->
+      <circle cx="16" cy="12" r="14" fill="#E53E3E" />
+      <text x="16" y="16" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">12</text>
+      <text x="42" y="16" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">ZEST SPA</text>
+
+      <!-- Item 13 -->
+      <circle cx="16" cy="52" r="14" fill="#E53E3E" />
+      <text x="16" y="56" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">13</text>
+      <text x="42" y="56" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">BEACH CLUB</text>
+
+      <!-- Item 14 -->
+      <circle cx="16" cy="98" r="14" fill="#E53E3E" />
+      <text x="16" y="102" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">14</text>
+      <text x="42" y="102" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">AQUA GARDEN</text>
+
+      <!-- Item 15 -->
+      <circle cx="16" cy="140" r="14" fill="#E53E3E" />
+      <text x="16" y="144" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">15</text>
+      <text x="42" y="144" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">BEACH</text>
+
+      <!-- Item 16 -->
+      <circle cx="16" cy="184" r="14" fill="#E53E3E" opacity="0" />
+    </g>
+
+    <!-- Far Right Column Items (16 to 18) -->
+    <g transform="translate(800, 35)">
+      <!-- Item 16 -->
+      <circle cx="16" cy="12" r="14" fill="#E53E3E" />
+      <text x="16" y="16" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">16</text>
+      <text x="42" y="16" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">GYM</text>
+
+      <!-- Item 17 -->
+      <circle cx="16" cy="52" r="14" fill="#E53E3E" />
+      <text x="16" y="56" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">17</text>
+      <text x="42" y="56" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">GAME ROOM</text>
+
+      <!-- Item 18 -->
+      <circle cx="16" cy="98" r="14" fill="#E53E3E" />
+      <text x="16" y="102" font-family="sans-serif" font-size="11" font-weight="900" fill="#FFFFFF" text-anchor="middle">18</text>
+      <text x="42" y="102" font-family="sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">SHOP</text>
+    </g>
+
+    <!-- Bottom Contact Line -->
+    <line x1="40" y1="275" x2="920" y2="275" stroke="#334155" stroke-width="1" />
+    <text x="320" y="300" font-family="sans-serif" font-size="14" font-weight="bold" fill="#94A3B8">📞 1900 0394</text>
+    <text x="480" y="300" font-family="sans-serif" font-size="14" font-weight="bold" fill="#94A3B8">🌐 thecliffresort.com.vn</text>
+  </g>
+</svg>

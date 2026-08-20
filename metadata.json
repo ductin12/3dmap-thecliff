@@ -1,0 +1,6 @@
+{
+  "name": "The Cliff Resort 3D Map Explorer",
+  "description": "Bản đồ 3D tương tác sống động cho The Cliff Resort & Residences với slide ảnh chi tiết, trang quản trị Admin và tích hợp WordPress.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
