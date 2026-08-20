@@ -19,9 +19,21 @@ export default function App() {
   const { hours: initHours, minutes: initMinutes } = getVietnamHoursAndMinutes();
   const initialLightingMode = getVietnamLightingMode(initHours, initMinutes);
 
-  // Load initial locations from server or default
-  const [locations, setLocations] = useState<LocationItem[]>(INITIAL_LOCATIONS);
-  const [resortConfig, setResortConfig] = useState<ResortConfig>(DEFAULT_RESORT_CONFIG);
+  // Load initial locations from server or local cache
+  const [locations, setLocations] = useState<LocationItem[]>(() => {
+    try {
+      const cached = localStorage.getItem('cliff_resort_locations_v2');
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return INITIAL_LOCATIONS;
+  });
+  const [resortConfig, setResortConfig] = useState<ResortConfig>(() => {
+    try {
+      const cached = localStorage.getItem('cliff_resort_config_v2');
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return DEFAULT_RESORT_CONFIG;
+  });
   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -31,8 +43,26 @@ export default function App() {
         return res.json();
       })
       .then(data => {
-        if (data && data.locations) setLocations(data.locations);
-        if (data && data.config) {
+        const localLocs = localStorage.getItem('cliff_resort_locations_v2');
+        const localCfg = localStorage.getItem('cliff_resort_config_v2');
+
+        if (localLocs) {
+          try {
+            setLocations(JSON.parse(localLocs));
+          } catch(e) {
+            if (data && data.locations) setLocations(data.locations);
+          }
+        } else if (data && data.locations) {
+          setLocations(data.locations);
+        }
+
+        if (localCfg) {
+          try {
+            setResortConfig(JSON.parse(localCfg));
+          } catch(e) {
+            if (data && data.config) setResortConfig(data.config);
+          }
+        } else if (data && data.config) {
           if (!data.config.mapImageBg || data.config.mapImageBg.includes('photo-1540555700478')) {
             data.config.mapImageBg = DEFAULT_RESORT_CONFIG.mapImageBg;
           }

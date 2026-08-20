@@ -73,6 +73,12 @@ export const AdminApp: React.FC = () => {
   const handleSaveAllData = (newLocs: LocationItem[], newCfg: ResortConfig) => {
     setLocations(newLocs);
     setResortConfig(newCfg);
+    try {
+      localStorage.setItem('cliff_resort_locations_v2', JSON.stringify(newLocs));
+      localStorage.setItem('cliff_resort_config_v2', JSON.stringify(newCfg));
+    } catch (e) {
+      console.warn("LocalStorage write error:", e);
+    }
     fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

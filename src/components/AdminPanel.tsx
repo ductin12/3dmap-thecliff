@@ -318,10 +318,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           return loc;
         });
         setLocList(updatedLocs);
+        onSaveAll(updatedLocs, cfg);
         setShowDriveModal(false);
         setDriveScanResult(null);
         setSelectedDriveIds([]);
-        alert(`Đã nhập thành công ${data.slides.length} ảnh/video vào Slide của ${currentLoc.title}! Hãy bấm "Lưu Cấu Hình" ở góc trên để lưu vĩnh viễn.`);
+        alert(`Đã nhập thành công và lưu ${data.slides.length} ảnh/video vào Slide của ${currentLoc.title}! Dữ liệu đã được tự động lưu.`);
       } else {
         alert(data.error || 'Lỗi khi nhập tệp từ Google Drive.');
       }
