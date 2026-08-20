@@ -26,7 +26,12 @@ import {
   CloudSun,
   Code,
   Copy,
-  Video
+  Video,
+  Folder,
+  FolderOpen,
+  FileImage,
+  Layers,
+  Film
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -71,6 +76,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   
   // Drag and Drop State for Slides
   const [draggedSlideIdx, setDraggedSlideIdx] = useState<number | null>(null);
+
+  // Google Drive Import States
+  const [isScanningDrive, setIsScanningDrive] = useState(false);
+  const [isImportingDrive, setIsImportingDrive] = useState(false);
+  const [driveImportProgress, setDriveImportProgress] = useState('');
+  const [showDriveModal, setShowDriveModal] = useState(false);
+  const [driveScanResult, setDriveScanResult] = useState<{
+    folderName: string;
+    totalFiles: number;
+    totalImages: number;
+    totalVideos: number;
+    images: Array<{ id: string; name: string; type: string; thumbnailUrl: string }>;
+    videos: Array<{ id: string; name: string; type: string; thumbnailUrl: string }>;
+  } | null>(null);
+  const [driveSelectedImgCount, setDriveSelectedImgCount] = useState<number>(0);
+  const [driveSelectedVidCount, setDriveSelectedVidCount] = useState<number>(0);
 
   React.useEffect(() => {
     fetch('https://tts.thecliff.io.vn/voices')
@@ -125,6 +146,100 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       return loc;
     });
     setLocList(updatedLocs);
+  };
+
+  // Handle URL input submit (handles standard URLs and Google Drive URLs)
+  const handleAddImageUrlClick = async (inputUrl: string) => {
+    if (!inputUrl || !inputUrl.trim()) return;
+    const trimmed = inputUrl.trim();
+
+    // Detect Google Drive Folder or File URL
+    const isDriveUrl = 
+      trimmed.includes('drive.google.com') || 
+      trimmed.includes('/folders/') || 
+      trimmed.includes('/file/d/') ||
+      trimmed.includes('drive.google.com/open?id=');
+
+    if (isDriveUrl) {
+      setIsScanningDrive(true);
+      try {
+        const res = await fetch('/api/gdrive/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: trimmed }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setDriveScanResult(data);
+          setDriveSelectedImgCount(data.totalImages || 0);
+          setDriveSelectedVidCount(data.totalVideos || 0);
+          setShowDriveModal(true);
+        } else {
+          alert(data.error || 'Không thể quét thư mục Google Drive. Vui lòng đảm bảo thư mục đã được bật chia sẻ "Bất kỳ ai có liên kết đều có thể xem".');
+        }
+      } catch (err: any) {
+        console.error('GDrive Scan Error:', err);
+        alert('Lỗi kết nối khi quét Google Drive: ' + err.message);
+      } finally {
+        setIsScanningDrive(false);
+      }
+      return;
+    }
+
+    // Direct image / video / YouTube link
+    handleAddSlideImage(trimmed);
+  };
+
+  // Confirm Import from Google Drive
+  const handleConfirmDriveImport = async () => {
+    if (!driveScanResult || !currentLoc) return;
+    setIsImportingDrive(true);
+    setDriveImportProgress('Đang chuẩn bị danh sách tệp...');
+
+    try {
+      const selectedImages = (driveScanResult.images || []).slice(0, driveSelectedImgCount);
+      const selectedVideos = (driveScanResult.videos || []).slice(0, driveSelectedVidCount);
+      const itemsToImport = [...selectedImages, ...selectedVideos];
+
+      if (itemsToImport.length === 0) {
+        alert('Vui lòng chọn ít nhất 1 ảnh hoặc 1 video để nhập.');
+        setIsImportingDrive(false);
+        return;
+      }
+
+      setDriveImportProgress(`Đang tải và lưu ${itemsToImport.length} tệp từ Google Drive về kho ảnh...`);
+
+      const res = await fetch('/api/gdrive/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: itemsToImport }),
+      });
+      const data = await res.json();
+
+      if (data.success && Array.isArray(data.slides)) {
+        const updatedLocs = locList.map((loc) => {
+          if (loc.id === currentLoc.id) {
+            return {
+              ...loc,
+              images: [...(loc.images || []), ...data.slides],
+            };
+          }
+          return loc;
+        });
+        setLocList(updatedLocs);
+        setShowDriveModal(false);
+        setDriveScanResult(null);
+        alert(`Đã nhập thành công ${data.slides.length} ảnh/video vào Slide của ${currentLoc.title}! Hãy bấm "Lưu Cấu Hình" ở góc trên để lưu vĩnh viễn.`);
+      } else {
+        alert(data.error || 'Lỗi khi nhập tệp từ Google Drive.');
+      }
+    } catch (err: any) {
+      console.error('GDrive Import Error:', err);
+      alert('Lỗi khi nhập tệp từ Google Drive: ' + err.message);
+    } finally {
+      setIsImportingDrive(false);
+      setDriveImportProgress('');
+    }
   };
 
   const handleDeleteSlideImage = (slideId: string) => {
@@ -775,27 +890,58 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 </div>
               </div>
 
-              {/* Add Image by URL Row */}
+              {/* Add Image by URL / YouTube / Google Drive Row */}
               <div className="p-4 bg-[#FDFCFB] rounded-2xl border border-gray-200 flex flex-col gap-3">
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="text"
-                    id="newImageUrlInput"
-                    placeholder="Dán đường dẫn ảnh URL hoặc link YouTube"
-                    className="flex-1 px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs text-[#2D3748] focus:outline-none focus:border-[#1A365D]"
-                  />
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      id="newImageUrlInput"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const input = document.getElementById('newImageUrlInput') as HTMLInputElement;
+                          if (input && input.value) {
+                            handleAddImageUrlClick(input.value);
+                            input.value = '';
+                          }
+                        }
+                      }}
+                      placeholder="Dán link ảnh URL, link YouTube hoặc link Thư mục Google Drive"
+                      className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-xs text-[#2D3748] focus:outline-none focus:border-[#1A365D]"
+                    />
+                    <Folder className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+                  </div>
                   <button
+                    disabled={isScanningDrive}
                     onClick={() => {
                       const input = document.getElementById('newImageUrlInput') as HTMLInputElement;
                       if (input && input.value) {
-                        handleAddSlideImage(input.value);
+                        handleAddImageUrlClick(input.value);
                         input.value = '';
                       }
                     }}
-                    className="px-5 py-2 rounded-xl bg-[#1A365D] hover:bg-[#122642] text-white font-bold text-xs flex items-center gap-1 justify-center shadow-md transition-all"
+                    className={`px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1.5 justify-center shadow-md transition-all ${
+                      isScanningDrive 
+                        ? 'bg-[#1A365D]/80 cursor-wait' 
+                        : 'bg-[#1A365D] hover:bg-[#122642]'
+                    }`}
                   >
-                    <Plus className="w-4 h-4" /> Thêm Ảnh URL
+                    {isScanningDrive ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Đang quét Drive...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4" />
+                        <span>Thêm Ảnh URL</span>
+                      </>
+                    )}
                   </button>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] text-gray-400">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Hỗ trợ: Link ảnh trực tiếp (JPG, PNG, WebP), video YouTube và <strong>Thư mục Google Drive</strong> (tự động quét & chọn số lượng ảnh/video để lưu vào data).</span>
                 </div>
                 
                 {/* Scrape from Website Row */}
@@ -1396,6 +1542,296 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           )}
         </div>
       </div>
+
+      {/* MODAL: GOOGLE DRIVE IMPORT CONFIGURATION */}
+      {showDriveModal && driveScanResult && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 md:p-6 bg-black/60 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-3xl max-h-[90vh] bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#2D3748]">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-[#FDFCFB]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#1A365D]/10 flex items-center justify-center text-[#1A365D]">
+                  <FolderOpen className="w-5 h-5 text-[#C5A059]" />
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-base text-[#1A365D]">
+                    Nhập Ảnh & Video từ Google Drive
+                  </h3>
+                  <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5">
+                    <span>Thư mục:</span>
+                    <strong className="text-[#2D3748]">{driveScanResult.folderName}</strong>
+                  </p>
+                </div>
+              </div>
+
+              <button
+                disabled={isImportingDrive}
+                onClick={() => {
+                  setShowDriveModal(false);
+                  setDriveScanResult(null);
+                }}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+              {/* Summary Stats Badges */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3.5 bg-blue-50/70 border border-blue-100 rounded-2xl flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-blue-600 block">Tổng Tệp</span>
+                    <span className="text-base font-bold text-blue-900">{driveScanResult.totalFiles} tệp</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-emerald-50/70 border border-emerald-100 rounded-2xl flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
+                    <FileImage className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 block">Ảnh Tìm Thấy</span>
+                    <span className="text-base font-bold text-emerald-900">{driveScanResult.totalImages} ảnh</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-amber-50/70 border border-amber-100 rounded-2xl flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-700 font-bold">
+                    <Film className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-amber-600 block">Video Tìm Thấy</span>
+                    <span className="text-base font-bold text-amber-900">{driveScanResult.totalVideos} video</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quantity Selectors */}
+              <div className="bg-[#F8FAFC] p-4 rounded-2xl border border-gray-200 space-y-4">
+                <h4 className="font-bold text-[#1A365D] text-xs uppercase tracking-wider flex items-center gap-1.5">
+                  <span>Cấu hình số lượng muốn nhập vào Slide:</span>
+                  <span className="text-gray-400 font-normal normal-case">(cho #{currentLoc?.code} - {currentLoc?.title})</span>
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Image Count Selector */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#2D3748] flex items-center gap-1.5">
+                        <FileImage className="w-4 h-4 text-emerald-600" /> Số lượng Ảnh:
+                      </span>
+                      <span className="text-gray-500 text-[11px]">
+                        Tối đa: <strong>{driveScanResult.totalImages}</strong>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={driveScanResult.totalImages}
+                        value={driveSelectedImgCount}
+                        onChange={(e) => {
+                          const val = Math.max(0, Math.min(driveScanResult.totalImages, parseInt(e.target.value) || 0));
+                          setDriveSelectedImgCount(val);
+                        }}
+                        disabled={isImportingDrive || driveScanResult.totalImages === 0}
+                        className="w-24 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-bold text-[#1A365D] text-center focus:outline-none focus:border-[#1A365D]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setDriveSelectedImgCount(driveScanResult.totalImages)}
+                        disabled={isImportingDrive || driveScanResult.totalImages === 0}
+                        className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[11px] font-bold transition-colors"
+                      >
+                        Tất cả ({driveScanResult.totalImages})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDriveSelectedImgCount(0)}
+                        disabled={isImportingDrive}
+                        className="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-[11px] font-medium transition-colors"
+                      >
+                        0
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Video Count Selector */}
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#2D3748] flex items-center gap-1.5">
+                        <Film className="w-4 h-4 text-amber-600" /> Số lượng Video:
+                      </span>
+                      <span className="text-gray-500 text-[11px]">
+                        Tối đa: <strong>{driveScanResult.totalVideos}</strong>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={driveScanResult.totalVideos}
+                        value={driveSelectedVidCount}
+                        onChange={(e) => {
+                          const val = Math.max(0, Math.min(driveScanResult.totalVideos, parseInt(e.target.value) || 0));
+                          setDriveSelectedVidCount(val);
+                        }}
+                        disabled={isImportingDrive || driveScanResult.totalVideos === 0}
+                        className="w-24 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-sm font-bold text-[#1A365D] text-center focus:outline-none focus:border-[#1A365D]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setDriveSelectedVidCount(driveScanResult.totalVideos)}
+                        disabled={isImportingDrive || driveScanResult.totalVideos === 0}
+                        className="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-[11px] font-bold transition-colors"
+                      >
+                        Tất cả ({driveScanResult.totalVideos})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDriveSelectedVidCount(0)}
+                        disabled={isImportingDrive}
+                        className="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-[11px] font-medium transition-colors"
+                      >
+                        0
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preview Grid */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-gray-500 text-[11px]">
+                  <span>Xem trước danh sách tệp sẽ nhập:</span>
+                  <span>
+                    Đã chọn: <strong className="text-emerald-700">{driveSelectedImgCount} ảnh</strong> & <strong className="text-amber-700">{driveSelectedVidCount} video</strong>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 rounded-xl border border-gray-200">
+                  {driveScanResult.images.map((img, idx) => {
+                    const isSelected = idx < driveSelectedImgCount;
+                    return (
+                      <div
+                        key={img.id || idx}
+                        className={`relative rounded-lg overflow-hidden border aspect-square bg-gray-200 transition-all ${
+                          isSelected ? 'border-emerald-500 ring-2 ring-emerald-400/40 opacity-100' : 'border-gray-200 opacity-40 grayscale'
+                        }`}
+                      >
+                        <img
+                          src={img.thumbnailUrl}
+                          alt={img.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                        <span className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] px-1 py-0.5 truncate text-center">
+                          {img.name}
+                        </span>
+                        {isSelected && (
+                          <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs">
+                            <Check className="w-2.5 h-2.5" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {driveScanResult.videos.map((vid, idx) => {
+                    const isSelected = idx < driveSelectedVidCount;
+                    return (
+                      <div
+                        key={vid.id || idx}
+                        className={`relative rounded-lg overflow-hidden border aspect-square bg-gray-900 transition-all ${
+                          isSelected ? 'border-amber-500 ring-2 ring-amber-400/40 opacity-100' : 'border-gray-200 opacity-40 grayscale'
+                        }`}
+                      >
+                        <img
+                          src={vid.thumbnailUrl}
+                          alt={vid.name}
+                          className="w-full h-full object-cover opacity-80"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Film className="w-5 h-5 text-white/90 drop-shadow-md" />
+                        </div>
+                        <span className="absolute bottom-0 inset-x-0 bg-black/70 text-white text-[9px] px-1 py-0.5 truncate text-center">
+                          {vid.name}
+                        </span>
+                        {isSelected && (
+                          <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-xs">
+                            <Check className="w-2.5 h-2.5" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Progress message if importing */}
+              {isImportingDrive && (
+                <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center gap-3 text-blue-900 animate-pulse">
+                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  <span className="font-medium text-xs">{driveImportProgress || 'Đang xử lý tải dữ liệu...'}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-gray-100 bg-[#FDFCFB] flex items-center justify-between">
+              <span className="text-xs text-gray-500">
+                Tổng cộng: <strong className="text-[#1A365D] font-bold">{driveSelectedImgCount + driveSelectedVidCount} tệp</strong>
+              </span>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  disabled={isImportingDrive}
+                  onClick={() => {
+                    setShowDriveModal(false);
+                    setDriveScanResult(null);
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  Hủy
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isImportingDrive || (driveSelectedImgCount === 0 && driveSelectedVidCount === 0)}
+                  onClick={handleConfirmDriveImport}
+                  className={`px-5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-md transition-all ${
+                    isImportingDrive || (driveSelectedImgCount === 0 && driveSelectedVidCount === 0)
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-[#1A365D] hover:bg-[#122642]'
+                  }`}
+                >
+                  {isImportingDrive ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Đang lưu về kho ảnh...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4 text-[#C5A059]" />
+                      <span>Nhập {driveSelectedImgCount + driveSelectedVidCount} Tệp Vào Slide</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+

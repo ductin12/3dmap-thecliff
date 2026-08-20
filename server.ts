@@ -312,6 +312,267 @@ Nội dung: ${text}`;
     }
   });
 
+  // Ensure data/gdrive directory exists
+  const gdriveDir = path.join(process.cwd(), "data", "gdrive");
+  if (!fs.existsSync(gdriveDir)) {
+    fs.mkdirSync(gdriveDir, { recursive: true });
+  }
+
+  // API Endpoint: Scan Google Drive Folder / File
+  app.post("/api/gdrive/scan", async (req, res) => {
+    try {
+      const { url } = req.body;
+      if (!url || typeof url !== "string") {
+        return res.status(400).json({ error: "URL is required" });
+      }
+
+      const cleanUrl = url.trim();
+
+      // Extract folder or file ID
+      let folderId = "";
+      const folderMatches = [
+        /\/drive\/(?:u\/\d+\/)?folders\/([a-zA-Z0-9_-]+)/,
+        /\/drive\/folders\/([a-zA-Z0-9_-]+)/,
+        /[?&]id=([a-zA-Z0-9_-]+)(?:&.*)?$/,
+      ];
+
+      for (const reg of folderMatches) {
+        const m = cleanUrl.match(reg);
+        if (m && (cleanUrl.includes("folder") || cleanUrl.includes("drive.google.com"))) {
+          folderId = m[1];
+          break;
+        }
+      }
+
+      // Check if it's a single file link
+      if (!folderId) {
+        const fileMatches = [
+          /\/file\/d\/([a-zA-Z0-9_-]+)/,
+          /\/d\/([a-zA-Z0-9_-]+)/,
+          /\/uc\?(?:export=download&)?id=([a-zA-Z0-9_-]+)/,
+        ];
+        for (const reg of fileMatches) {
+          const m = cleanUrl.match(reg);
+          if (m) {
+            const singleId = m[1];
+            return res.json({
+              success: true,
+              isSingleFile: true,
+              folderName: "Tệp Google Drive đơn lẻ",
+              totalImages: 1,
+              totalVideos: 0,
+              images: [
+                {
+                  id: singleId,
+                  name: `Drive_File_${singleId.substring(0, 6)}`,
+                  type: "image",
+                  thumbnailUrl: `https://lh3.googleusercontent.com/d/${singleId}=w400`,
+                  downloadUrl: `https://drive.google.com/uc?export=download&id=${singleId}`,
+                },
+              ],
+              videos: [],
+            });
+          }
+        }
+        return res.status(400).json({ error: "Không tìm thấy ID thư mục hoặc tệp Google Drive hợp lệ từ đường dẫn." });
+      }
+
+      console.log(`[GDrive Scan] Scanning folder ID: ${folderId}`);
+      
+      // Fetch Google Drive embedded view
+      const scanUrl = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+      let scanResponse = await fetch(scanUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      });
+
+      let html = "";
+      if (scanResponse.ok) {
+        html = await scanResponse.text();
+      } else {
+        const fallbackRes = await fetch(`https://drive.google.com/drive/folders/${folderId}`, {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          },
+        });
+        html = await fallbackRes.text();
+      }
+
+      const images: any[] = [];
+      const videos: any[] = [];
+      const seenIds = new Set<string>();
+
+      // 1. Try parse flip-entry structure
+      const entryRegex = /id="entry-([a-zA-Z0-9_-]+)"[^>]*>.*?class="flip-entry-title"[^>]*>([^<]+)<\/div>/gs;
+      let match;
+      while ((match = entryRegex.exec(html)) !== null) {
+        const id = match[1];
+        const name = match[2].trim();
+        const lower = name.toLowerCase();
+        if (!seenIds.has(id)) {
+          seenIds.add(id);
+          const isVideo = !!lower.match(/\.(mp4|mov|avi|mkv|webm|wmv|flv|m4v|3gp)$/);
+          const item = {
+            id,
+            name,
+            type: isVideo ? "video" : "image",
+            thumbnailUrl: isVideo 
+              ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
+              : `https://lh3.googleusercontent.com/d/${id}=w400`,
+            downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
+          };
+          if (isVideo) videos.push(item);
+          else images.push(item);
+        }
+      }
+
+      // 2. Try parse SSR data structures if flip-entry found nothing
+      if (images.length === 0 && videos.length === 0) {
+        const ssrRegex = /\["(?<id>[a-zA-Z0-9_-]{25,45})",\s*\["(?<name>[^"]+\.(?:jpg|jpeg|png|webp|gif|mp4|mov|avi|webm|mkv))"/gi;
+        let m;
+        while ((m = ssrRegex.exec(html)) !== null) {
+          const id = m.groups?.id;
+          const name = m.groups?.name;
+          if (id && name && !seenIds.has(id)) {
+            seenIds.add(id);
+            const lower = name.toLowerCase();
+            const isVideo = !!lower.match(/\.(mp4|mov|avi|mkv|webm|wmv|flv|m4v|3gp)$/);
+            const item = {
+              id,
+              name,
+              type: isVideo ? "video" : "image",
+              thumbnailUrl: isVideo 
+                ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
+                : `https://lh3.googleusercontent.com/d/${id}=w400`,
+              downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
+            };
+            if (isVideo) videos.push(item);
+            else images.push(item);
+          }
+        }
+      }
+
+      // Extract folder name if present
+      let folderName = "Thư mục Google Drive";
+      const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+      if (titleMatch && titleMatch[1]) {
+        folderName = titleMatch[1].replace(" - Google Drive", "").trim();
+      }
+
+      return res.json({
+        success: true,
+        folderName,
+        totalFiles: images.length + videos.length,
+        totalImages: images.length,
+        totalVideos: videos.length,
+        images,
+        videos,
+      });
+    } catch (error: any) {
+      console.error("[GDrive Scan Error]:", error);
+      return res.status(500).json({ error: error.message || "Lỗi khi quét thư mục Google Drive." });
+    }
+  });
+
+  // API Endpoint: Import Selected Files from Google Drive
+  app.post("/api/gdrive/import", async (req, res) => {
+    try {
+      const { items } = req.body;
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ error: "Missing items array" });
+      }
+
+      const importedSlides: any[] = [];
+      const { Readable } = await import("stream");
+      const { pipeline } = await import("stream/promises");
+
+      for (const item of items) {
+        const { id, name, type } = item;
+        const cleanName = (name || `file_${id}`).replace(/[^a-zA-Z0-9._-]/g, "_");
+        const ext = path.extname(cleanName) || (type === "video" ? ".mp4" : ".jpg");
+        const destFileName = `gdrive-${id}${ext}`;
+        const destPath = path.join(gdriveDir, destFileName);
+        const publicUrl = `/data/gdrive/${destFileName}`;
+
+        let finalUrl = publicUrl;
+
+        // If file not cached yet, download it
+        if (!fs.existsSync(destPath) || fs.statSync(destPath).size === 0) {
+          try {
+            let downloadUrl = type === "image"
+              ? `https://lh3.googleusercontent.com/d/${id}=w2048`
+              : `https://drive.usercontent.google.com/download?id=${id}&export=download&authuser=0`;
+
+            let fetchRes = await fetch(downloadUrl, {
+              headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+              },
+            });
+
+            if (!fetchRes.ok || !fetchRes.body) {
+              downloadUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+              fetchRes = await fetch(downloadUrl, {
+                headers: {
+                  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                },
+              });
+            }
+
+            // Handle virus scan warning page if any
+            const cType = fetchRes.headers.get("content-type") || "";
+            if (cType.includes("text/html") && type === "video") {
+              const htmlText = await fetchRes.text();
+              const confirmMatch = htmlText.match(/confirm=([0-9a-zA-Z_-]+)/) || htmlText.match(/name="confirm" value="([^"]+)"/);
+              if (confirmMatch) {
+                const confirmUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=${confirmMatch[1]}`;
+                fetchRes = await fetch(confirmUrl, {
+                  headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                  },
+                });
+              }
+            }
+
+            if (fetchRes.ok && fetchRes.body) {
+              const dest = fs.createWriteStream(destPath);
+              // @ts-ignore
+              const readableStream = Readable.fromWeb(fetchRes.body);
+              await pipeline(readableStream, dest);
+            } else {
+              // Fallback to high-res direct CDN url
+              finalUrl = type === "image"
+                ? `https://lh3.googleusercontent.com/d/${id}=w2048`
+                : `https://drive.google.com/file/d/${id}/preview`;
+            }
+          } catch (dlErr) {
+            console.warn(`[GDrive Download Warning ${id}]:`, dlErr);
+            finalUrl = type === "image"
+              ? `https://lh3.googleusercontent.com/d/${id}=w2048`
+              : `https://drive.google.com/file/d/${id}/preview`;
+          }
+        }
+
+        importedSlides.push({
+          id: `img-gdrive-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          url: finalUrl,
+          title: path.basename(name || "", path.extname(name || "")),
+          caption: "",
+          mediaType: type === "video" ? "video" : "image",
+        });
+      }
+
+      return res.json({
+        success: true,
+        count: importedSlides.length,
+        slides: importedSlides,
+      });
+    } catch (error: any) {
+      console.error("[GDrive Import Error]:", error);
+      return res.status(500).json({ error: error.message || "Lỗi khi nhập tệp từ Google Drive." });
+    }
+  });
+
   // Vite middleware for development vs static serve for production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

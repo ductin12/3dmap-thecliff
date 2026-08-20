@@ -221,4 +221,186 @@ app.post("/api/scrape-room", async (req, res) => {
   }
 });
 
+// POST /api/gdrive/scan
+app.post("/api/gdrive/scan", async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url || typeof url !== "string") {
+      return res.status(400).json({ error: "URL is required" });
+    }
+
+    const cleanUrl = url.trim();
+    let folderId = "";
+    const folderMatches = [
+      /\/drive\/(?:u\/\d+\/)?folders\/([a-zA-Z0-9_-]+)/,
+      /\/drive\/folders\/([a-zA-Z0-9_-]+)/,
+      /[?&]id=([a-zA-Z0-9_-]+)(?:&.*)?$/,
+    ];
+
+    for (const reg of folderMatches) {
+      const m = cleanUrl.match(reg);
+      if (m && (cleanUrl.includes("folder") || cleanUrl.includes("drive.google.com"))) {
+        folderId = m[1];
+        break;
+      }
+    }
+
+    if (!folderId) {
+      const fileMatches = [
+        /\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /\/d\/([a-zA-Z0-9_-]+)/,
+        /\/uc\?(?:export=download&)?id=([a-zA-Z0-9_-]+)/,
+      ];
+      for (const reg of fileMatches) {
+        const m = cleanUrl.match(reg);
+        if (m) {
+          const singleId = m[1];
+          return res.json({
+            success: true,
+            isSingleFile: true,
+            folderName: "Tệp Google Drive đơn lẻ",
+            totalImages: 1,
+            totalVideos: 0,
+            images: [
+              {
+                id: singleId,
+                name: `Drive_File_${singleId.substring(0, 6)}`,
+                type: "image",
+                thumbnailUrl: `https://lh3.googleusercontent.com/d/${singleId}=w400`,
+                downloadUrl: `https://drive.google.com/uc?export=download&id=${singleId}`,
+              },
+            ],
+            videos: [],
+          });
+        }
+      }
+      return res.status(400).json({ error: "Không tìm thấy ID thư mục hoặc tệp Google Drive hợp lệ từ đường dẫn." });
+    }
+
+    const scanUrl = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+    let scanResponse = await fetch(scanUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      },
+    });
+
+    let html = "";
+    if (scanResponse.ok) {
+      html = await scanResponse.text();
+    } else {
+      const fallbackRes = await fetch(`https://drive.google.com/drive/folders/${folderId}`, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+      });
+      html = await fallbackRes.text();
+    }
+
+    const images: any[] = [];
+    const videos: any[] = [];
+    const seenIds = new Set<string>();
+
+    const entryRegex = /id="entry-([a-zA-Z0-9_-]+)"[^>]*>.*?class="flip-entry-title"[^>]*>([^<]+)<\/div>/gs;
+    let match;
+    while ((match = entryRegex.exec(html)) !== null) {
+      const id = match[1];
+      const name = match[2].trim();
+      const lower = name.toLowerCase();
+      if (!seenIds.has(id)) {
+        seenIds.add(id);
+        const isVideo = !!lower.match(/\.(mp4|mov|avi|mkv|webm|wmv|flv|m4v|3gp)$/);
+        const item = {
+          id,
+          name,
+          type: isVideo ? "video" : "image",
+          thumbnailUrl: isVideo 
+            ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
+            : `https://lh3.googleusercontent.com/d/${id}=w400`,
+          downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
+        };
+        if (isVideo) videos.push(item);
+        else images.push(item);
+      }
+    }
+
+    if (images.length === 0 && videos.length === 0) {
+      const ssrRegex = /\["(?<id>[a-zA-Z0-9_-]{25,45})",\s*\["(?<name>[^"]+\.(?:jpg|jpeg|png|webp|gif|mp4|mov|avi|webm|mkv))"/gi;
+      let m;
+      while ((m = ssrRegex.exec(html)) !== null) {
+        const id = m.groups?.id;
+        const name = m.groups?.name;
+        if (id && name && !seenIds.has(id)) {
+          seenIds.add(id);
+          const lower = name.toLowerCase();
+          const isVideo = !!lower.match(/\.(mp4|mov|avi|mkv|webm|wmv|flv|m4v|3gp)$/);
+          const item = {
+            id,
+            name,
+            type: isVideo ? "video" : "image",
+            thumbnailUrl: isVideo 
+              ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
+              : `https://lh3.googleusercontent.com/d/${id}=w400`,
+            downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
+          };
+          if (isVideo) videos.push(item);
+          else images.push(item);
+        }
+      }
+    }
+
+    let folderName = "Thư mục Google Drive";
+    const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+    if (titleMatch && titleMatch[1]) {
+      folderName = titleMatch[1].replace(" - Google Drive", "").trim();
+    }
+
+    return res.json({
+      success: true,
+      folderName,
+      totalFiles: images.length + videos.length,
+      totalImages: images.length,
+      totalVideos: videos.length,
+      images,
+      videos,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message || "Lỗi khi quét thư mục Google Drive." });
+  }
+});
+
+// POST /api/gdrive/import
+app.post("/api/gdrive/import", async (req, res) => {
+  try {
+    const { items } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: "Missing items array" });
+    }
+
+    const importedSlides: any[] = [];
+    for (const item of items) {
+      const { id, name, type } = item;
+      const finalUrl = type === "image"
+        ? `https://lh3.googleusercontent.com/d/${id}=w2048`
+        : `https://drive.google.com/file/d/${id}/preview`;
+
+      importedSlides.push({
+        id: `img-gdrive-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        url: finalUrl,
+        title: path.basename(name || "", path.extname(name || "")),
+        caption: "",
+        mediaType: type === "video" ? "video" : "image",
+      });
+    }
+
+    return res.json({
+      success: true,
+      count: importedSlides.length,
+      slides: importedSlides,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message || "Lỗi khi nhập tệp từ Google Drive." });
+  }
+});
+
 export default app;
+
