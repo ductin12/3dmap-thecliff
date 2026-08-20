@@ -808,10 +808,137 @@
       ],
       "images": [
         {
-          "id": "img-9-1",
-          "url": "https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=1200&auto=format&fit=crop",
-          "title": "Phòng hội nghị",
-          "caption": "Thiết kế hiện đại chuyên nghiệp cho mọi sự kiện"
+          "id": "img-gdrive-1787218579771-hrrwm",
+          "url": "/data/gdrive/gdrive-1I6ZRwVQgo5nHiGVXSQxIc8SufFJ-RFPT.jpg",
+          "title": "DSC07993",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579772-kkp3o",
+          "url": "/data/gdrive/gdrive-1QhbQCDvKknI2h6SFJhZoDOvWFlTviBzN.jpg",
+          "title": "DSC08042",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579773-9lfov",
+          "url": "/data/gdrive/gdrive-1nf7MnEODWby5UZVchW2rAjt99GajnGHU.jpg",
+          "title": "DSC08044",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579775-9m8k0",
+          "url": "/data/gdrive/gdrive-12z71c2sY943okhbm8a1GLVtEFHvMSyBi.jpg",
+          "title": "DSC08137",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579779-fsimw",
+          "url": "/data/gdrive/gdrive-1M1PrP2X_Rld42sU7oG9ONiKjJaqvnAUY.jpg",
+          "title": "DSC08147",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579780-onsqf",
+          "url": "/data/gdrive/gdrive-1yfEF8LmcAJkjB8da3Fg47Vg-9tHZ9_Rr.jpg",
+          "title": "DSC08164",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579780-6z39t",
+          "url": "/data/gdrive/gdrive-1pPrdo_5lkkoFEXDYmWchSnb0CoQ8BeM-.jpg",
+          "title": "DSC08168",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579781-asm4e",
+          "url": "/data/gdrive/gdrive-1jEtYpKr41bGKVsQ7kA2T_wKdSgUYeevC.jpg",
+          "title": "DSC08203",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579782-idtje",
+          "url": "/data/gdrive/gdrive-1okk0ljoR-NS-3Up6sxCIV_SZZWloV3sT.jpg",
+          "title": "DSC08221",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579783-xqp1z",
+          "url": "/data/gdrive/gdrive-1eLGZqzraUrwrwjyyVX9mgYW94oG6Kkuo.jpg",
+          "title": "DSC08233",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579783-nim5h",
+          "url": "/data/gdrive/gdrive-1UUdTHVBGnRi3Bt20OdDzVWQz37J_Ih12.jpg",
+          "title": "DSC08239",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579784-tjyvc",
+          "url": "/data/gdrive/gdrive-14skpa5TVUsA02vFL_iT3UArVeH7eBSt7.jpg",
+          "title": "DSC08254",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579786-90it0",
+          "url": "/data/gdrive/gdrive-1g7_Vdp2flp-NXVYty0VlHAzGzuqpfiYp.jpg",
+          "title": "DSC08256",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579787-i68zc",
+          "url": "/data/gdrive/gdrive-1bAdzyNnbacT-nHVdMThpZCWrMZOdtgQJ.jpg",
+          "title": "DSC08261",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579788-7sk4o",
+          "url": "/data/gdrive/gdrive-1D6--8DRQTxDgYveA2FwC_7YaW-Iq7m1c.jpg",
+          "title": "DSC08262",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579789-gjygo",
+          "url": "/data/gdrive/gdrive-1RBlxOHUXQojcdBDw3_QxtmMgiOv4EGxr.jpg",
+          "title": "DSC08272",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579790-zqsxp",
+          "url": "/data/gdrive/gdrive-1-tuw6BiVH06sAvNR0FHsZ9LW3jlDeNdf.jpg",
+          "title": "DSC08277",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579791-nb6da",
+          "url": "/data/gdrive/gdrive-11dWQ0aCZ_UpsYt8Ea7gukixuAeMkQslo.jpg",
+          "title": "DSC08384",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218579796-9lkfy",
+          "url": "/data/gdrive/gdrive-1y4P2rIS3_9BdXyo85qgoNAtDYc2EEz_m.jpg",
+          "title": "DSC08408",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -843,16 +970,102 @@
       ],
       "images": [
         {
-          "id": "img-10-1",
-          "url": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=1200&auto=format&fit=crop",
-          "title": "Big Pool",
-          "caption": "Hồ bơi tràn bờ lung linh dưới nắng vàng Phan Thiết"
+          "id": "img-gdrive-1787218655501-gklxe",
+          "url": "/data/gdrive/gdrive-1V5hHPt3Q_zjcHcQ6avLNHdTZbYkrjZUm.jpg",
+          "title": "DSC00179",
+          "caption": "",
+          "mediaType": "image"
         },
         {
-          "id": "img-10-2",
-          "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
-          "title": "On-The-Rock Bar",
-          "caption": "Thưởng thức ly Cocktail mát lạnh ngay tại bờ hồ"
+          "id": "img-gdrive-1787218655502-ri7w7",
+          "url": "/data/gdrive/gdrive-1Ar5-TVyWQBS_DUQUR6IF_70ZmAeYGT9g.JPG",
+          "title": "IMG_5299",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655502-yj33p",
+          "url": "/data/gdrive/gdrive-1PCU690wCtbHBuCXoA6kDdsISmycmo6mY.JPG",
+          "title": "IMG_5308",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655503-0y1bz",
+          "url": "/data/gdrive/gdrive-1_1heP8MSzMTxEqAfWpTw3b6ow_R_T5su.JPG",
+          "title": "IMG_6304",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655504-mini7",
+          "url": "/data/gdrive/gdrive-1_SwHGRkvd39KlUk4mUHmUJC_KSl4h7kA.JPG",
+          "title": "IMG_6306",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655505-mvlv3",
+          "url": "/data/gdrive/gdrive-1XDXEcS5puU6kLk8aumOu4lSMS-MNI6sd.jpg",
+          "title": "IMG_8046",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655505-l3spj",
+          "url": "/data/gdrive/gdrive-1YHVh83mE_1AKXvVNKs-D_IRrPlVsavhL.jpg",
+          "title": "IMG_8050",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655506-59ooh",
+          "url": "/data/gdrive/gdrive-1JwFzVJBLoQ2j-u6Ak4lS9ips02M2Jhq3.jpg",
+          "title": "IMG_8051",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655506-k5uf8",
+          "url": "/data/gdrive/gdrive-1UeRprlM_HnFrZ0JJE_uyoCwOUmubmZf6.jpg",
+          "title": "IMG_8056",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218655507-5gf60",
+          "url": "/data/gdrive/gdrive-1Bf4Uz10qNhVJESLCzQ-YTaGTU-QLMjca.jpg",
+          "title": "IMG_8066",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218657739-8j7ze",
+          "url": "/data/gdrive/gdrive-1MC4kmuhZOpQcnjZJ0cLDNT69vcj9xAod.jpg",
+          "title": "MRV02368",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218659711-papvk",
+          "url": "/data/gdrive/gdrive-1UkjbNTwX1O5s-nRQBdam4toCltGgaMMR.jpg",
+          "title": "MRV02409",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218659712-7uaxe",
+          "url": "/data/gdrive/gdrive-1_V7yBCy2A-STTrMTPzrkR65Fu2Hpjvdg.jpg",
+          "title": "MRV02413",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218659713-maymb",
+          "url": "/data/gdrive/gdrive-16bPQgTbmQgQ-VY3d5RFHXDHdV7hMToRd.jpg",
+          "title": "MRV02440",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -881,10 +1094,81 @@
       ],
       "images": [
         {
-          "id": "img-11-1",
-          "url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200&auto=format&fit=crop",
-          "title": "Small Pool",
-          "caption": "Không gian xanh mát an toàn cho bé thỏa sức bơi lội"
+          "id": "img-gdrive-1787218703345-w26qd",
+          "url": "/data/gdrive/gdrive-1KgIDuR4eP_WZKpWhgSg3HkJokNSve25W.jpg",
+          "title": "DSC00169",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218703800-v8yvb",
+          "url": "/data/gdrive/gdrive-17-SApfEvNMh4gTyD9VJqIcuLlJjjm9At.jpg",
+          "title": "DSC00172",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704399-tft2y",
+          "url": "/data/gdrive/gdrive-1XDXEcS5puU6kLk8aumOu4lSMS-MNI6sd.jpg",
+          "title": "IMG_8046",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704400-85fsa",
+          "url": "/data/gdrive/gdrive-1JwFzVJBLoQ2j-u6Ak4lS9ips02M2Jhq3.jpg",
+          "title": "IMG_8051",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704400-dxyx0",
+          "url": "/data/gdrive/gdrive-1UeRprlM_HnFrZ0JJE_uyoCwOUmubmZf6.jpg",
+          "title": "IMG_8056",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704400-n41lm",
+          "url": "/data/gdrive/gdrive-1Iqtanc9CHvJDXJR1uJ4hA6AsozOb6diB.jpg",
+          "title": "MRV02363",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704401-zbi8n",
+          "url": "/data/gdrive/gdrive-1MC4kmuhZOpQcnjZJ0cLDNT69vcj9xAod.jpg",
+          "title": "MRV02368",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704401-e6xta",
+          "url": "/data/gdrive/gdrive-1UkjbNTwX1O5s-nRQBdam4toCltGgaMMR.jpg",
+          "title": "MRV02409",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704402-kyxyj",
+          "url": "/data/gdrive/gdrive-1ccvQEVn9v7EJyyTgrdHEdDSWSWuO4bVd.jpg",
+          "title": "MRV02412",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704402-ud4ja",
+          "url": "/data/gdrive/gdrive-1_V7yBCy2A-STTrMTPzrkR65Fu2Hpjvdg.jpg",
+          "title": "MRV02413",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218704402-iumkb",
+          "url": "/data/gdrive/gdrive-16bPQgTbmQgQ-VY3d5RFHXDHdV7hMToRd.jpg",
+          "title": "MRV02440",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingLink": "tel:+842523719111",
