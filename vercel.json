@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "vite build && cp -r data dist/data 2>/dev/null || true",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
