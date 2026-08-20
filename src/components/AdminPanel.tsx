@@ -93,6 +93,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [selectedDriveIds, setSelectedDriveIds] = useState<string[]>([]);
 
   React.useEffect(() => {
+    if (locations && locations.length > 0) {
+      setLocList(locations);
+      if (!selectedLocId || !locations.some(l => l.id === selectedLocId)) {
+        setSelectedLocId(locations[0]?.id || '');
+      }
+    }
+  }, [locations]);
+
+  React.useEffect(() => {
+    if (resortConfig) {
+      setCfg(resortConfig);
+    }
+  }, [resortConfig]);
+
+  React.useEffect(() => {
     fetch('https://tts.thecliff.io.vn/voices')
       .then(res => res.json())
       .then(data => {

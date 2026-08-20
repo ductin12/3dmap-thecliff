@@ -20,6 +20,7 @@ export const AdminApp: React.FC = () => {
   // States for AdminPanel to work standalone
   const [locations, setLocations] = useState<LocationItem[]>(INITIAL_LOCATIONS);
   const [resortConfig, setResortConfig] = useState<ResortConfig>(DEFAULT_RESORT_CONFIG);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   
   const [activeTab, setActiveTab] = useState<'panel' | 'users'>('panel');
 
@@ -48,7 +49,8 @@ export const AdminApp: React.FC = () => {
           setResortConfig(data.config);
         }
       })
-      .catch(e => console.error("Error loading data from API:", e));
+      .catch(e => console.error("Error loading data from API:", e))
+      .finally(() => setIsDataLoaded(true));
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -193,7 +195,12 @@ export const AdminApp: React.FC = () => {
       </header>
       
       <main className="max-w-7xl mx-auto py-8 px-4">
-        {activeTab === 'panel' ? (
+        {!isDataLoaded ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-16 flex flex-col items-center justify-center gap-4 text-[#1A365D]" style={{ minHeight: '60vh' }}>
+            <div className="w-8 h-8 border-3 border-[#1A365D] border-t-transparent rounded-full animate-spin" />
+            <p className="font-serif font-bold text-sm">Đang tải dữ liệu bản đồ...</p>
+          </div>
+        ) : activeTab === 'panel' ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden relative" style={{ minHeight: '80vh' }}>
             <AdminPanel 
               locations={locations}
