@@ -3343,10 +3343,130 @@
       ],
       "images": [
         {
-          "id": "img-17-1",
-          "url": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
-          "title": "Game Room",
-          "caption": "Phút giây giải trí thư thái cho cả gia đình"
+          "id": "img-gdrive-1787286807263-7bmre",
+          "url": "https://lh3.googleusercontent.com/d/1a96iVV3mSWJzYFujp0G870bKjm2haQ99=w2048",
+          "title": "DSC08034",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-zo36o",
+          "url": "https://lh3.googleusercontent.com/d/1-EZOQ1f2FFaszOeJKARUEnwucqlPIxAU=w2048",
+          "title": "DSC08036",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-gd7yf",
+          "url": "https://lh3.googleusercontent.com/d/1paNRv1LxvheYHn6HJlD1c0XsABrFAZrU=w2048",
+          "title": "DSC08041",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-n9cf7",
+          "url": "https://lh3.googleusercontent.com/d/114UTQ6p8QH8vHLsXrmDoq6DDTnjF8SLt=w2048",
+          "title": "DSC08043",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-o1zzy",
+          "url": "https://lh3.googleusercontent.com/d/1flUgkFVeMZsnCO1g2055sv93JEpiElZo=w2048",
+          "title": "IMG_3856",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-cqryh",
+          "url": "https://lh3.googleusercontent.com/d/16zYM0rR8J4tqvhg5JTVeJULH2CEfKExL=w2048",
+          "title": "IMG_3857-3",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-1otu4",
+          "url": "https://lh3.googleusercontent.com/d/13JAi4LAcQS8fdi4N6QHmg_8dW35HSoEl=w2048",
+          "title": "IMG_3861",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-5dm5p",
+          "url": "https://lh3.googleusercontent.com/d/1HHJD9Qu3RYE7apaALU2sjM9psk4ScCde=w2048",
+          "title": "IMG_3863",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-wrz4k",
+          "url": "https://lh3.googleusercontent.com/d/1_ZNO_MCWEO0RewKPoSZr_Tx-ouqSPGnW=w2048",
+          "title": "IMG_3871",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-91i5p",
+          "url": "https://lh3.googleusercontent.com/d/197XXrwgRH3VFBSKJtETHi5UtkVQKN2aG=w2048",
+          "title": "IMG_3872",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-8yja6",
+          "url": "https://lh3.googleusercontent.com/d/14JcHpNYIS6U6DJOBuuGIylj8uAzWVlLv=w2048",
+          "title": "IMG_3886",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-r1xj6",
+          "url": "https://lh3.googleusercontent.com/d/1YBTlZnryblMA5jhx2bEF6BOb_JZf6-mu=w2048",
+          "title": "IMG_3887",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-am473",
+          "url": "https://lh3.googleusercontent.com/d/1181wxnF-0uZE5roG-Gl_2q7HwW1ojJiW=w2048",
+          "title": "IMG_3889",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-2r8ed",
+          "url": "https://lh3.googleusercontent.com/d/1-IbgyHvFeam1f5wOJXQmT-7hcQIHLw4-=w2048",
+          "title": "IMG_3891",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-nv96s",
+          "url": "https://lh3.googleusercontent.com/d/1bwgefd1tdj2LyGnYSZ7KJzzyntH-Mfxq=w2048",
+          "title": "IMG_3894",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-hts99",
+          "url": "https://lh3.googleusercontent.com/d/1Qv4-Dj0q40R9llAoC9imquDLZSLEm1Om=w2048",
+          "title": "IMG_3895",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-y4xbl",
+          "url": "https://lh3.googleusercontent.com/d/1qgaT3jlrWC1ERDM6cAFfnRM8AxicBT5Q=w2048",
+          "title": "IMG_3897",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286807263-3pt5i",
+          "url": "https://lh3.googleusercontent.com/d/1z0p5DHue8J7L-BVGTzTRYVSK05KXk1a9=w2048",
+          "title": "IMG_3898",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/gameroom/",
@@ -3415,5 +3535,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:32:28.498Z"
+  "updatedAt": "2026-08-21T04:33:28.609Z"
 }
