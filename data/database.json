@@ -1333,7 +1333,7 @@
       "category": "pool_beach",
       "x": 44.2,
       "y": 37.6,
-      "description": "Hồ bơi nông an toàn dành cho em bé và gia đình, tích hợp cầu trượt nước mini và các trò chơi phun nước ngộ nghĩnh.",
+      "description": "Hồ bơi  nhỏ riêng tư, giúp bạn có những giây phút nghỉ ngơi, yên bình bên cạnh người thân, gia đình. Tận hưởng những phút giây yên bình bên bờ đại dương. ",
       "highlights": [
         "Mực nước nông an toàn (0.6m)",
         "Cầu trượt nước vui nhộn",
@@ -2083,13 +2083,6 @@
           "title": "Reels Beach 2 FN ",
           "caption": "",
           "mediaType": "video"
-        },
-        {
-          "id": "img-gdrive-1787291111711-el4o8",
-          "url": "https://lh3.googleusercontent.com/d/1O7o4zEh4ezcHknJeG-8aHjGW5qKcsflR=w2048",
-          "title": "Drive_File_1O7o4z",
-          "caption": "",
-          "mediaType": "image"
         },
         {
           "id": "img-gdrive-1787285397333-lkcl7",
@@ -3736,5 +3729,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T05:45:49.686Z"
+  "updatedAt": "2026-08-21T05:58:07.417Z"
 }
