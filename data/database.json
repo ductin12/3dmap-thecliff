@@ -2533,6 +2533,13 @@
           "mediaType": "image"
         },
         {
+          "id": "img-gdrive-1787285397333-e2l3k",
+          "url": "https://lh3.googleusercontent.com/d/17YFOacylACeX1r0t4N1s_Ec1KOKmfEON=w2048",
+          "title": "DSC02454",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
           "id": "img-gdrive-1787285397333-dl65p",
           "url": "https://lh3.googleusercontent.com/d/1gVTclHbbPAWPR5CXmwpMsYxODCSqNodW=w2048",
           "title": "DSC02324",
@@ -2550,20 +2557,6 @@
           "id": "img-gdrive-1787285397333-kt43d",
           "url": "https://lh3.googleusercontent.com/d/1zvXmAxlD7ZUihv-w_SOI-Rl6HOO8vM-6=w2048",
           "title": "DSC02326",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787290182842-xf8nl",
-          "url": "https://drive.google.com/file/d/1CZUG1rCnr1sZ_J_RaiKGyLDPjHSDoMb0/preview",
-          "title": "Kite_Moment_July",
-          "caption": "",
-          "mediaType": "video"
-        },
-        {
-          "id": "img-gdrive-1787285397333-e2l3k",
-          "url": "https://lh3.googleusercontent.com/d/17YFOacylACeX1r0t4N1s_Ec1KOKmfEON=w2048",
-          "title": "DSC02454",
           "caption": "",
           "mediaType": "image"
         },
@@ -2977,6 +2970,13 @@
           "id": "img-gdrive-1787285397334-90xl8",
           "url": "https://lh3.googleusercontent.com/d/1E_zNmNAHZTCMG0g_mxQUcvUx_11iI3rU=w2048",
           "title": "VMT05555",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787291111711-el4o8",
+          "url": "https://lh3.googleusercontent.com/d/1O7o4zEh4ezcHknJeG-8aHjGW5qKcsflR=w2048",
+          "title": "Drive_File_1O7o4z",
           "caption": "",
           "mediaType": "image"
         }
@@ -3736,5 +3736,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T05:39:26.567Z"
+  "updatedAt": "2026-08-21T05:45:13.409Z"
 }
