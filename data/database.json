@@ -3680,9 +3680,81 @@
       ],
       "images": [
         {
-          "id": "img-1787287789943",
-          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
-          "title": "Khu vực mới"
+          "id": "img-1787290052083-0",
+          "url": "https://youtu.be/feeD_NobD0w",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
+          "id": "img-1787290052083-1",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-9_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-2",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde4_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-3",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-03_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-4",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-01_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-5",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-5_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-6",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-at-The-Cliff-Resort-_-Residen3_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-7",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-02_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-8",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde-at-The-Cliff-Resort-_-Residen5_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-9",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde3_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-1787290052083-10",
+          "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/Verde1_thecliff.jpg",
+          "title": "VERDE CONDOS",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "amenities": [
@@ -3727,5 +3799,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:55:28.290Z"
+  "updatedAt": "2026-08-21T05:27:40.927Z"
 }
