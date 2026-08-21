@@ -3711,7 +3711,7 @@
     "defaultVoiceStyle": "female_ai",
     "defaultSpeechRate": 1,
     "autoSyncWeather": true,
-    "activeWeatherOverlay": "auto",
+    "activeWeatherOverlay": "none",
     "weatherStationLat": 10.9329,
     "weatherStationLng": 108.1017,
     "tourConfig": {
@@ -3729,5 +3729,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T05:59:40.301Z"
+  "updatedAt": "2026-08-21T06:07:44.126Z"
 }
