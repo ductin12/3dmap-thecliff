@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { LocationItem, LightingMode, MapTransform, WeatherOverlayType, TourConfig } from '../types';
-import { ZoomIn, ZoomOut, RotateCcw, Maximize2, Compass, MapPin } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Maximize2, Compass, MapPin, Video, CloudSun, CloudOff } from 'lucide-react';
 import { WeatherOverlay } from './WeatherOverlay';
 
 interface ResortMapProps {
@@ -18,6 +18,7 @@ interface ResortMapProps {
   onUpdatePinPosition: (id: string, x: number, y: number) => void;
   activeWeatherOverlay?: WeatherOverlayType;
   liveWeatherCategory?: 'clear' | 'cloudy' | 'fog' | 'rain' | 'thunderstorm';
+  onToggleWeatherEffect?: () => void;
   isTourMode?: boolean;
   tourConfig?: TourConfig;
   activeTourStepIdx?: number;
@@ -38,6 +39,7 @@ export const ResortMap: React.FC<ResortMapProps> = ({
   onUpdatePinPosition,
   activeWeatherOverlay = 'auto',
   liveWeatherCategory = 'clear',
+  onToggleWeatherEffect,
   isTourMode = false,
   tourConfig,
   activeTourStepIdx = 0
@@ -275,6 +277,23 @@ export const ResortMap: React.FC<ResortMapProps> = ({
         >
           <RotateCcw className="w-5 h-5 text-[#C5A059]" />
         </button>
+        {onToggleWeatherEffect && (
+          <button
+            onClick={onToggleWeatherEffect}
+            className={`w-11 h-11 rounded-full shadow-lg border flex items-center justify-center transition-all hover:scale-105 ${
+              activeWeatherOverlay === 'none'
+                ? 'bg-white hover:bg-gray-50 text-gray-400 border-gray-200'
+                : 'bg-[#1A365D] hover:bg-[#2A4365] text-[#C5A059] border-[#1A365D]'
+            }`}
+            title={activeWeatherOverlay === 'none' ? "Bật hiệu ứng thời tiết (Mưa/Nắng/Mây/Sương)" : "Tắt hiệu ứng thời tiết (Bản đồ trong suốt)"}
+          >
+            {activeWeatherOverlay === 'none' ? (
+              <CloudOff className="w-5 h-5 text-gray-400" />
+            ) : (
+              <CloudSun className="w-5 h-5 text-[#C5A059]" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Calibrator Banner */}

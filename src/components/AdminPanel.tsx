@@ -1642,6 +1642,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         desc: 'Tự động hiển thị nắng/chiều/đêm & mưa theo thời tiết Mũi Né thực tế'
                       },
                       {
+                        id: 'none',
+                        label: '🚫 Tắt Hoàn Toàn Hiệu Ứng',
+                        desc: 'Bản đồ luôn sáng trong suốt, không có mưa hay sương mù'
+                      },
+                      {
                         id: 'clear',
                         label: '☀️ Nắng Đẹp / Vệt Sáng Biển',
                         desc: 'Ánh nắng miền biển rực rỡ kèm vệt sáng lens flare'

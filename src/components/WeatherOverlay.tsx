@@ -10,7 +10,11 @@ export const WeatherOverlay: React.FC<WeatherOverlayProps> = ({ activeOverlay, l
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Determine effective overlay category
-  const effectiveCategory = activeOverlay === 'auto' ? liveCategory : activeOverlay;
+  const effectiveCategory = activeOverlay === 'none' ? 'none' : (activeOverlay === 'auto' ? liveCategory : activeOverlay);
+
+  if (effectiveCategory === 'none') {
+    return null;
+  }
 
   // Rain Canvas Animation Effect
   useEffect(() => {

@@ -36,7 +36,7 @@ export interface LocationItem {
   distanceFromLobby?: string; // e.g., "50m - 1 phút đi bộ"
 }
 
-export type WeatherOverlayType = 'auto' | 'clear' | 'cloudy' | 'fog' | 'rain' | 'thunderstorm';
+export type WeatherOverlayType = 'auto' | 'clear' | 'cloudy' | 'fog' | 'rain' | 'thunderstorm' | 'none';
 
 export interface TourStep {
   locationId: string;

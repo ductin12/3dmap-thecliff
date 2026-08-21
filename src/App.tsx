@@ -92,6 +92,27 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isWeatherModalOpen, setIsWeatherModalOpen] = useState<boolean>(false);
 
+  // User Interactive Weather Effect Mode ('auto' | 'none' | 'clear' | 'rain' | 'cloudy' | 'fog' | 'thunderstorm')
+  const [weatherOverlayMode, setWeatherOverlayMode] = useState<WeatherOverlayType>(() => {
+    try {
+      const saved = localStorage.getItem('cliff_weather_overlay_preference');
+      if (saved) return saved as WeatherOverlayType;
+    } catch (e) {}
+    return 'auto';
+  });
+
+  const handleSelectWeatherOverlay = (mode: WeatherOverlayType) => {
+    setWeatherOverlayMode(mode);
+    try {
+      localStorage.setItem('cliff_weather_overlay_preference', mode);
+    } catch (e) {}
+  };
+
+  const handleToggleWeatherOverlay = () => {
+    const nextMode: WeatherOverlayType = weatherOverlayMode === 'none' ? 'auto' : 'none';
+    handleSelectWeatherOverlay(nextMode);
+  };
+
   // Live Mui Ne Weather Telemetry State
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [isRefreshingWeather, setIsRefreshingWeather] = useState<boolean>(false);
@@ -268,8 +289,9 @@ export default function App() {
             isCalibratingPin={isCalibratingPin}
             calibratingLocationId={calibratingLocationId}
             onUpdatePinPosition={handleUpdatePinPosition}
-            activeWeatherOverlay={resortConfig.activeWeatherOverlay || 'auto'}
+            activeWeatherOverlay={weatherOverlayMode === 'auto' ? (resortConfig.activeWeatherOverlay || 'auto') : weatherOverlayMode}
             liveWeatherCategory={weatherData?.conditionCategory || 'clear'}
+            onToggleWeatherEffect={handleToggleWeatherOverlay}
             isTourMode={isTourMode}
             tourConfig={resortConfig.tourConfig}
             activeTourStepIdx={activeTourStepIdx}
@@ -289,13 +311,15 @@ export default function App() {
         />
       )}
 
-      {/* Mui Ne Weather Live Modal */}
+      {/* Mui Ne Weather Live Modal with Overlay Selector */}
       <WeatherModal
         isOpen={isWeatherModalOpen}
         onClose={() => setIsWeatherModalOpen(false)}
         weatherData={weatherData}
         onRefreshWeather={loadWeather}
         isRefreshing={isRefreshingWeather}
+        activeOverlay={weatherOverlayMode}
+        onSelectOverlay={handleSelectWeatherOverlay}
       />
     </div>
   );

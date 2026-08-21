@@ -16,6 +16,7 @@ import {
   Info
 } from 'lucide-react';
 import { WeatherData } from '../services/weatherService';
+import { WeatherOverlayType } from '../types';
 
 interface WeatherModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ interface WeatherModalProps {
   weatherData: WeatherData | null;
   onRefreshWeather: () => void;
   isRefreshing: boolean;
+  activeOverlay?: WeatherOverlayType;
+  onSelectOverlay?: (overlay: WeatherOverlayType) => void;
 }
 
 export const WeatherModal: React.FC<WeatherModalProps> = ({
@@ -31,6 +34,8 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
   weatherData,
   onRefreshWeather,
   isRefreshing,
+  activeOverlay = 'auto',
+  onSelectOverlay,
 }) => {
   if (!isOpen) return null;
 
@@ -215,6 +220,57 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Map Weather Overlay Customizer / On-Off Toggle */}
+          {onSelectOverlay && (
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 p-4 rounded-2xl border border-gray-200/90 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-[#1A365D] text-xs flex items-center gap-1.5 uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                  <span>Hiệu Ứng Thời Tiết Bản Đồ (Live Overlay)</span>
+                </span>
+                <span className="text-[10px] bg-white px-2 py-0.5 rounded-md font-bold text-[#1A365D] border border-gray-200">
+                  {activeOverlay === 'none' ? '🚫 Đang Tắt' : activeOverlay === 'auto' ? '⚡ Tự Động' : '✨ Tùy Chỉnh'}
+                </span>
+              </div>
+
+              <p className="text-[11px] text-gray-500 leading-relaxed">
+                Bạn có thể bật hiệu ứng theo thời tiết thực tế hoặc tắt hoàn toàn để bản đồ luôn sáng trong, không có mưa hay sương mờ.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                {[
+                  { id: 'auto', label: 'Tự Động Mũi Né', icon: '⚡', desc: 'Theo thời tiết live' },
+                  { id: 'none', label: 'Tắt Hiệu Ứng', icon: '🚫', desc: 'Bản đồ trong suốt' },
+                  { id: 'clear', label: 'Nắng Vàng', icon: '☀️', desc: 'Tia nắng biển' },
+                  { id: 'rain', label: 'Mưa Rơi', icon: '🌧️', desc: 'Hạt mưa 3D' },
+                  { id: 'cloudy', label: 'Nhiều Mây', icon: '☁️', desc: 'Bóng mây dịu' },
+                  { id: 'fog', label: 'Sương Mù', icon: '🌫️', desc: 'Làn sương biển' },
+                ].map((item) => {
+                  const isSelected = activeOverlay === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => onSelectOverlay(item.id as WeatherOverlayType)}
+                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col gap-0.5 ${
+                        isSelected
+                          ? 'bg-[#1A365D] text-white border-[#1A365D] shadow-sm scale-[1.02]'
+                          : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5 font-bold text-xs">
+                        <span>{item.icon}</span>
+                        <span>{item.label}</span>
+                      </div>
+                      <span className={`text-[10px] ${isSelected ? 'text-blue-200' : 'text-gray-400'}`}>
+                        {item.desc}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Note Banner about Admin Configuration */}
           <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-2xl flex items-start gap-2.5 text-blue-900 text-[11px] leading-relaxed">
