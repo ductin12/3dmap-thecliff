@@ -3696,6 +3696,31 @@
       "openingHours": "24/7",
       "capacity": "3-5 khách",
       "distanceFromLobby": "50m - 2 phút đi bộ"
+    },
+    {
+      "id": "loc-1787296884644",
+      "code": "0",
+      "title": "LOBBY",
+      "subtitle": "Sảnh lễ tân",
+      "category": "accommodation",
+      "x": 60,
+      "y": 59,
+      "description": "Nhập thông tin chi tiết khu vực tại đây...",
+      "highlights": [
+        "Tiện ích nổi bật 1",
+        "Tiện ích nổi bật 2"
+      ],
+      "images": [
+        {
+          "id": "img-1787296884644",
+          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
+          "title": "Khu vực mới"
+        }
+      ],
+      "amenities": [
+        "Wifi",
+        "Máy lạnh"
+      ]
     }
   ],
   "config": {
@@ -3729,5 +3754,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T07:10:43.616Z"
+  "updatedAt": "2026-08-21T07:22:36.059Z"
 }
