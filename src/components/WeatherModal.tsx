@@ -13,7 +13,8 @@ import {
   Cloud,
   Thermometer,
   ShieldCheck,
-  Info
+  Info,
+  Sparkles
 } from 'lucide-react';
 import { WeatherData } from '../services/weatherService';
 import { WeatherOverlayType } from '../types';
