@@ -328,52 +328,94 @@ Nội dung: ${text}`;
 
       const cleanUrl = url.trim();
 
-      // Extract folder or file ID
+      const isFolder = cleanUrl.includes("/folders/") || cleanUrl.includes("embeddedfolderview") || (cleanUrl.includes("drive/folders") && !cleanUrl.includes("/file/d/"));
       let folderId = "";
-      const folderMatches = [
-        /\/drive\/(?:u\/\d+\/)?folders\/([a-zA-Z0-9_-]+)/,
-        /\/drive\/folders\/([a-zA-Z0-9_-]+)/,
-        /[?&]id=([a-zA-Z0-9_-]+)(?:&.*)?$/,
-      ];
 
-      for (const reg of folderMatches) {
-        const m = cleanUrl.match(reg);
-        if (m && (cleanUrl.includes("folder") || cleanUrl.includes("drive.google.com"))) {
-          folderId = m[1];
-          break;
+      if (isFolder) {
+        const folderMatches = [
+          /\/drive\/(?:u\/\d+\/)?folders\/([a-zA-Z0-9_-]+)/,
+          /\/drive\/folders\/([a-zA-Z0-9_-]+)/,
+          /[?&]id=([a-zA-Z0-9_-]+)(?:&.*)?$/,
+        ];
+
+        for (const reg of folderMatches) {
+          const m = cleanUrl.match(reg);
+          if (m) {
+            folderId = m[1];
+            break;
+          }
         }
       }
 
-      // Check if it's a single file link
+      // Check if it's a single file link (image or video)
       if (!folderId) {
         const fileMatches = [
           /\/file\/d\/([a-zA-Z0-9_-]+)/,
           /\/d\/([a-zA-Z0-9_-]+)/,
           /\/uc\?(?:export=download&)?id=([a-zA-Z0-9_-]+)/,
+          /[?&]id=([a-zA-Z0-9_-]+)/,
         ];
+
+        let singleId = "";
         for (const reg of fileMatches) {
           const m = cleanUrl.match(reg);
           if (m) {
-            const singleId = m[1];
-            return res.json({
-              success: true,
-              isSingleFile: true,
-              folderName: "Tệp Google Drive đơn lẻ",
-              totalImages: 1,
-              totalVideos: 0,
-              images: [
-                {
-                  id: singleId,
-                  name: `Drive_File_${singleId.substring(0, 6)}`,
-                  type: "image",
-                  thumbnailUrl: `https://lh3.googleusercontent.com/d/${singleId}=w400`,
-                  downloadUrl: `https://drive.google.com/uc?export=download&id=${singleId}`,
-                },
-              ],
-              videos: [],
-            });
+            singleId = m[1];
+            break;
           }
         }
+
+        if (singleId) {
+          let fileName = `Drive_File_${singleId.substring(0, 6)}`;
+          let isVideo = false;
+
+          try {
+            const viewRes = await fetch(`https://drive.google.com/file/d/${singleId}/view`, {
+              headers: {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+              },
+            });
+            if (viewRes.ok) {
+              const html = await viewRes.text();
+              const titleMatch = html.match(/<meta\s+itemprop="name"\s+content="([^"]+)"/i) ||
+                                 html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
+                                 html.match(/<title>([^<]+?)(?:\s*-\s*Google Drive)?<\/title>/i) ||
+                                 html.match(/itemJson:\s*\[null,"([^"]+)"/);
+              if (titleMatch && titleMatch[1]) {
+                fileName = titleMatch[1].trim();
+              }
+
+              const lowerName = fileName.toLowerCase();
+              const hasVideoExt = !!lowerName.match(/\.(mp4|mov|avi|mkv|webm|wmv|flv|m4v|3gp)$/);
+              const hasVideoMime = html.includes("video/mp4") || html.includes("video/") || html.includes("type=\"video");
+              isVideo = hasVideoExt || hasVideoMime;
+            }
+          } catch (_e) {}
+
+          const item = {
+            id: singleId,
+            name: fileName,
+            type: isVideo ? "video" : "image",
+            thumbnailUrl: isVideo 
+              ? `https://drive.google.com/thumbnail?id=${singleId}&sz=w400`
+              : `https://lh3.googleusercontent.com/d/${singleId}=w400`,
+            downloadUrl: isVideo
+              ? `https://drive.google.com/file/d/${singleId}/preview`
+              : `https://lh3.googleusercontent.com/d/${singleId}=w2048`,
+          };
+
+          return res.json({
+            success: true,
+            isSingleFile: true,
+            folderName: isVideo ? `Video: ${fileName}` : `Ảnh: ${fileName}`,
+            totalFiles: 1,
+            totalImages: isVideo ? 0 : 1,
+            totalVideos: isVideo ? 1 : 0,
+            images: isVideo ? [] : [item],
+            videos: isVideo ? [item] : [],
+          });
+        }
+
         return res.status(400).json({ error: "Không tìm thấy ID thư mục hoặc tệp Google Drive hợp lệ từ đường dẫn." });
       }
 
