@@ -611,13 +611,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       reader.onload = (event) => {
         try {
           const json = JSON.parse(event.target?.result as string);
-          if (json.locations && Array.isArray(json.locations)) {
-            setLocList(json.locations);
-          }
-          if (json.config) {
-            setCfg(json.config);
-          }
-          alert("Nhập cấu hình dữ liệu JSON thành công!");
+          const newLocs = json.locations && Array.isArray(json.locations) ? json.locations : locList;
+          const newCfg = json.config ? json.config : cfg;
+          setLocList(newLocs);
+          setCfg(newCfg);
+          onSaveAll(newLocs, newCfg);
+          alert("Nhập cấu hình dữ liệu JSON và lưu thành công!");
         } catch (err) {
           alert("Lỗi file JSON không hợp lệ.");
         }

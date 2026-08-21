@@ -18,9 +18,145 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
 });
 
+// Cloud Storage / Database Helpers for Vercel Serverless
+async function getCloudData(): Promise<any | null> {
+  // 1. Upstash Redis / Vercel KV via REST API
+  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/get/cliff_resort_database_v2`, {
+        headers: { Authorization: `Bearer ${kvToken}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.result) {
+          return typeof json.result === 'string' ? JSON.parse(json.result) : json.result;
+        }
+      }
+    } catch (e) {
+      console.warn("KV fetch error:", e);
+    }
+  }
+
+  // 2. JSONBin.io fallback
+  const jsonBinId = process.env.JSONBIN_BIN_ID;
+  const jsonBinKey = process.env.JSONBIN_API_KEY;
+  if (jsonBinId && jsonBinKey) {
+    try {
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}/latest`, {
+        headers: { 'X-Master-Key': jsonBinKey }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.record) return json.record;
+      }
+    } catch (e) {
+      console.warn("JSONBin fetch error:", e);
+    }
+  }
+
+  return null;
+}
+
+async function saveCloudData(dataToSave: any): Promise<{ savedToCloud: boolean; driver?: string }> {
+  // 1. Upstash Redis / Vercel KV via REST API
+  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (kvUrl && kvToken) {
+    try {
+      const res = await fetch(`${kvUrl}/set/cliff_resort_database_v2`, {
+        method: 'POST',
+        headers: { 
+          Authorization: `Bearer ${kvToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSave)
+      });
+      if (res.ok) {
+        return { savedToCloud: true, driver: 'Upstash / Vercel KV' };
+      }
+    } catch (e) {
+      console.warn("KV save error:", e);
+    }
+  }
+
+  // 2. GitHub REST API Auto-Commit
+  const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  const ghRepo = process.env.GITHUB_REPO || 'ductin12/3dmap-thecliff';
+  if (ghToken) {
+    try {
+      // Get current file sha
+      const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data/database.json`, {
+        headers: {
+          Authorization: `Bearer ${ghToken}`,
+          Accept: 'application/vnd.github.v3+json',
+          'User-Agent': 'TheCliff3DMap-Sync'
+        }
+      });
+      let sha = '';
+      if (getRes.ok) {
+        const fileInfo = await getRes.json();
+        sha = fileInfo.sha;
+      }
+
+      const contentBase64 = Buffer.from(JSON.stringify(dataToSave, null, 2)).toString('base64');
+      const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data/database.json`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${ghToken}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'TheCliff3DMap-Sync'
+        },
+        body: JSON.stringify({
+          message: 'chore: update resort database from Admin Panel',
+          content: contentBase64,
+          sha: sha || undefined
+        })
+      });
+      if (putRes.ok) {
+        return { savedToCloud: true, driver: 'GitHub Auto-Commit' };
+      }
+    } catch (e) {
+      console.warn("GitHub commit error:", e);
+    }
+  }
+
+  // 3. JSONBin.io
+  const jsonBinId = process.env.JSONBIN_BIN_ID;
+  const jsonBinKey = process.env.JSONBIN_API_KEY;
+  if (jsonBinId && jsonBinKey) {
+    try {
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': jsonBinKey
+        },
+        body: JSON.stringify(dataToSave)
+      });
+      if (res.ok) {
+        return { savedToCloud: true, driver: 'JSONBin Cloud' };
+      }
+    } catch (e) {
+      console.warn("JSONBin save error:", e);
+    }
+  }
+
+  return { savedToCloud: false };
+}
+
 // GET /api/data
 app.get("/api/data", async (_req, res) => {
   try {
+    // Check cloud store first
+    const cloudData = await getCloudData();
+    if (cloudData && cloudData.locations) {
+      return res.json(cloudData);
+    }
+
+    // Fallback to local / bundled database.json
     if (fs.existsSync(dbPath)) {
       const data = fs.readFileSync(dbPath, "utf-8");
       return res.json(JSON.parse(data));
@@ -38,11 +174,23 @@ app.post("/api/data", async (req, res) => {
     if (!locations || !config) {
       return res.status(400).json({ error: "Missing locations or config" });
     }
-    const dataToSave = { locations, config };
-    if (fs.existsSync(path.dirname(dbPath))) {
-      fs.writeFileSync(dbPath, JSON.stringify(dataToSave, null, 2));
-    }
-    return res.json({ success: true });
+    const dataToSave = { locations, config, updatedAt: new Date().toISOString() };
+
+    // 1. Try cloud database saving
+    const cloudResult = await saveCloudData(dataToSave);
+
+    // 2. Try file system write (works in Node/Docker)
+    try {
+      if (fs.existsSync(path.dirname(dbPath))) {
+        fs.writeFileSync(dbPath, JSON.stringify(dataToSave, null, 2));
+      }
+    } catch (_e) {}
+
+    return res.json({ 
+      success: true, 
+      cloud: cloudResult.savedToCloud, 
+      driver: cloudResult.driver || 'local-file' 
+    });
   } catch (e: any) {
     return res.status(500).json({ error: e.message || "Failed to save data" });
   }
