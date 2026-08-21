@@ -3042,6 +3042,27 @@
           "title": "VMT05555",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787290182842-xf8nl",
+          "url": "https://drive.google.com/file/d/1CZUG1rCnr1sZ_J_RaiKGyLDPjHSDoMb0/preview",
+          "title": "Kite_Moment_July",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
+          "id": "img-gdrive-1787290182842-knqo1",
+          "url": "https://drive.google.com/file/d/1O7o4zEh4ezcHknJeG-8aHjGW5qKcsflR/preview",
+          "title": "Reels Beach 2 FN ",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
+          "id": "img-gdrive-1787290182842-oihqb",
+          "url": "https://drive.google.com/file/d/1-XSV-ck5oOHN2m_OXK31oIWqW5ZtGeXi/preview",
+          "title": "Reels Hoàng hôn bãi biển FN",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -3799,5 +3820,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T05:27:40.927Z"
+  "updatedAt": "2026-08-21T05:29:44.572Z"
 }
