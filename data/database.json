@@ -1214,7 +1214,7 @@
     },
     {
       "id": "loc-10",
-      "code": "10 (4)",
+      "code": "10",
       "title": "BIG POOL (MAIN POOL)",
       "subtitle": "Hồ Bơi Vô Cực Trung Tâm & Pool Bar",
       "category": "pool_beach",
@@ -3415,5 +3415,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:31:51.990Z"
+  "updatedAt": "2026-08-21T04:32:28.498Z"
 }
