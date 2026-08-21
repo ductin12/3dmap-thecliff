@@ -10,6 +10,14 @@ dotenv.config();
 const app = express();
 app.use(express.json({ limit: "50mb" }));
 
+// Normalize /api path when running behind Vercel serverless rewrite
+app.use((req, _res, next) => {
+  if (!req.url.startsWith("/api")) {
+    req.url = "/api" + req.url;
+  }
+  next();
+});
+
 const dbPath = path.join(process.cwd(), "data", "database.json");
 const dataDir = path.join(process.cwd(), "data", "audio");
 
