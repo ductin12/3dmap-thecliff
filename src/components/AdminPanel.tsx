@@ -417,33 +417,84 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   };
 
-  const handleMapBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  // Helper to compress map background images for reliable client & serverless display
+  const compressMapImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = async (uploadEvent) => {
-        const base64Url = uploadEvent.target?.result as string;
-        if (base64Url) {
-          try {
-            const res = await fetch('/api/upload-map', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ base64Data: base64Url })
-            });
-            const data = await res.json();
-            if (data.success) {
-              setCfg((prev) => ({ ...prev, mapImageBg: data.url }));
-            } else {
-              console.error("Map upload failed:", data.error);
-              alert("Lỗi tải ảnh: " + data.error);
-            }
-          } catch (error) {
-            console.error("Map upload error:", error);
-            alert("Lỗi mạng khi tải ảnh lên máy chủ");
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxWidth = 2048;
+          const maxHeight = 2048;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
           }
-        }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(e.target?.result as string);
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+
+          try {
+            const dataUrl = canvas.toDataURL('image/webp', 0.88);
+            resolve(dataUrl);
+          } catch {
+            try {
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+              resolve(dataUrl);
+            } catch {
+              resolve(e.target?.result as string);
+            }
+          }
+        };
+        img.onerror = () => resolve(e.target?.result as string);
+        img.src = e.target?.result as string;
       };
+      reader.onerror = reject;
       reader.readAsDataURL(file);
+    });
+  };
+
+  const handleMapBgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const compressedDataUrl = await compressMapImageFile(file);
+      const newCfg = { ...cfg, mapImageBg: compressedDataUrl };
+      setCfg(newCfg);
+      onSaveAll(locList, newCfg);
+
+      // Attempt server storage if on Node/Docker
+      fetch('/api/upload-map', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64Data: compressedDataUrl })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.url && !window.location.hostname.includes('vercel.app')) {
+            const serverCfg = { ...cfg, mapImageBg: data.url };
+            setCfg(serverCfg);
+            onSaveAll(locList, serverCfg);
+          }
+        })
+        .catch(() => {});
+
+      alert("Đã cập nhật và lưu ảnh bản đồ mới thành công!");
+    } catch (error: any) {
+      console.error("Map upload error:", error);
+      alert("Lỗi khi tải ảnh bản đồ: " + error.message);
     }
   };
 
@@ -1194,8 +1245,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <input
                     type="text"
                     value={cfg.mapImageBg || ''}
-                    onChange={(e) => setCfg({ ...cfg, mapImageBg: e.target.value })}
-                    placeholder="Nhập đường dẫn URL ảnh bản đồ (VD: https://domain.com/cliff-map.jpg)"
+                    onChange={(e) => {
+                      let val = e.target.value;
+                      // Auto-convert Google Drive file share URL to direct high-res CDN link
+                      if (val.includes('drive.google.com/file/d/')) {
+                        const match = val.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match && match[1]) {
+                          val = `https://lh3.googleusercontent.com/d/${match[1]}=w2048`;
+                        }
+                      }
+                      setCfg({ ...cfg, mapImageBg: val });
+                    }}
+                    placeholder="Nhập đường dẫn URL ảnh bản đồ, link Google Drive hoặc bấm Tải ảnh từ máy"
                     className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[#2D3748] focus:bg-white focus:border-[#1A365D] outline-none text-xs"
                   />
                   
@@ -1215,13 +1276,28 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <div className="mt-2 space-y-1.5">
                   <div className="flex items-center justify-between text-[11px] text-gray-500 font-medium">
                     <span>Xem trước ảnh nền bản đồ hiện tại:</span>
-                    <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-md text-gray-600 font-mono">
-                      {cfg.mapImageBg?.startsWith('data:') 
-                        ? 'Ảnh Tải Lên (Base64 Data)' 
-                        : cfg.mapImageBg?.startsWith('/') 
-                        ? 'Sơ Đồ Vector Local (/cliff-map.svg)' 
-                        : 'Đường Dẫn URL Bên Ngoài'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-md text-gray-600 font-mono">
+                        {cfg.mapImageBg?.startsWith('data:') 
+                          ? 'Ảnh Tải Lên (Data URL Tối Ưu)' 
+                          : cfg.mapImageBg?.startsWith('/') 
+                          ? 'Sơ Đồ Vector Local (/cliff-map.svg)' 
+                          : 'Đường Dẫn URL Trực Tiếp / CDN'}
+                      </span>
+                      {cfg.mapImageBg && cfg.mapImageBg !== '/cliff-map.svg' && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newCfg = { ...cfg, mapImageBg: '/cliff-map.svg' };
+                            setCfg(newCfg);
+                            onSaveAll(locList, newCfg);
+                          }}
+                          className="text-[10px] text-red-600 hover:underline font-bold"
+                        >
+                          Xóa & Đặt Lại Gốc
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="w-full h-52 bg-slate-900 rounded-xl overflow-hidden border border-gray-200 relative flex items-center justify-center p-2">
@@ -1231,6 +1307,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         alt="Resort Map Preview"
                         className="w-full h-full object-contain rounded-lg"
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = '/cliff-map.svg';
+                        }}
                       />
                     ) : (
                       <div className="text-gray-400 text-xs flex flex-col items-center gap-1">

@@ -45,6 +45,13 @@ export const ResortMap: React.FC<ResortMapProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapWrapperRef = useRef<HTMLDivElement>(null);
 
+  // Map background image state with fallback
+  const [imgSrc, setImgSrc] = useState<string>(mapImageBg || '/cliff-map.svg');
+
+  useEffect(() => {
+    setImgSrc(mapImageBg || '/cliff-map.svg');
+  }, [mapImageBg]);
+
   // Map transform state for zoom and pan
   const [transform, setTransform] = useState<MapTransform>({
     scale: 1,
@@ -292,17 +299,21 @@ export const ResortMap: React.FC<ResortMapProps> = ({
           onClick={handleMapClick}
           className="relative w-[1000px] h-[1333px] min-w-[1000px] min-h-[1333px] shrink-0 max-w-none shadow-2xl rounded-[36px] border-[12px] border-white overflow-hidden bg-[#D6E4F0]"
           style={{
-            backgroundImage: `url('${mapImageBg}')`,
+            backgroundImage: `url('${imgSrc}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
           {/* Real Resort Map Graphic Render */}
           <img
-            src={mapImageBg}
+            src={imgSrc}
             alt="The Cliff Resort & Residences 3D Map"
             className="w-full h-full object-cover pointer-events-none transition-all duration-700"
             referrerPolicy="no-referrer"
+            onError={() => {
+              console.warn("Map background image failed to load, falling back to /cliff-map.svg");
+              setImgSrc('/cliff-map.svg');
+            }}
           />
 
           {/* Interactive Vector Terrain Art Overlay */}

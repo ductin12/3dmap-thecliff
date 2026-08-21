@@ -768,16 +768,284 @@
       ],
       "images": [
         {
-          "id": "img-8-1",
-          "url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop",
-          "title": "Vista Restaurant",
-          "caption": "Không gian ẩm thực sang trọng ngắm trọn bờ biển"
+          "id": "img-gdrive-1787224426430-ob54o",
+          "url": "/data/gdrive/gdrive-12-fH7Dw9ZtmEZgd06Duhon1tli9MH7YZ.jpg",
+          "title": "DSC06672",
+          "caption": "",
+          "mediaType": "image"
         },
         {
-          "id": "img-8-2",
-          "url": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop",
-          "title": "Món ăn đặc sản",
-          "caption": "Hải sản tươi ngon chế biến bởi các đầu bếp hàng đầu"
+          "id": "img-gdrive-1787224428009-c6amh",
+          "url": "/data/gdrive/gdrive-1PqIe3OpkwwzXVuUOvj2OOtejyuuSyiTy.jpg",
+          "title": "DSC06675",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224428357-kwkbq",
+          "url": "/data/gdrive/gdrive-1LhorTQkWRTfYgjtwCTfPS98UT9alX2mC.jpg",
+          "title": "DSC06678",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224429186-797q7",
+          "url": "/data/gdrive/gdrive-1_g_u8sKqYwfTBMzDvzJn8mXjc0bwSIiG.JPG",
+          "title": "IMG_5278",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224429602-szfsw",
+          "url": "/data/gdrive/gdrive-1WWObfJQQQVUI_rN-sE1NIPdxPoZR-6AL.JPG",
+          "title": "IMG_5279",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224430582-gohv2",
+          "url": "/data/gdrive/gdrive-1oT2ooYu0Pr17ivyfgiWAly1fDxmVvx48.JPG",
+          "title": "IMG_5280",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224431749-curnf",
+          "url": "/data/gdrive/gdrive-1mB3HISFldRLJ2Zyiv4S-fL8VElvelkV-.JPG",
+          "title": "IMG_5281",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224432515-ihdbb",
+          "url": "/data/gdrive/gdrive-1FWNO0h3VlIwXaR70Jq2U1bPB-ZJTjHyg.JPG",
+          "title": "IMG_5282",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224432899-lle6z",
+          "url": "/data/gdrive/gdrive-1vdRrhlYzKRJrGuB5hTxepLav3ot46Ou5.JPG",
+          "title": "IMG_5283",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224433290-rqxfx",
+          "url": "/data/gdrive/gdrive-1fV_fwCIarnyw-4d6xwpTFdnSAK1X9bMR.JPG",
+          "title": "IMG_5284",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224433749-zqsw2",
+          "url": "/data/gdrive/gdrive-1Qckw7bEVxFrmDu9qkQ4KTFkaaj4Bj9Kp.JPG",
+          "title": "IMG_5285",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224434191-6nkqe",
+          "url": "/data/gdrive/gdrive-1LuAfUwuqT4sPQ16tMzb3f173DakgtU3T.jpg",
+          "title": "IMG_7696",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224434551-6g15y",
+          "url": "/data/gdrive/gdrive-1BupgQ_t5gQmBkcCQFF0UUUcF-1mx5Thf.jpg",
+          "title": "IMG_7700",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224435208-zguxt",
+          "url": "/data/gdrive/gdrive-1qd6mTJb9TonNgaj76yPYQoTD0apzUuM-.jpg",
+          "title": "IMG_7703",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224435659-8w92b",
+          "url": "/data/gdrive/gdrive-1JFP12GsZdru9ZC5MCmLJ3cqD-V40umK4.jpg",
+          "title": "IMG_7709",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224436126-77co3",
+          "url": "/data/gdrive/gdrive-1SRsP3RualYB01n_mVsqoqdI6kljO0cQ2.jpg",
+          "title": "IMG_7713",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224436968-21koy",
+          "url": "/data/gdrive/gdrive-1gKmtDGtQRvp9gd_JQ-PAgTiPZS1saQCO.jpg",
+          "title": "IMG_7716",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224437785-03417",
+          "url": "/data/gdrive/gdrive-1WuMJ8lEqcRI6dFm5oMIoimQuVpQk6Ac8.jpg",
+          "title": "IMG_7719",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224438102-cuekz",
+          "url": "/data/gdrive/gdrive-15srnNlIpS-NIYTj-lpfKXVIDVhSVVdwu.jpg",
+          "title": "IMG_7726",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224438462-c6521",
+          "url": "/data/gdrive/gdrive-1kyevyqHD-EyEledafKlOu9sCsJOykW16.jpg",
+          "title": "IMG_7732",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224438923-qs7ec",
+          "url": "/data/gdrive/gdrive-1ION5uNlinMgvgw_5PDw4rXqhBX83nibH.jpg",
+          "title": "IMG_7737",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224439284-aqyuk",
+          "url": "/data/gdrive/gdrive-1bKOb1muaWjLkTzuTm9yZom7LgwD8hQOs.jpg",
+          "title": "IMG_7743",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224439630-oqf07",
+          "url": "/data/gdrive/gdrive-1W-4mcRB8AWua16iILr8YBnFxL3bwnQ5H.jpg",
+          "title": "IMG_7745",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224439966-80cug",
+          "url": "/data/gdrive/gdrive-1YEh_pigl_98hwqbkd8-EM0LLdVD3u66t.jpg",
+          "title": "IMG_7746",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224440318-aoe7n",
+          "url": "/data/gdrive/gdrive-1KPscRKVYRF_NvD3dEF_FXkGUOzlitVMo.jpg",
+          "title": "IMG_7746_1",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224440824-erzm8",
+          "url": "/data/gdrive/gdrive-1KAN1FeS7YO1ZXjC0xUqnOSUC7kpNcR2B.jpg",
+          "title": "IMG_7751",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224441254-79f8j",
+          "url": "/data/gdrive/gdrive-1h9u7VFB7AaHUOfQKBUmN9oKWwrWRjm_q.jpg",
+          "title": "IMG_7754",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224443103-ejwv9",
+          "url": "/data/gdrive/gdrive-1IxpIKuRJbGJGONwhO17R-p8xqRLNt9Ll.jpg",
+          "title": "IMG_7759",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224443594-nqwmm",
+          "url": "/data/gdrive/gdrive-1Qiku8GEFTPiJPGUP0yL31PYP1chNl5rS.jpg",
+          "title": "MRV00186",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224444835-l8pz3",
+          "url": "/data/gdrive/gdrive-1Aud2Oe247kwP5c0-yUVS8xIXslKTfwBY.jpg",
+          "title": "MRV05245",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224445632-n1ero",
+          "url": "/data/gdrive/gdrive-1-YydDEUqya-Jh2CSG8byq5UVpVjQFJro.jpg",
+          "title": "MRV05250",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224446804-gau3n",
+          "url": "/data/gdrive/gdrive-17GEO_ZKivIu6E64gxCgq0czoBEnkDXdI.jpg",
+          "title": "MRV05267",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224447614-vjbbr",
+          "url": "/data/gdrive/gdrive-1p2tPSGODb2WG20NjG259heDpKeJvgebP.jpg",
+          "title": "VMT07011",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224448026-qghux",
+          "url": "/data/gdrive/gdrive-125ZcnVdlGt0QtKSxNNQAvl041O_Pz0o4.jpg",
+          "title": "VMT07013",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224448417-t88yf",
+          "url": "/data/gdrive/gdrive-1ONINTq2w3N4C5lv0lH8o875it6ehAv3l.jpg",
+          "title": "VMT07017",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224448782-qnsnb",
+          "url": "/data/gdrive/gdrive-19xvi6SlljwzHd_56iuZb92b0wohZlefp.jpg",
+          "title": "VMT07018",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224449136-bp3l5",
+          "url": "/data/gdrive/gdrive-1jra3UZrfL2NagOpn3J3ZkUh391u77HLP.jpg",
+          "title": "VMT07022",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224449446-4csqs",
+          "url": "/data/gdrive/gdrive-1kmX0FbKjWZpRHQtXDoW3UfX-_DjgMECw.jpg",
+          "title": "VMT07414-Enhanced-NR",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224450729-13lzc",
+          "url": "/data/gdrive/gdrive-10cgkVdWplyLLy9NKQjNODgg664LQgE35.jpg",
+          "title": "VMT07419",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787224451097-rvsp1",
+          "url": "/data/gdrive/gdrive-1w2rC2SFyZFK6poeJNTt9s6NKMxftZkwj.jpg",
+          "title": "VMT07431",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Xem Thực Đơn",
@@ -1592,7 +1860,7 @@
     "hotline": "1900 0394",
     "website": "https://thecliffresort.com.vn",
     "address": "Zone 5, Phú Thủy, TP. Phan Thiết, Lâm Đồng",
-    "mapImageBg": "/data/map-bg-1786513442403.png",
+    "mapImageBg": "/data/map-bg-1787283941268.jpg",
     "weatherTemperature": "29°C - Nắng Nhẹ",
     "ambientSoundEnabled": true,
     "ambientMusicUrl": "",
