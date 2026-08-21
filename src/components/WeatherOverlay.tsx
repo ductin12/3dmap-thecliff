@@ -12,10 +12,6 @@ export const WeatherOverlay: React.FC<WeatherOverlayProps> = ({ activeOverlay, l
   // Determine effective overlay category
   const effectiveCategory = activeOverlay === 'none' ? 'none' : (activeOverlay === 'auto' ? liveCategory : activeOverlay);
 
-  if (effectiveCategory === 'none') {
-    return null;
-  }
-
   // Rain Canvas Animation Effect
   useEffect(() => {
     if (effectiveCategory !== 'rain' && effectiveCategory !== 'thunderstorm') {
@@ -85,6 +81,10 @@ export const WeatherOverlay: React.FC<WeatherOverlayProps> = ({ activeOverlay, l
       window.removeEventListener('resize', handleResize);
     };
   }, [effectiveCategory]);
+
+  if (effectiveCategory === 'none') {
+    return null;
+  }
 
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden select-none">
