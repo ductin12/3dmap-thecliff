@@ -3053,7 +3053,7 @@
       "title": "GYM",
       "subtitle": "Phòng Tập Gym Hướng Biển",
       "category": "recreation",
-      "x": 72.8,
+      "x": 72.5,
       "y": 50.1,
       "description": "Phòng tập thể hình hiện đại trang bị đầy đủ máy chạy bộ, xe đạp, tạ đơn và thảm Yoga với vách kính lớn nhìn thẳng ra đại dương.",
       "highlights": [
@@ -3727,5 +3727,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:54:44.815Z"
+  "updatedAt": "2026-08-21T04:55:07.957Z"
 }
