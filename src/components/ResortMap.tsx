@@ -426,20 +426,25 @@ export const ResortMap: React.FC<ResortMapProps> = ({
                         : 'translate(-50%, 0)',
                     }}
                   >
-                    {/* Thumbnail */}
                     {(() => {
                       const displayImg = loc.images?.find(img => img.mediaType !== 'video') || loc.images?.[0];
                       if (!displayImg) return null;
                       
                       let imgUrl = displayImg.url;
-                      if (displayImg.mediaType === 'video' && (imgUrl.includes('youtube.com') || imgUrl.includes('youtu.be'))) {
-                         const match = imgUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                         if (match) imgUrl = `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+                      const isVideo = displayImg.mediaType === 'video';
+                      if (isVideo) {
+                        if (imgUrl.includes('youtube.com') || imgUrl.includes('youtu.be')) {
+                          const match = imgUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                          if (match) imgUrl = `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+                        } else if (imgUrl.includes('drive.google.com') || imgUrl.includes('googleusercontent.com')) {
+                          const match = imgUrl.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                          if (match) imgUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
+                        }
                       }
 
                       return (
-                        <div className="w-full h-28 rounded-xl overflow-hidden mb-2 bg-gray-100 shadow-sm">
-                          {displayImg.mediaType === 'video' && !imgUrl.includes('youtube.com') ? (
+                        <div className="w-full h-28 rounded-xl overflow-hidden mb-2 bg-gray-100 shadow-sm relative flex items-center justify-center">
+                          {isVideo && !imgUrl.includes('youtube.com') && !imgUrl.includes('drive.google.com') && !imgUrl.includes('googleusercontent.com') ? (
                             <video src={imgUrl} className="w-full h-full object-cover" />
                           ) : (
                             <img
@@ -448,6 +453,11 @@ export const ResortMap: React.FC<ResortMapProps> = ({
                               className="w-full h-full object-cover"
                               referrerPolicy="no-referrer"
                             />
+                          )}
+                          {isVideo && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                              <Video className="w-6 h-6 text-white" />
+                            </div>
                           )}
                         </div>
                       );

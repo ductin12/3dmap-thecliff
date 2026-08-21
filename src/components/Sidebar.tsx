@@ -160,12 +160,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         );
                       }
                       let imgUrl = displayImg.url;
-                      if (displayImg.mediaType === 'video' && (imgUrl.includes('youtube.com') || imgUrl.includes('youtu.be'))) {
-                         const match = imgUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                         if (match) imgUrl = `https://img.youtube.com/vi/${match[1]}/default.jpg`;
+                      const isVideo = displayImg.mediaType === 'video';
+                      if (isVideo) {
+                        if (imgUrl.includes('youtube.com') || imgUrl.includes('youtu.be')) {
+                          const match = imgUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                          if (match) imgUrl = `https://img.youtube.com/vi/${match[1]}/default.jpg`;
+                        } else if (imgUrl.includes('drive.google.com') || imgUrl.includes('googleusercontent.com')) {
+                          const match = imgUrl.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                          if (match) imgUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`;
+                        }
                       }
                       
-                      return displayImg.mediaType === 'video' && !imgUrl.includes('youtube.com') ? (
+                      return isVideo && !imgUrl.includes('youtube.com') && !imgUrl.includes('drive.google.com') && !imgUrl.includes('googleusercontent.com') ? (
                          <video src={imgUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                       ) : (
                         <img

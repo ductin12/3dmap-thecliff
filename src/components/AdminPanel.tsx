@@ -1161,6 +1161,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       const match = img.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                       if (match) ytId = match[1];
                     }
+                    const isGoogleDrive = isVideo && (img.url.includes('drive.google.com') || img.url.includes('googleusercontent.com'));
+                    let gdriveId = '';
+                    if (isGoogleDrive) {
+                      const match = img.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                      if (match) gdriveId = match[1];
+                    }
                     
                     return (
                     <div
@@ -1186,10 +1192,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       }}
                       className={`relative group rounded-2xl overflow-hidden bg-white border shadow-sm flex flex-col cursor-move transition-all ${draggedSlideIdx === idx ? 'opacity-50 border-dashed border-[#1A365D]' : 'border-gray-200'}`}
                     >
-                      <div className="w-full h-44 overflow-hidden bg-gray-900 relative">
+                      <div className="w-full h-44 overflow-hidden bg-gray-900 relative flex items-center justify-center">
                         {isVideo ? (
                            isYouTube && ytId ? (
                              <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="YouTube Video" className="w-full h-full object-cover" />
+                           ) : isGoogleDrive && gdriveId ? (
+                             <img 
+                               src={`https://drive.google.com/thumbnail?id=${gdriveId}&sz=w400`} 
+                               alt="Google Drive Video" 
+                               className="w-full h-full object-cover" 
+                             />
                            ) : (
                              <video src={img.url} className="w-full h-full object-cover" muted />
                            )
@@ -1202,8 +1214,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           />
                         )}
                         {isVideo && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
-                            <Video className="w-10 h-10 text-white/80" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none">
+                            <Video className="w-10 h-10 text-white drop-shadow-md" />
                           </div>
                         )}
                       </div>

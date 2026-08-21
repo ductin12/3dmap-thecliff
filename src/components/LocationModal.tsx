@@ -344,6 +344,15 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                  const match = currentSlide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                  if (match) ytId = match[1];
               }
+
+              // Google Drive Video Detection
+              const isGoogleDrive = isVideo && (currentSlide.url.includes('drive.google.com') || currentSlide.url.includes('googleusercontent.com'));
+              let gdriveId = '';
+              if (isGoogleDrive) {
+                const match = currentSlide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                if (match) gdriveId = match[1];
+              }
+
               if (isVideo) {
                  if (isYouTube && ytId) {
                    return (
@@ -354,6 +363,17 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                        allowFullScreen
                        className="w-full h-full"
+                     ></iframe>
+                   );
+                 }
+                 if (isGoogleDrive && gdriveId) {
+                   return (
+                     <iframe
+                       src={`https://drive.google.com/file/d/${gdriveId}/preview`}
+                       title={currentSlide.title || "Google Drive Video"}
+                       className="w-full h-full border-0"
+                       allow="autoplay; fullscreen; encrypted-media"
+                       allowFullScreen
                      ></iframe>
                    );
                  }
@@ -372,7 +392,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             })()}
             
             {/* Image Gradient Dark Overlay for Caption readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 pointer-events-none" />
 
             {/* Slide Navigation Arrows */}
             {slides.length > 1 && (
@@ -402,7 +422,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             </button>
 
             {/* Active Slide Info & Indicators */}
-            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 pointer-events-none">
               <div>
                 {currentSlide.title && (
                   <h3 className="text-sm font-serif font-bold text-white drop-shadow-md">
@@ -436,6 +456,12 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                    const match = slide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                    if (match) ytId = match[1];
                 }
+                const isGoogleDrive = isVideo && (slide.url.includes('drive.google.com') || slide.url.includes('googleusercontent.com'));
+                let gdriveId = '';
+                if (isGoogleDrive) {
+                  const match = slide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                  if (match) gdriveId = match[1];
+                }
                 
                 return (
                 <button
@@ -450,6 +476,12 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                   {isVideo ? (
                     isYouTube && ytId ? (
                       <img src={`https://img.youtube.com/vi/${ytId}/default.jpg`} className="w-full h-full object-cover opacity-80" />
+                    ) : isGoogleDrive && gdriveId ? (
+                      <img 
+                        src={`https://drive.google.com/thumbnail?id=${gdriveId}&sz=w200`} 
+                        alt={slide.title || 'Video Thumbnail'}
+                        className="w-full h-full object-cover opacity-80" 
+                      />
                     ) : (
                       <video src={slide.url} className="w-full h-full object-cover opacity-80" />
                     )
@@ -616,19 +648,66 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 
       {/* Lightbox Fullscreen Popup */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-60 bg-black/90 flex items-center justify-center p-4 animate-fadeIn">
+        <div className="fixed inset-0 z-60 bg-black/95 flex items-center justify-center p-4 animate-fadeIn">
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 p-3 rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors"
+            className="absolute top-6 right-6 p-3 rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors z-70"
           >
             <X className="w-6 h-6" />
           </button>
-          <img
-            src={currentSlide.url}
-            alt={currentSlide.title || location.title}
-            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
-            referrerPolicy="no-referrer"
-          />
+          <div className="w-full max-w-5xl aspect-video max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black">
+            {(() => {
+              const isVideo = currentSlide.mediaType === 'video';
+              const isYouTube = isVideo && (currentSlide.url.includes('youtube.com') || currentSlide.url.includes('youtu.be'));
+              let ytId = '';
+              if (isYouTube) {
+                const match = currentSlide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+                if (match) ytId = match[1];
+              }
+              const isGoogleDrive = isVideo && (currentSlide.url.includes('drive.google.com') || currentSlide.url.includes('googleusercontent.com'));
+              let gdriveId = '';
+              if (isGoogleDrive) {
+                const match = currentSlide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
+                if (match) gdriveId = match[1];
+              }
+
+              if (isVideo) {
+                if (isYouTube && ytId) {
+                  return (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
+                      title="YouTube video player"
+                      className="w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  );
+                }
+                if (isGoogleDrive && gdriveId) {
+                  return (
+                    <iframe
+                      src={`https://drive.google.com/file/d/${gdriveId}/preview`}
+                      title={currentSlide.title || "Google Drive Video"}
+                      className="w-full h-full border-0"
+                      allow="autoplay; fullscreen; encrypted-media"
+                      allowFullScreen
+                    ></iframe>
+                  );
+                }
+                return (
+                  <video src={currentSlide.url} controls autoPlay className="w-full h-full object-contain" />
+                );
+              }
+              return (
+                <img
+                  src={currentSlide.url}
+                  alt={currentSlide.title || location.title}
+                  className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
+                  referrerPolicy="no-referrer"
+                />
+              );
+            })()}
+          </div>
         </div>
       )}
     </div>
