@@ -3664,6 +3664,36 @@
       ],
       "bookingLink": "https://thecliffresort.com.vn/shop/",
       "bookingCtaText": "Xem Shop"
+    },
+    {
+      "id": "loc-1787287789943",
+      "code": "6",
+      "title": "VERDE CONDOS",
+      "subtitle": "Mô tả ngắn khu vực mới",
+      "category": "accommodation",
+      "x": 50,
+      "y": 50,
+      "description": "VERDE LOUNGE | THE CLIFF RESORT & RESIDENCES PHAN THIET\n\nVerde Lounge – Decorating style features the special color of coconut leaves and purity of nature. Verde Lounge blends various creativities of modern, luxury and the beauty of nature. This dominant style is the best choice for you to restore your inner peace.",
+      "highlights": [
+        "Tiện ích nổi bật 1",
+        "Tiện ích nổi bật 2"
+      ],
+      "images": [
+        {
+          "id": "img-1787287789943",
+          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
+          "title": "Khu vực mới"
+        }
+      ],
+      "amenities": [
+        "Wifi",
+        "Máy lạnh"
+      ],
+      "bookingCtaText": "Đặt Phòng Ngay",
+      "bookingLink": "https://thecliffresort.com.vn/rooms/verde-lounge/",
+      "openingHours": "24/7",
+      "capacity": "3-5 khách",
+      "distanceFromLobby": "50m - 2 phút đi bộ"
     }
   ],
   "config": {
@@ -3697,5 +3727,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:49:42.541Z"
+  "updatedAt": "2026-08-21T04:52:09.916Z"
 }
