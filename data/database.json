@@ -3712,11 +3712,6 @@
       ],
       "images": [
         {
-          "id": "img-1787296884644",
-          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
-          "title": "Khu vực mới"
-        },
-        {
           "id": "img-gdrive-1787297145906-hncsj",
           "url": "https://lh3.googleusercontent.com/d/1ouRDgxql-CXOQQnFuti3aue_CaVDanVt=w2048",
           "title": "2022_10_10_10_32_IMG_5182",
@@ -3975,5 +3970,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T07:25:47.293Z"
+  "updatedAt": "2026-08-21T07:25:56.861Z"
 }
