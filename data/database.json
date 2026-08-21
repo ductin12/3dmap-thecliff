@@ -2085,6 +2085,13 @@
           "mediaType": "video"
         },
         {
+          "id": "img-gdrive-1787291111711-el4o8",
+          "url": "https://lh3.googleusercontent.com/d/1O7o4zEh4ezcHknJeG-8aHjGW5qKcsflR=w2048",
+          "title": "Drive_File_1O7o4z",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
           "id": "img-gdrive-1787285397333-lkcl7",
           "url": "https://lh3.googleusercontent.com/d/1whBbCTbf-cBRORt88ZKwuCayhR192nfb=w2048",
           "title": "DJI_0025",
@@ -2972,13 +2979,6 @@
           "title": "VMT05555",
           "caption": "",
           "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787291111711-el4o8",
-          "url": "https://lh3.googleusercontent.com/d/1O7o4zEh4ezcHknJeG-8aHjGW5qKcsflR=w2048",
-          "title": "Drive_File_1O7o4z",
-          "caption": "",
-          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -3736,5 +3736,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T05:45:13.409Z"
+  "updatedAt": "2026-08-21T05:45:49.686Z"
 }
