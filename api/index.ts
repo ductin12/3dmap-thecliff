@@ -18,15 +18,59 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
 });
 
+// Diagnostic Storage Status
+app.get("/api/status", async (_req, res) => {
+  const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  
+  let kvConnected = false;
+  let kvError = null;
+  if (kvUrl && kvToken) {
+    try {
+      const testRes = await fetch(kvUrl, {
+        method: 'POST',
+        headers: { 
+          Authorization: `Bearer ${kvToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(["PING"])
+      });
+      if (testRes.ok) {
+        const pingData = await testRes.json();
+        if (pingData.result === "PONG" || pingData.result) {
+          kvConnected = true;
+        }
+      }
+    } catch (e: any) {
+      kvError = e.message;
+    }
+  }
+
+  return res.json({
+    status: "ok",
+    has_kv_configured: !!(kvUrl && kvToken),
+    kv_connected: kvConnected,
+    kv_error: kvError,
+    has_github_token: !!ghToken,
+    active_driver: kvConnected ? 'Vercel KV / Upstash Redis' : (ghToken ? 'GitHub API Sync' : 'Local / Browser Cache')
+  });
+});
+
 // Cloud Storage / Database Helpers for Vercel Serverless
 async function getCloudData(): Promise<any | null> {
-  // 1. Upstash Redis / Vercel KV via REST API
+  // 1. Upstash Redis / Vercel KV via REST API Command Array
   const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (kvUrl && kvToken) {
     try {
-      const res = await fetch(`${kvUrl}/get/cliff_resort_database_v2`, {
-        headers: { Authorization: `Bearer ${kvToken}` }
+      const res = await fetch(kvUrl, {
+        method: 'POST',
+        headers: { 
+          Authorization: `Bearer ${kvToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(["GET", "cliff_resort_database_v2"])
       });
       if (res.ok) {
         const json = await res.json();
@@ -60,21 +104,24 @@ async function getCloudData(): Promise<any | null> {
 }
 
 async function saveCloudData(dataToSave: any): Promise<{ savedToCloud: boolean; driver?: string }> {
-  // 1. Upstash Redis / Vercel KV via REST API
+  // 1. Upstash Redis / Vercel KV via REST API Command Array
   const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (kvUrl && kvToken) {
     try {
-      const res = await fetch(`${kvUrl}/set/cliff_resort_database_v2`, {
+      const res = await fetch(kvUrl, {
         method: 'POST',
         headers: { 
           Authorization: `Bearer ${kvToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(dataToSave)
+        body: JSON.stringify(["SET", "cliff_resort_database_v2", JSON.stringify(dataToSave)])
       });
       if (res.ok) {
-        return { savedToCloud: true, driver: 'Upstash / Vercel KV' };
+        const result = await res.json();
+        if (result.result === "OK" || result.result) {
+          return { savedToCloud: true, driver: 'Upstash / Vercel KV' };
+        }
       }
     } catch (e) {
       console.warn("KV save error:", e);
@@ -86,7 +133,6 @@ async function saveCloudData(dataToSave: any): Promise<{ savedToCloud: boolean; 
   const ghRepo = process.env.GITHUB_REPO || 'ductin12/3dmap-thecliff';
   if (ghToken) {
     try {
-      // Get current file sha
       const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data/database.json`, {
         headers: {
           Authorization: `Bearer ${ghToken}`,

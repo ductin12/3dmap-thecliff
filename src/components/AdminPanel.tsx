@@ -107,6 +107,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     }
   }, [resortConfig]);
 
+  // Storage Status State
+  const [storageInfo, setStorageInfo] = useState<{
+    has_kv_configured?: boolean;
+    kv_connected?: boolean;
+    active_driver?: string;
+    has_github_token?: boolean;
+  }>({});
+
+  React.useEffect(() => {
+    fetch('/api/status')
+      .then(res => res.json())
+      .then(data => setStorageInfo(data))
+      .catch(() => {});
+  }, []);
+
   React.useEffect(() => {
     fetch('https://tts.thecliff.io.vn/voices')
       .then(res => res.json())
@@ -636,9 +651,27 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <Sliders className="w-5 h-5 text-[#C5A059]" />
             </div>
             <div>
-              <span className="px-2 py-0.5 bg-blue-50 text-[#1A365D] text-[10px] font-bold uppercase tracking-widest rounded">
-                Admin Control
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 bg-blue-50 text-[#1A365D] text-[10px] font-bold uppercase tracking-widest rounded">
+                  Admin Control
+                </span>
+                {storageInfo.kv_connected ? (
+                  <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-200" title="Dữ liệu lưu trữ trên Vercel KV / Cloud Database">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Cloud DB Active
+                  </span>
+                ) : storageInfo.has_github_token ? (
+                  <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full border border-blue-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                    GitHub Sync
+                  </span>
+                ) : (
+                  <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] bg-amber-50 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-200" title="Chưa nhận biến môi trường KV - Hãy bấm Redeploy trên Vercel sau khi tạo Database">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    Cần Redeploy KV
+                  </span>
+                )}
+              </div>
               <h2 className="text-lg md:text-xl font-serif font-bold text-[#1A365D]">
                 Quản Lý Bản Đồ 3D - The Cliff Resort
               </h2>
