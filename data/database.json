@@ -3071,10 +3071,340 @@
       ],
       "images": [
         {
-          "id": "img-16-1",
-          "url": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop",
-          "title": "Phòng Gym",
-          "caption": "Nơi duy trì vóc dáng tràn đầy năng lượng"
+          "id": "img-gdrive-1787286025386-10oi6",
+          "url": "https://lh3.googleusercontent.com/d/11ogfWlchJ_ybo_5C4B0eQjeekt8U1Aql=w2048",
+          "title": "1",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-x4603",
+          "url": "https://lh3.googleusercontent.com/d/1qkvjKJ5gzEWRNbp76tHFg7cRYuxdtqQj=w2048",
+          "title": "10",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-me3gs",
+          "url": "https://lh3.googleusercontent.com/d/1ASAgm0tISlT-LyLDenPHQy9HTE3DmMD9=w2048",
+          "title": "11",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-i3z50",
+          "url": "https://lh3.googleusercontent.com/d/1wUMcOkDYyoQrLC3r3A637K1TDKvKcCwt=w2048",
+          "title": "2",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-ex4cm",
+          "url": "https://lh3.googleusercontent.com/d/1ru7XvNRP5Z1qk-5Y38Xej19KqjlyKANe=w2048",
+          "title": "3",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-8g7i8",
+          "url": "https://lh3.googleusercontent.com/d/1oZZD9-ns2nQQRqlxYJSIpWE3ZxPke8bx=w2048",
+          "title": "4",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-oxjex",
+          "url": "https://lh3.googleusercontent.com/d/1L3uUf73yV-UjKzkttH77V7vhmIWK9VAK=w2048",
+          "title": "5",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-8160t",
+          "url": "https://lh3.googleusercontent.com/d/1mplvNydUm89JXwfDXWvGkUXR2Ny-G8sP=w2048",
+          "title": "6",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-u2ky4",
+          "url": "https://lh3.googleusercontent.com/d/1q_L6lYX4wX4AbJWPKtMFWu2O9v1hNxYs=w2048",
+          "title": "7",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-xtzwl",
+          "url": "https://lh3.googleusercontent.com/d/1vGWml8ib_oP7ww7zePrQm1WfSZ0cnFQy=w2048",
+          "title": "8",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-8nbdv",
+          "url": "https://lh3.googleusercontent.com/d/18IrKY2BMPFPZ5VaU4UO4DYdmn2P7YVet=w2048",
+          "title": "9",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-ughfs",
+          "url": "https://lh3.googleusercontent.com/d/1iMTDErPM_hYE6Y-4ajjEnuefGy6jBi8G=w2048",
+          "title": "IMG_9046",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-9nshp",
+          "url": "https://lh3.googleusercontent.com/d/1J9nQ_uctrHYFN_CvOqSw0mrjg_oSVC5I=w2048",
+          "title": "IMG_9047",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-o4pqv",
+          "url": "https://lh3.googleusercontent.com/d/1k7ug6cIw17n2EvxNDz_Ohm42_Ehx8zsc=w2048",
+          "title": "IMG_9048",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-1u75c",
+          "url": "https://lh3.googleusercontent.com/d/1pxfBEmgPdDrhrO7kOmvLXYjPfBj6tFRS=w2048",
+          "title": "IMG_9049",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-00b9d",
+          "url": "https://lh3.googleusercontent.com/d/1o4xkMdUlT818Cg4AXZY0HyVYdZdRqrQu=w2048",
+          "title": "IMG_9050",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-jkcsv",
+          "url": "https://lh3.googleusercontent.com/d/12W9scWG-fxGIRbh3ES0lRgfQe1i7W2ac=w2048",
+          "title": "IMG_9051",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-5gn06",
+          "url": "https://lh3.googleusercontent.com/d/1JAtbcVZTtxxtqLMWAHZ4aDz1Rbak0xY1=w2048",
+          "title": "IMG_9054",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-hwjlp",
+          "url": "https://lh3.googleusercontent.com/d/19olg5iLL0V_4ncHSrQCzQ8bjhyV-WhwS=w2048",
+          "title": "IMG_9055",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-wjtxu",
+          "url": "https://lh3.googleusercontent.com/d/1FSOtqWlsFqZ_aXPKGru88D1YfyP-Eayt=w2048",
+          "title": "IMG_9056",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-go0zv",
+          "url": "https://lh3.googleusercontent.com/d/14EUpmgvs82dQSAtis0UVwoZZm92nR0XB=w2048",
+          "title": "IMG_9057",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-vpk9q",
+          "url": "https://lh3.googleusercontent.com/d/1UfCBLivpcmrJhwJSbv1yMzJ_cqHDt6H4=w2048",
+          "title": "IMG_9058",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-08uo2",
+          "url": "https://lh3.googleusercontent.com/d/1rsmIZmKfFN4mpNc0TakezLc2Knm5oqPM=w2048",
+          "title": "IMG_9059",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-uq9dw",
+          "url": "https://lh3.googleusercontent.com/d/1JHg7leDZojtKYoLZ0SAPVuYpcBRGL5qL=w2048",
+          "title": "IMG_9060",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-cz9zq",
+          "url": "https://lh3.googleusercontent.com/d/14Fojmoq86WLQPzgGFWsiLnlWEZf-4zTq=w2048",
+          "title": "IMG_9061",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-auug9",
+          "url": "https://lh3.googleusercontent.com/d/1nl_VgzOpWyXunGicjLchBI1zwndZvMsG=w2048",
+          "title": "IMG_9062",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-zslr6",
+          "url": "https://lh3.googleusercontent.com/d/1jmitNcSLvjPNUUffD0bOoyvFQkBemuAv=w2048",
+          "title": "IMG_9067",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-gve1l",
+          "url": "https://lh3.googleusercontent.com/d/1NxFgN2M_WHoZZNbS64dtIWYZTdU1rAnT=w2048",
+          "title": "IMG_9068",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-d4kv5",
+          "url": "https://lh3.googleusercontent.com/d/1FQ2T3-f6exZ46Va4YU3aBvkv2oY55B1f=w2048",
+          "title": "IMG_9069",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-cyfrp",
+          "url": "https://lh3.googleusercontent.com/d/1ViWNx-9mFyDtiO_dZSNnDlkPObEoOMDl=w2048",
+          "title": "IMG_9070",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-rdgxn",
+          "url": "https://lh3.googleusercontent.com/d/1tuhZ7vz6iVPUJxqMc2Q4XKVXUjCJvZoh=w2048",
+          "title": "IMG_9072",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-521cu",
+          "url": "https://lh3.googleusercontent.com/d/1MB7ddfLUag0ipntEVMH_czkHfGpLYdfG=w2048",
+          "title": "IMG_9073",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-17foh",
+          "url": "https://lh3.googleusercontent.com/d/1shqwBtFsZ_DTmKlwZSrWUJoOgcjtf6AF=w2048",
+          "title": "IMG_9079",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-pmtrn",
+          "url": "https://lh3.googleusercontent.com/d/1Vq1eAfGH4cJN7vN_KbMXsX3fvfV-TSHg=w2048",
+          "title": "IMG_9082",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-bmyd6",
+          "url": "https://lh3.googleusercontent.com/d/1pi4SD95m4d8aq89TR6Q79--NV8-EmGAk=w2048",
+          "title": "IMG_9084",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-q1a9b",
+          "url": "https://lh3.googleusercontent.com/d/1Akgf_3w513nzoKYbOmSypsO5Eafzx_Rg=w2048",
+          "title": "IMG_9087",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-y4coc",
+          "url": "https://lh3.googleusercontent.com/d/1v-9YjS8vm3dW20xm4K1svE0QYrGkzPAt=w2048",
+          "title": "IMG_9088",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-elbmi",
+          "url": "https://lh3.googleusercontent.com/d/1vUy_jW_0bUQ2vmSX_HQLNJruwZIbMCRn=w2048",
+          "title": "IMG_9090",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-jyw68",
+          "url": "https://lh3.googleusercontent.com/d/1q_JFBICETzlDJdP5wY549g5eMDMhAfiK=w2048",
+          "title": "IMG_9091",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-j4ep5",
+          "url": "https://lh3.googleusercontent.com/d/1MYvJlGb0ctsd4TM2tUhMzJdJdEF4PYj1=w2048",
+          "title": "IMG_9093",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-b239r",
+          "url": "https://lh3.googleusercontent.com/d/1qdSuXSdzwCNAC47TVHnZN2gHR3-HedRr=w2048",
+          "title": "IMG_9099",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-ilnfw",
+          "url": "https://lh3.googleusercontent.com/d/1cGxwzHqrptuL5pCDjULbZ1U76NiBkcn4=w2048",
+          "title": "IMG_9101",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-c7ts1",
+          "url": "https://lh3.googleusercontent.com/d/1LvhmrtE3IHTGtMMA8kiniI6XGANXqML8=w2048",
+          "title": "IMG_9116",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-4fzpf",
+          "url": "https://lh3.googleusercontent.com/d/1XsfRP1chDvcG1t8ZQI6AseAuzIZvIdn3=w2048",
+          "title": "IMG_9117",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-z4ack",
+          "url": "https://lh3.googleusercontent.com/d/1zlv8p5WZmmGS7ejtRFYQIhdHbwfywXxI=w2048",
+          "title": "IMG_9118",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-1znqi",
+          "url": "https://lh3.googleusercontent.com/d/1ee2kVcgAQ2UCQO5MSDlcjEx_6M7a4-m1=w2048",
+          "title": "IMG_9121",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-klxkk",
+          "url": "https://lh3.googleusercontent.com/d/1h8IZ0KjDePGycCGk7QA9isk9vTo7ZRIr=w2048",
+          "title": "IMG_9122",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787286025386-1pbmj",
+          "url": "https://lh3.googleusercontent.com/d/1vv670rUEHU7JgJEbh1flsSNc1FtiTn9v=w2048",
+          "title": "IMG_9124",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/gym/"
@@ -3176,5 +3506,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:17:55.382Z"
+  "updatedAt": "2026-08-21T04:20:26.460Z"
 }
