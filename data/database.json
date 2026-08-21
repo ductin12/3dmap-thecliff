@@ -533,12 +533,12 @@
     },
     {
       "id": "loc-5-6",
-      "code": "5, 6",
-      "title": "TERRA / VERDE CONDOS",
+      "code": "5",
+      "title": "TERRA  OCEAN VIEW",
       "subtitle": "Căn Hộ Nghỉ Dưỡng Cao Cấp Sườn Đồi",
       "category": "accommodation",
       "x": 86.5,
-      "y": 38.5,
+      "y": 40.1,
       "description": "Dãy căn hộ Terra & Verde được xếp tầng uốn lượn theo sườn đồi tự nhiên. Điểm đặc trưng là ban công siêu rộng tích hợp bồn bơi Jacuzzi sủi bọt ngắm nhìn biển từ trên cao.",
       "highlights": [
         "Ban công rộng lớn có Jacuzzi ngoạn mục",
@@ -3697,5 +3697,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T04:48:26.177Z"
+  "updatedAt": "2026-08-21T04:49:25.147Z"
 }
