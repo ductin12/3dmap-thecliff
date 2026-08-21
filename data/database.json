@@ -3705,7 +3705,7 @@
       "category": "accommodation",
       "x": 60,
       "y": 59,
-      "description": "Nhập thông tin chi tiết khu vực tại đây...",
+      "description": "Sảnh Lobby - với sức chứa lên đến 100 khách vào các ngày cao điểm, là nơi hỗ trợ khách hàng thực hiện các thủ tục: check in, check out. Với đội ngũ lễ tân chuyên nghiệp, thân thiện và vui vẻ luôn là điểm mạnh và để lại những ấn tượng khó phai trong lòng du khách. ",
       "highlights": [
         "Tiện ích nổi bật 1",
         "Tiện ích nổi bật 2"
@@ -3720,7 +3720,11 @@
       "amenities": [
         "Wifi",
         "Máy lạnh"
-      ]
+      ],
+      "bookingCtaText": "Liên Hệ Lễ Tân",
+      "openingHours": "24/7",
+      "capacity": "100 khách",
+      "bookingLink": "https://thecliffresort.com.vn/"
     }
   ],
   "config": {
@@ -3754,5 +3758,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-21T07:22:36.059Z"
+  "updatedAt": "2026-08-21T07:25:02.052Z"
 }
