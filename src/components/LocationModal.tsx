@@ -7,9 +7,7 @@ import {
   ChevronRight, 
   Maximize, 
   Volume2, 
-  VolumeX, 
   Clock, 
-  MapPin, 
   Users, 
   Eye, 
   CheckCircle2, 
@@ -18,12 +16,7 @@ import {
   Share2,
   Navigation,
   Sparkles,
-  Play,
-  Pause,
-  Square,
   Loader2,
-  Radio,
-  Sliders,
   Video
 } from 'lucide-react';
 
@@ -35,6 +28,134 @@ interface LocationModalProps {
   defaultSpeechRate?: number;
   isTourMode?: boolean;
 }
+
+// Helper to check if a slide is a video
+function isMediaVideo(slide?: { url?: string; mediaType?: string }): boolean {
+  if (!slide || !slide.url) return false;
+  if (slide.mediaType === 'video') return true;
+  const urlLower = slide.url.toLowerCase();
+  if (
+    urlLower.includes('youtube.com') ||
+    urlLower.includes('youtu.be') ||
+    urlLower.match(/\.(mp4|mov|avi|webm|mkv|wmv|flv|m4v|3gp)(\?|$)/) ||
+    urlLower.includes('drive.google.com') ||
+    urlLower.includes('googleusercontent.com')
+  ) {
+    if (!urlLower.match(/\.(jpg|jpeg|png|webp|gif|svg|heic)(\?|$)/)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Helper to extract Google Drive file ID from any URL format
+function getGoogleDriveId(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const match = url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=download&)?id=)|lh3\.googleusercontent\.com\/d\/|drive\.usercontent\.google\.com\/download\?id=)([a-zA-Z0-9_-]{20,})/);
+  if (match) return match[1];
+  const genericMatch = url.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+  if (genericMatch) return genericMatch[1];
+  return null;
+}
+
+// Dedicated Video Slide Player Component
+const VideoSlidePlayer: React.FC<{
+  url: string;
+  title?: string;
+  isFullscreen?: boolean;
+}> = ({ url, title, isFullscreen = false }) => {
+  const [useIframeFallback, setUseIframeFallback] = useState(false);
+
+  // YouTube detection
+  const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+  let ytId = '';
+  if (isYouTube) {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+    if (match) ytId = match[1];
+  }
+
+  if (isYouTube && ytId) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=0&loop=1&playlist=${ytId}&playsinline=1`}
+        title={title || "YouTube video player"}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        className="w-full h-full border-0"
+      />
+    );
+  }
+
+  const gdriveId = getGoogleDriveId(url);
+
+  // Google Drive Video Handling
+  if (gdriveId) {
+    if (useIframeFallback) {
+      return (
+        <div className="relative w-full h-full bg-black flex flex-col items-center justify-center">
+          <iframe
+            src={`https://drive.google.com/file/d/${gdriveId}/preview`}
+            title={title || "Google Drive Video"}
+            className="w-full h-full border-0"
+            allow="autoplay; fullscreen; encrypted-media"
+            allowFullScreen
+          />
+          <div className="absolute top-2.5 right-12 z-20">
+            <a
+              href={`https://drive.google.com/file/d/${gdriveId}/view?usp=sharing`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2.5 py-1 rounded-lg bg-black/60 hover:bg-black/80 text-white text-[10px] font-semibold backdrop-blur-md border border-white/20 flex items-center gap-1 shadow-md transition-all"
+            >
+              <span>Mở Drive</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative w-full h-full bg-black flex items-center justify-center">
+        <video
+          key={gdriveId}
+          controls
+          playsInline
+          autoPlay
+          muted
+          loop
+          className="w-full h-full object-contain"
+          onError={() => {
+            console.warn("Direct video stream failed for Google Drive video, switching to iframe player...");
+            setUseIframeFallback(true);
+          }}
+        >
+          <source src={`https://drive.usercontent.google.com/download?id=${gdriveId}&export=download&authuser=0`} type="video/mp4" />
+          <source src={`https://drive.google.com/uc?export=download&id=${gdriveId}`} type="video/mp4" />
+          <source src={`https://lh3.googleusercontent.com/d/${gdriveId}`} type="video/mp4" />
+          Trình duyệt của bạn không hỗ trợ phát video này.
+        </video>
+      </div>
+    );
+  }
+
+  // Direct MP4 / WebM / Local video URL
+  return (
+    <div className="relative w-full h-full bg-black flex items-center justify-center">
+      <video
+        key={url}
+        src={url}
+        controls
+        playsInline
+        autoPlay
+        muted
+        loop
+        className="w-full h-full object-contain bg-black"
+      />
+    </div>
+  );
+};
 
 export const LocationModal: React.FC<LocationModalProps> = ({
   location,
@@ -54,8 +175,6 @@ export const LocationModal: React.FC<LocationModalProps> = ({
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [voiceStyle, setVoiceStyle] = useState<string>(defaultVoiceStyle || '');
   const [speechRate, setSpeechRate] = useState<number>(defaultSpeechRate);
-  const [activeEngine, setActiveEngine] = useState<'ai' | 'web' | null>(null);
-  const [showAudioPanel, setShowAudioPanel] = useState(false);
 
   useEffect(() => {
     setVoiceStyle(defaultVoiceStyle);
@@ -68,7 +187,6 @@ export const LocationModal: React.FC<LocationModalProps> = ({
     setIsPlaying(false);
     setIsPaused(false);
     setIsLoadingAudio(false);
-    setActiveEngine(null);
     if (!isTourMode) {
       globalAudioNarrator.stop();
     }
@@ -99,25 +217,21 @@ export const LocationModal: React.FC<LocationModalProps> = ({
     setActiveSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  // Start or toggle AI audio speech narration
+  // Start or toggle AI audio speech narration directly
   const handleTogglePlayAudio = async () => {
     if (isPlaying) {
-      if (isPaused) {
-        globalAudioNarrator.resume();
-        setIsPaused(false);
-      } else {
-        globalAudioNarrator.pause();
-        setIsPaused(true);
-      }
+      globalAudioNarrator.stop();
+      setIsPlaying(false);
+      setIsPaused(false);
+      setIsLoadingAudio(false);
       return;
     }
 
     const narrationText = location.description;
     
     setIsLoadingAudio(true);
-    setShowAudioPanel(true);
 
-    const result = await globalAudioNarrator.speak({
+    await globalAudioNarrator.speak({
       id: location.id,
       text: narrationText,
       title: location.title,
@@ -143,15 +257,6 @@ export const LocationModal: React.FC<LocationModalProps> = ({
         setIsLoadingAudio(loading);
       }
     });
-
-    setActiveEngine(result.type);
-  };
-
-  const handleStopAudio = () => {
-    globalAudioNarrator.stop();
-    setIsPlaying(false);
-    setIsPaused(false);
-    setIsLoadingAudio(false);
   };
 
   const handleCopyLink = () => {
@@ -183,14 +288,14 @@ export const LocationModal: React.FC<LocationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/50 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center sm:p-3 md:p-6 bg-black/50 backdrop-blur-sm animate-fadeIn">
       {/* Modal Container */}
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#2D3748]">
+      <div className="relative w-full h-[95vh] md:h-auto md:max-h-[92vh] max-w-4xl bg-white border border-gray-100 rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#2D3748] transition-transform animate-slideUp md:animate-none">
         
         {/* Modal Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 bg-[#FDFCFB] border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 bg-[#FDFCFB] border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-xl bg-[#C5A059] text-white font-extrabold text-sm flex items-center justify-center shadow-md">
+            <span className="w-10 h-10 rounded-xl bg-[#C5A059] text-white font-extrabold text-sm flex items-center justify-center shadow-md shrink-0">
               #{location.code}
             </span>
             <div>
@@ -198,14 +303,8 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                 <span className="px-2 py-0.5 bg-blue-50 text-[#1A365D] text-[10px] font-bold uppercase tracking-widest rounded">
                   Luxury Zone
                 </span>
-                {activeEngine && (
-                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded flex items-center gap-1 border border-emerald-200">
-                    <Sparkles className="w-3 h-3 text-emerald-600" />
-                    {activeEngine === 'ai' ? 'Giọng AI Gemini' : 'Giọng Chuẩn Vi-VN'}
-                  </span>
-                )}
               </div>
-              <h2 className="text-xl md:text-2xl font-serif font-bold text-[#1A365D] leading-tight mt-0.5">
+              <h2 className="text-lg md:text-2xl font-serif font-bold text-[#1A365D] leading-tight mt-0.5">
                 {location.title}
               </h2>
             </div>
@@ -214,31 +313,29 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           <div className="flex items-center gap-2">
             {/* Audio Guide Quick Toggle Button */}
             <button
-              onClick={() => {
-                setShowAudioPanel((prev) => !prev);
-                if (!isPlaying && !showAudioPanel) {
-                  handleTogglePlayAudio();
-                }
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs ${
+              onClick={handleTogglePlayAudio}
+              className={`p-2.5 rounded-xl transition-all border shadow-xs ${
                 isPlaying
-                  ? 'bg-amber-500 text-white animate-pulse shadow-md'
-                  : showAudioPanel
-                  ? 'bg-[#1A365D] text-white'
-                  : 'bg-[#F7FAFC] hover:bg-amber-50 text-[#1A365D] border border-gray-200'
+                  ? 'bg-amber-500 text-white border-amber-500 shadow-md animate-pulse'
+                  : isLoadingAudio
+                  ? 'bg-amber-50 text-amber-600 border-amber-200'
+                  : 'bg-[#F7FAFC] hover:bg-amber-50 text-gray-600 hover:text-[#C5A059] border-gray-200'
               }`}
-              title="Thuyết minh giọng nói Tiếng Việt chuẩn AI"
+              title={isPlaying ? "Dừng thuyết minh" : "Nghe thuyết minh"}
             >
-              <Volume2 className={`w-4 h-4 ${isPlaying ? 'text-white' : 'text-[#C5A059]'}`} />
-              <span className="hidden sm:inline">
-                {isLoadingAudio ? 'Đang tạo audio...' : isPlaying ? 'Đang phát AI...' : 'Thuyết Minh AI'}
-              </span>
+              {isLoadingAudio ? (
+                <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
+              ) : isPlaying ? (
+                <Volume2 className="w-4 h-4 text-white" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-[#C5A059]" />
+              )}
             </button>
 
             {/* Share Link Button */}
             <button
               onClick={handleCopyLink}
-              className="p-2 rounded-xl bg-[#F7FAFC] hover:bg-gray-100 text-gray-600 border border-gray-200 transition-colors"
+              className="p-2.5 rounded-xl bg-[#F7FAFC] hover:bg-gray-100 text-gray-600 border border-gray-200 transition-colors"
               title="Sao chép liên kết chia sẻ"
             >
               <Share2 className="w-4 h-4" />
@@ -247,167 +344,43 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             {/* Close Modal Button */}
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-[#F7FAFC] hover:bg-gray-200 text-gray-600 border border-gray-200 transition-colors ml-1"
+              className="p-2.5 rounded-xl bg-[#F7FAFC] hover:bg-gray-200 text-gray-600 border border-gray-200 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* AI AUDIO NARRATION CONTROL PANEL (Expandable Bar) */}
-        {showAudioPanel && (
-          <div className="bg-slate-900 text-white p-4 border-b border-slate-800 space-y-3 animate-fadeIn">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              
-              {/* Play / Pause / Stop Controls */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleTogglePlayAudio}
-                  disabled={isLoadingAudio}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C5A059] hover:bg-[#B38E47] text-white font-bold transition-transform active:scale-95 disabled:opacity-50 shadow-md"
-                >
-                  {isLoadingAudio ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : isPlaying && !isPaused ? (
-                    <Pause className="w-5 h-5 fill-current" />
-                  ) : (
-                    <Play className="w-5 h-5 fill-current ml-0.5" />
-                  )}
-                </button>
-
-                {isPlaying && (
-                  <button
-                    onClick={handleStopAudio}
-                    className="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 text-gray-300 transition-colors"
-                    title="Dừng thuyết minh"
-                  >
-                    <Square className="w-4 h-4 fill-current" />
-                  </button>
-                )}
-
-                {/* Animated Soundwave Visualizer */}
-                {isPlaying && !isPaused && (
-                  <div className="flex items-center gap-1 px-3 py-1 bg-slate-800/80 rounded-full border border-slate-700/60">
-                    <span className="w-1 h-3 bg-[#C5A059] rounded-full animate-bounce"></span>
-                    <span className="w-1 h-5 bg-[#C5A059] rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                    <span className="w-1 h-2 bg-[#C5A059] rounded-full animate-bounce [animation-delay:0.4s]"></span>
-                    <span className="w-1 h-4 bg-[#C5A059] rounded-full animate-bounce [animation-delay:0.1s]"></span>
-                    <span className="text-[11px] text-amber-300 font-semibold ml-1">Đang thuyết minh...</span>
-                  </div>
-                )}
-
-                {isLoadingAudio && (
-                  <span className="text-xs text-amber-200 animate-pulse font-medium">
-                    ✨ Gemini AI đang tạo bài đọc truyền cảm...
-                  </span>
-                )}
-              </div>
-
-              {/* Voice & Speed Selectors */}
-              <div className="flex flex-wrap items-center gap-3 text-xs w-full sm:w-auto justify-between sm:justify-end">
-                {/* Voice Selection - Removed as it uses the globally configured voice from Admin */}
-
-                {/* Speed Selection */}
-                <div className="flex items-center gap-1 bg-slate-800 px-2 py-1 rounded-xl border border-slate-700">
-                  <span className="text-gray-400 text-[11px] mr-1 font-medium">Tốc độ:</span>
-                  {[0.85, 1.0, 1.15].map((rate) => (
-                    <button
-                      key={rate}
-                      type="button"
-                      onClick={() => setSpeechRate(rate)}
-                      className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${
-                        speechRate === rate
-                          ? 'bg-amber-400 text-slate-950'
-                          : 'text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      {rate === 0.85 ? '0.8x' : rate === 1.0 ? '1.0x' : '1.2x'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )}
-
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-5 md:space-y-6 custom-scrollbar">
           
           {/* SLIDE IMAGE CAROUSEL SECTION */}
           <div className="relative group w-full aspect-video rounded-2xl overflow-hidden bg-black border border-gray-200 shadow-md flex items-center justify-center">
-            {(() => {
-              const isVideo = currentSlide.mediaType === 'video';
-              const isYouTube = isVideo && (currentSlide.url.includes('youtube.com') || currentSlide.url.includes('youtu.be'));
-              let ytId = '';
-              if (isYouTube) {
-                 const match = currentSlide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                 if (match) ytId = match[1];
-              }
-
-              // Google Drive Video Detection
-              const isGoogleDrive = isVideo && (currentSlide.url.includes('drive.google.com') || currentSlide.url.includes('googleusercontent.com'));
-              let gdriveId = '';
-              if (isGoogleDrive) {
-                const match = currentSlide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
-                if (match) gdriveId = match[1];
-              }
-
-              if (isVideo) {
-                 if (isYouTube && ytId) {
-                   return (
-                     <iframe
-                       src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}`}
-                       title="YouTube video player"
-                       frameBorder="0"
-                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                       allowFullScreen
-                       className="w-full h-full"
-                     ></iframe>
-                   );
-                 }
-                 if (isGoogleDrive && gdriveId) {
-                   return (
-                     <iframe
-                       src={`https://drive.google.com/file/d/${gdriveId}/preview`}
-                       title={currentSlide.title || "Google Drive Video"}
-                       className="w-full h-full border-0"
-                       allow="autoplay; fullscreen; encrypted-media"
-                       allowFullScreen
-                     ></iframe>
-                   );
-                 }
-                 return (
-                   <video src={currentSlide.url} controls autoPlay muted loop className="w-full h-full object-contain" />
-                 );
-              }
-              return (
-                <img
-                  src={currentSlide.url}
-                  alt={currentSlide.title || location.title}
-                  className="w-full h-full object-cover transition-all duration-500"
-                  referrerPolicy="no-referrer"
-                />
-              );
-            })()}
-            
-            {/* Image Gradient Dark Overlay for Caption readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 pointer-events-none" />
+            {isMediaVideo(currentSlide) ? (
+              <VideoSlidePlayer url={currentSlide.url} title={currentSlide.title || location.title} />
+            ) : (
+              <img
+                src={currentSlide.url}
+                alt={currentSlide.title || location.title}
+                className="w-full h-full object-cover transition-all duration-500"
+                referrerPolicy="no-referrer"
+              />
+            )}
 
             {/* Slide Navigation Arrows */}
             {slides.length > 1 && (
               <>
                 <button
                   onClick={handlePrevSlide}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 hover:bg-white text-[#1A365D] border border-gray-200 shadow-lg backdrop-blur-md transition-all hover:scale-110"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 shadow-md active:scale-95 z-10"
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={handleNextSlide}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 hover:bg-white text-[#1A365D] border border-gray-200 shadow-lg backdrop-blur-md transition-all hover:scale-110"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-9 md:h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 shadow-md active:scale-95 z-10"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </>
             )}
@@ -415,59 +388,40 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             {/* Lightbox Fullscreen Button */}
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute top-3 right-3 p-2 rounded-xl bg-white/80 hover:bg-white text-[#1A365D] border border-gray-200 shadow-md backdrop-blur-md transition-all"
-              title="Xem ảnh phóng to"
+              className="absolute top-2.5 right-2.5 w-8 h-8 md:w-9 md:h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 shadow-md active:scale-95 z-10"
+              title="Xem toàn màn hình"
             >
-              <Maximize className="w-4 h-4" />
+              <Maximize className="w-3.5 h-3.5" />
             </button>
 
-            {/* Active Slide Info & Indicators */}
-            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 pointer-events-none">
-              <div>
-                {currentSlide.title && (
-                  <h3 className="text-sm font-serif font-bold text-white drop-shadow-md">
-                    {currentSlide.title}
-                  </h3>
-                )}
-                {currentSlide.caption && (
-                  <p className="text-xs text-gray-200 drop-shadow-md line-clamp-1">
-                    {currentSlide.caption}
-                  </p>
-                )}
-              </div>
-
-              {/* Slide Counter Badge */}
-              {slides.length > 1 && (
-                <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-gray-200 text-xs font-bold text-[#1A365D] shadow-sm">
+            {/* Slide Counter Badge */}
+            {slides.length > 1 && (
+              <div className="absolute bottom-2.5 right-2.5 pointer-events-none z-10">
+                <span className="px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-[11px] font-semibold text-white/90 shadow-sm">
                   {activeSlideIndex + 1} / {slides.length}
                 </span>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Slide Thumbnails Row */}
           {slides.length > 1 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
               {slides.map((slide, idx) => {
-                const isVideo = slide.mediaType === 'video';
+                const isVideo = isMediaVideo(slide);
                 const isYouTube = isVideo && (slide.url.includes('youtube.com') || slide.url.includes('youtu.be'));
                 let ytId = '';
                 if (isYouTube) {
                    const match = slide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
                    if (match) ytId = match[1];
                 }
-                const isGoogleDrive = isVideo && (slide.url.includes('drive.google.com') || slide.url.includes('googleusercontent.com'));
-                let gdriveId = '';
-                if (isGoogleDrive) {
-                  const match = slide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
-                  if (match) gdriveId = match[1];
-                }
+                const gdriveId = getGoogleDriveId(slide.url);
                 
                 return (
                 <button
                   key={slide.id || idx}
                   onClick={() => setActiveSlideIndex(idx)}
-                  className={`relative flex-shrink-0 w-20 h-14 rounded-xl overflow-hidden border-2 transition-all bg-gray-900 ${
+                  className={`relative flex-shrink-0 w-16 h-12 md:w-20 md:h-14 rounded-xl overflow-hidden border-2 transition-all bg-gray-900 ${
                     activeSlideIndex === idx
                       ? 'border-[#1A365D] ring-2 ring-[#1A365D]/30 scale-105'
                       : 'border-gray-200 opacity-60 hover:opacity-100'
@@ -476,11 +430,14 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                   {isVideo ? (
                     isYouTube && ytId ? (
                       <img src={`https://img.youtube.com/vi/${ytId}/default.jpg`} className="w-full h-full object-cover opacity-80" />
-                    ) : isGoogleDrive && gdriveId ? (
+                    ) : gdriveId ? (
                       <img 
                         src={`https://drive.google.com/thumbnail?id=${gdriveId}&sz=w200`} 
                         alt={slide.title || 'Video Thumbnail'}
                         className="w-full h-full object-cover opacity-80" 
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = `https://lh3.googleusercontent.com/d/${gdriveId}=w400`;
+                        }}
                       />
                     ) : (
                       <video src={slide.url} className="w-full h-full object-cover opacity-80" />
@@ -495,7 +452,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                   )}
                   {isVideo && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <Video className="w-4 h-4 text-white" />
+                      <Video className="w-3.5 h-3.5 text-white" />
                     </div>
                   )}
                 </button>
@@ -504,11 +461,11 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           )}
 
           {/* Key Specs Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#F7FAFC] border border-gray-100">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 md:gap-3 p-3.5 md:p-4 rounded-2xl bg-[#F7FAFC] border border-gray-100">
             {location.openingHours && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 font-bold">
-                  <Clock className="w-5 h-5 text-amber-600" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 font-bold shrink-0">
+                  <Clock className="w-4 h-4 text-amber-600" />
                 </div>
                 <div>
                   <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Giờ hoạt động</p>
@@ -518,33 +475,33 @@ export const LocationModal: React.FC<LocationModalProps> = ({
             )}
 
             {location.capacity && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold">
-                  <Users className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold shrink-0">
+                  <Users className="w-4 h-4 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Sức chứa / Quy mô</p>
+                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Sức chứa</p>
                   <p className="text-xs font-bold text-[#1A365D]">{location.capacity}</p>
                 </div>
               </div>
             )}
 
             {location.viewType && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold">
-                  <Eye className="w-5 h-5 text-emerald-600" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold shrink-0">
+                  <Eye className="w-4 h-4 text-emerald-600" />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Hướng nhìn (View)</p>
+                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Hướng nhìn</p>
                   <p className="text-xs font-bold text-[#1A365D]">{location.viewType}</p>
                 </div>
               </div>
             )}
 
             {location.distanceFromLobby && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 font-bold">
-                  <Navigation className="w-5 h-5 text-purple-600" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 font-bold shrink-0">
+                  <Navigation className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
                   <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Vị trí từ Sảnh</p>
@@ -562,16 +519,20 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                 <span>Mô Tả Chi Tiết Khu Vực</span>
               </h3>
 
-              {!showAudioPanel && (
-                <button
-                  type="button"
-                  onClick={handleTogglePlayAudio}
-                  className="text-[11px] text-[#C5A059] hover:underline font-bold flex items-center gap-1"
-                >
+              <button
+                type="button"
+                onClick={handleTogglePlayAudio}
+                className={`text-[11px] font-bold flex items-center gap-1 transition-colors ${
+                  isPlaying ? 'text-amber-600 font-extrabold animate-pulse' : 'text-[#C5A059] hover:underline'
+                }`}
+              >
+                {isLoadingAudio ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
                   <Volume2 className="w-3.5 h-3.5" />
-                  <span>Nghe Giọng Đọc AI</span>
-                </button>
-              )}
+                )}
+                <span>{isPlaying ? 'Dừng đọc' : 'Nghe đọc AI'}</span>
+              </button>
             </div>
 
             <p className="text-sm text-gray-600 leading-relaxed bg-[#FDFCFB] p-4 rounded-2xl border border-gray-100 shadow-xs">
@@ -618,16 +579,16 @@ export const LocationModal: React.FC<LocationModalProps> = ({
         </div>
 
         {/* Modal Footer CTA */}
-        <div className="p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-4 md:p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-[#C5A059]" />
             <span className="text-xs text-gray-600">Lễ Tân / Đặt phòng: <strong className="text-[#1A365D]">{hotline}</strong></span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 ml-auto">
             <button
               onClick={onClose}
-              className="px-5 py-3 rounded-xl bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold transition-colors shadow-xs"
+              className="px-4 md:px-5 py-2.5 md:py-3 rounded-xl bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 text-xs font-bold transition-colors shadow-xs"
             >
               Đóng
             </button>
@@ -636,7 +597,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
               href={location.bookingLink || `tel:${hotline}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#C5A059] hover:bg-[#B38E47] text-white font-bold text-xs shadow-lg hover:shadow-xl transition-all"
+              className="flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 rounded-xl bg-[#C5A059] hover:bg-[#B38E47] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all"
             >
               <span className="uppercase">{getCtaText()}</span>
               <ExternalLink className="w-4 h-4" />
@@ -646,71 +607,68 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 
       </div>
 
-      {/* Lightbox Fullscreen Popup */}
+      {/* Lightbox Fullscreen Popup with Slide Navigation */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-60 bg-black/95 flex items-center justify-center p-4 animate-fadeIn">
+        <div className="fixed inset-0 z-60 bg-black/95 flex items-center justify-center p-2 sm:p-4 animate-fadeIn select-none">
+          {/* Close Button */}
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 p-3 rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors z-70"
+            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-70 backdrop-blur-md border border-white/20"
+            title="Đóng xem ảnh"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
-          <div className="w-full max-w-5xl aspect-video max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black">
-            {(() => {
-              const isVideo = currentSlide.mediaType === 'video';
-              const isYouTube = isVideo && (currentSlide.url.includes('youtube.com') || currentSlide.url.includes('youtu.be'));
-              let ytId = '';
-              if (isYouTube) {
-                const match = currentSlide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-                if (match) ytId = match[1];
-              }
-              const isGoogleDrive = isVideo && (currentSlide.url.includes('drive.google.com') || currentSlide.url.includes('googleusercontent.com'));
-              let gdriveId = '';
-              if (isGoogleDrive) {
-                const match = currentSlide.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
-                if (match) gdriveId = match[1];
-              }
 
-              if (isVideo) {
-                if (isYouTube && ytId) {
-                  return (
-                    <iframe
-                      src={`https://www.youtube.com/embed/${ytId}?autoplay=1`}
-                      title="YouTube video player"
-                      className="w-full h-full border-0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  );
-                }
-                if (isGoogleDrive && gdriveId) {
-                  return (
-                    <iframe
-                      src={`https://drive.google.com/file/d/${gdriveId}/preview`}
-                      title={currentSlide.title || "Google Drive Video"}
-                      className="w-full h-full border-0"
-                      allow="autoplay; fullscreen; encrypted-media"
-                      allowFullScreen
-                    ></iframe>
-                  );
-                }
-                return (
-                  <video src={currentSlide.url} controls autoPlay className="w-full h-full object-contain" />
-                );
-              }
-              return (
-                <img
-                  src={currentSlide.url}
-                  alt={currentSlide.title || location.title}
-                  className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
-                  referrerPolicy="no-referrer"
-                />
-              );
-            })()}
+          {/* Slide Counter in Fullscreen */}
+          {slides.length > 1 && (
+            <div className="absolute top-4 left-4 z-70 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90">
+              {activeSlideIndex + 1} / {slides.length}
+            </div>
+          )}
+
+          {/* Fullscreen Prev Button */}
+          {slides.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrevSlide();
+              }}
+              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
+              title="Ảnh/video trước"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Fullscreen Next Button */}
+          {slides.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNextSlide();
+              }}
+              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
+              title="Ảnh/video tiếp theo"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Main Fullscreen Media Content */}
+          <div className="relative w-full max-w-5xl aspect-video max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black">
+            {isMediaVideo(currentSlide) ? (
+              <VideoSlidePlayer url={currentSlide.url} title={currentSlide.title || location.title} isFullscreen={true} />
+            ) : (
+              <img
+                src={currentSlide.url}
+                alt={currentSlide.title || location.title}
+                className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
+                referrerPolicy="no-referrer"
+              />
+            )}
           </div>
         </div>
       )}
     </div>
   );
 };
-

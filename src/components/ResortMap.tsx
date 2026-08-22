@@ -99,7 +99,7 @@ export const ResortMap: React.FC<ResortMapProps> = ({
     e.preventDefault();
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.88;
     setTransform(prev => {
-      const newScale = Math.min(Math.max(prev.scale * zoomFactor, 0.7), 3.5);
+      const newScale = Math.min(Math.max(prev.scale * zoomFactor, 0.2), 5.0);
       return { ...prev, scale: newScale };
     });
   };
@@ -157,7 +157,7 @@ export const ResortMap: React.FC<ResortMapProps> = ({
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      const newScale = Math.min(Math.max(initialPinchScale * (dist / initialPinchDistance), 0.7), 3.5);
+      const newScale = Math.min(Math.max(initialPinchScale * (dist / initialPinchDistance), 0.2), 5.0);
       setTransform(prev => ({ ...prev, scale: newScale }));
     }
   };
@@ -257,14 +257,14 @@ export const ResortMap: React.FC<ResortMapProps> = ({
       {/* Floating Controls Bar */}
       <div className="absolute bottom-8 left-8 z-20 flex gap-2">
         <button
-          onClick={() => setTransform(p => ({ ...p, scale: Math.min(p.scale * 1.25, 3.5) }))}
+          onClick={() => setTransform(p => ({ ...p, scale: Math.min(p.scale * 1.25, 5.0) }))}
           className="w-11 h-11 bg-white hover:bg-gray-50 text-[#1A365D] rounded-full shadow-lg border border-gray-100 flex items-center justify-center text-xl font-bold transition-transform hover:scale-105"
           title="Phóng to map"
         >
           <ZoomIn className="w-5 h-5 text-[#1A365D]" />
         </button>
         <button
-          onClick={() => setTransform(p => ({ ...p, scale: Math.max(p.scale * 0.8, 0.7) }))}
+          onClick={() => setTransform(p => ({ ...p, scale: Math.max(p.scale * 0.8, 0.2) }))}
           className="w-11 h-11 bg-white hover:bg-gray-50 text-[#1A365D] rounded-full shadow-lg border border-gray-100 flex items-center justify-center text-xl font-bold transition-transform hover:scale-105"
           title="Thu nhỏ map"
         >
@@ -438,7 +438,7 @@ export const ResortMap: React.FC<ResortMapProps> = ({
                 {/* Hover Quick Card Preview Tooltip */}
                 {(isHovered || isSelected) && !isCalibratingPin && (
                   <div
-                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 p-3 rounded-2xl bg-white border border-gray-100 text-[#2D3748] shadow-2xl pointer-events-none transition-all duration-200 animate-fadeIn"
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 md:w-60 p-3 rounded-2xl bg-white border border-gray-100 text-[#2D3748] shadow-2xl pointer-events-none transition-all duration-200 animate-fadeIn hidden md:block"
                     style={{
                       transform: is3DTilted 
                         ? 'translate(-50%, 0) rotateX(-32deg) rotateY(6deg)' 
