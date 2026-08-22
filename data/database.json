@@ -4058,7 +4058,7 @@
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/vuon-chanh-vang/",
-      "bookingCtaText": "+ Xem chi tiết"
+      "bookingCtaText": "Xem chi tiết"
     },
     {
       "id": "loc-1787396574808",
@@ -4229,5 +4229,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:13:30.609Z"
+  "updatedAt": "2026-08-22T11:13:38.042Z"
 }
