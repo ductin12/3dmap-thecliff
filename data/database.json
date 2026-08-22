@@ -3958,7 +3958,15 @@
         "Thanh toán thẻ/QR",
         "Đóng gói quà tặng"
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "img-gdrive-1787377311426-2jtop",
+          "url": "https://drive.google.com/file/d/1Sdo7uy2irdxMTyoEEWLEawewRb9ypu_Z/preview",
+          "title": "Purity at the Lemon Tree Garden Fn - No Text",
+          "caption": "",
+          "mediaType": "video"
+        }
+      ],
       "bookingLink": "https://thecliffresort.com.vn/vuon-chanh-vang/",
       "bookingCtaText": "+ Xem chi tiết"
     }
@@ -3994,5 +4002,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:41:42.814Z"
+  "updatedAt": "2026-08-22T05:41:53.073Z"
 }
