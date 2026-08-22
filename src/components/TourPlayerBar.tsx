@@ -28,17 +28,18 @@ export const TourPlayerBar: React.FC<TourPlayerBarProps> = ({
   
   const currentStep = tourConfig.steps[activeStepIdx];
   const currentLocation = locations.find(l => l.id === currentStep?.locationId);
+  const speechText = currentStep?.narrationScript?.trim() || currentLocation?.description?.trim() || '';
 
   useEffect(() => {
     let isCancelled = false;
 
-    if (isPlaying && currentStep?.narrationScript) {
+    if (isPlaying && speechText) {
       // Use dynamic globalAudioNarrator for TTS API integration
       import('../utils/speechUtils').then(({ globalAudioNarrator }) => {
         if (isCancelled) return;
         globalAudioNarrator.speak({
-          id: `tour-${currentStep.locationId}`,
-          text: currentStep.narrationScript,
+          id: `tour-${currentStep?.locationId || activeStepIdx}`,
+          text: speechText,
           voiceStyle: defaultVoiceStyle,
           speechRate: defaultSpeechRate,
           onEnd: () => {
