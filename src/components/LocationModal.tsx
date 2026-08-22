@@ -87,14 +87,18 @@ const VideoSlidePlayer: React.FC<{
 
   const gdriveId = getGoogleDriveId(url);
 
-  // Google Drive Video Handling
+  // Google Drive Video Handling (clipped top header bar so video is 100% centered with no Google title bar or Mở Drive button)
   if (gdriveId) {
     return (
       <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
         <iframe
           src={`https://drive.google.com/file/d/${gdriveId}/preview`}
           title={title || "Google Drive Video"}
-          className="w-full h-full border-0 object-contain"
+          className="absolute inset-x-0 w-full border-0"
+          style={{
+            top: '-56px',
+            height: 'calc(100% + 56px)',
+          }}
           allow="autoplay; fullscreen; encrypted-media"
           allowFullScreen
         />
