@@ -3920,6 +3920,13 @@
           "title": "MRV00214",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787376655625-p5aeh",
+          "url": "https://drive.google.com/file/d/1CBXM3mAjsMhiBVN01kHzbSw-xlCvkHi7/preview",
+          "title": "demo_OVERVIEW THE CLIFF_08.2026",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "amenities": [
@@ -4156,5 +4163,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:30:43.900Z"
+  "updatedAt": "2026-08-22T05:30:57.406Z"
 }
