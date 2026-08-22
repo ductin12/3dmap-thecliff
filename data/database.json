@@ -1418,13 +1418,6 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787292765343-ux1ms",
-          "url": "https://lh3.googleusercontent.com/d/1mtqGmYxffZEIWX6xbaFsS2bfG_f14dX9=w2048",
-          "title": "DJI_0300",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
           "id": "img-gdrive-1787292765343-fu12c",
           "url": "https://lh3.googleusercontent.com/d/1pTehUrfB2L91Tkfe2aprd7SZIuB2W-wJ=w2048",
           "title": "DJI_0310",
@@ -4195,5 +4188,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:08:33.689Z"
+  "updatedAt": "2026-08-22T11:08:57.953Z"
 }
