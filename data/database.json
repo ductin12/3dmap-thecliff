@@ -1294,16 +1294,16 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787218655501-gklxe",
-          "url": "/data/gdrive/gdrive-1V5hHPt3Q_zjcHcQ6avLNHdTZbYkrjZUm.jpg",
-          "title": "DSC00179",
+          "id": "img-gdrive-1787292833092-xhnsk",
+          "url": "https://lh3.googleusercontent.com/d/1mtqGmYxffZEIWX6xbaFsS2bfG_f14dX9=w2048",
+          "title": "DJI_0300",
           "caption": "",
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787218655502-ri7w7",
-          "url": "/data/gdrive/gdrive-1Ar5-TVyWQBS_DUQUR6IF_70ZmAeYGT9g.JPG",
-          "title": "IMG_5299",
+          "id": "img-gdrive-1787218655501-gklxe",
+          "url": "/data/gdrive/gdrive-1V5hHPt3Q_zjcHcQ6avLNHdTZbYkrjZUm.jpg",
+          "title": "DSC00179",
           "caption": "",
           "mediaType": "image"
         },
@@ -1336,23 +1336,16 @@
           "mediaType": "image"
         },
         {
+          "id": "img-gdrive-1787218655502-ri7w7",
+          "url": "/data/gdrive/gdrive-1Ar5-TVyWQBS_DUQUR6IF_70ZmAeYGT9g.JPG",
+          "title": "IMG_5299",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
           "id": "img-gdrive-1787218655502-yj33p",
           "url": "/data/gdrive/gdrive-1PCU690wCtbHBuCXoA6kDdsISmycmo6mY.JPG",
           "title": "IMG_5308",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787292833092-xhnsk",
-          "url": "https://lh3.googleusercontent.com/d/1mtqGmYxffZEIWX6xbaFsS2bfG_f14dX9=w2048",
-          "title": "DJI_0300",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787292833092-k7ytv",
-          "url": "https://lh3.googleusercontent.com/d/1pTehUrfB2L91Tkfe2aprd7SZIuB2W-wJ=w2048",
-          "title": "DJI_0310",
           "caption": "",
           "mediaType": "image"
         },
@@ -4209,5 +4202,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:06:09.051Z"
+  "updatedAt": "2026-08-22T11:08:12.055Z"
 }
