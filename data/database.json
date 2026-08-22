@@ -213,7 +213,8 @@
           "caption": "",
           "mediaType": "image"
         }
-      ]
+      ],
+      "bookingLink": "https://thecliffresort.com.vn/rooms"
     },
     {
       "id": "loc-3",
@@ -4216,5 +4217,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:12:36.307Z"
+  "updatedAt": "2026-08-22T11:12:39.781Z"
 }
