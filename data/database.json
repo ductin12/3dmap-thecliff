@@ -1343,13 +1343,6 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787218655502-yj33p",
-          "url": "/data/gdrive/gdrive-1PCU690wCtbHBuCXoA6kDdsISmycmo6mY.JPG",
-          "title": "IMG_5308",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
           "id": "img-gdrive-1787292833092-y1e0w",
           "url": "https://lh3.googleusercontent.com/d/1eThnurXCymGGbi4T_EWohkBkku19luU9=w2048",
           "title": "IMG_1864",
@@ -4202,5 +4195,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:08:12.055Z"
+  "updatedAt": "2026-08-22T11:08:33.689Z"
 }
