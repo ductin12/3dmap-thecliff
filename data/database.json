@@ -2020,6 +2020,13 @@
           "title": "MRV05614",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787397770160-pxzm4",
+          "url": "https://drive.google.com/file/d/14DIj4KazVl-8sxzBWoh_y7v_FS_9gZLf/preview",
+          "title": "Sunset Chill Out",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/aqua-garden/",
@@ -4173,5 +4180,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:20:15.596Z"
+  "updatedAt": "2026-08-22T11:22:52.092Z"
 }
