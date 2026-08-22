@@ -1896,6 +1896,13 @@
       ],
       "images": [
         {
+          "id": "img-gdrive-1787397879597-wgiff",
+          "url": "https://drive.google.com/file/d/1oeYAKFwYSeOaG_MhVounXZeUJMRMAomV/preview",
+          "title": "Reels Aqua Garden Fn ",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
           "id": "img-gdrive-1787397569933-8sxpf",
           "url": "https://lh3.googleusercontent.com/d/1tky-d7BB7dzLegPHmmqJ_1atn-qCG5L8=w2048",
           "title": "DSC05460 2",
@@ -2020,13 +2027,6 @@
           "title": "MRV05614",
           "caption": "",
           "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787397879597-wgiff",
-          "url": "https://drive.google.com/file/d/1oeYAKFwYSeOaG_MhVounXZeUJMRMAomV/preview",
-          "title": "Reels Aqua Garden Fn ",
-          "caption": "",
-          "mediaType": "video"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/aqua-garden/",
@@ -4180,5 +4180,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:24:41.646Z"
+  "updatedAt": "2026-08-22T11:24:50.353Z"
 }
