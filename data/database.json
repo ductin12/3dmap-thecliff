@@ -4039,6 +4039,33 @@
       ],
       "bookingLink": "https://thecliffresort.com.vn/vuon-chanh-vang/",
       "bookingCtaText": "+ Xem chi tiết"
+    },
+    {
+      "id": "loc-1787396574808",
+      "code": "00",
+      "title": "Cổng Chào",
+      "subtitle": "Cổng Chào The Cliff Resort",
+      "category": "accommodation",
+      "x": 39.9,
+      "y": 97,
+      "description": "Nhập thông tin chi tiết khu vực tại đây...",
+      "highlights": [
+        "Tiện ích nổi bật 1",
+        "Tiện ích nổi bật 2"
+      ],
+      "images": [
+        {
+          "id": "img-1787396574808",
+          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
+          "title": "Khu vực mới"
+        }
+      ],
+      "amenities": [
+        "Wifi",
+        "Máy lạnh"
+      ],
+      "bookingLink": "https://thecliffresort.com.vn/",
+      "bookingCtaText": "Liên Hệ Lễ Tân"
     }
   ],
   "config": {
@@ -4152,5 +4179,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:02:02.113Z"
+  "updatedAt": "2026-08-22T11:03:45.043Z"
 }
