@@ -4055,9 +4055,39 @@
       ],
       "images": [
         {
-          "id": "img-1787396574808",
-          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
-          "title": "Khu vực mới"
+          "id": "img-gdrive-1787396717463-x6eaw",
+          "url": "https://lh3.googleusercontent.com/d/1zpBNXClaS9fDr6aU53ZzJD7guFEF-c9M=w2048",
+          "title": "IMG_1972",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396717463-a9rlm",
+          "url": "https://lh3.googleusercontent.com/d/1q_ZEjzNk-97T80og9VSzqiEuwbHC6bk-=w2048",
+          "title": "IMG_1988",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396717463-zwq9a",
+          "url": "https://lh3.googleusercontent.com/d/1cW4VmFwmG_DTQOROa6iFL0V4OWT3QJyY=w2048",
+          "title": "IMG_1996",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396717463-p2ux4",
+          "url": "https://lh3.googleusercontent.com/d/1MKhLqHTun1a9Lg04A6lFx6iDafJj2aRC=w2048",
+          "title": "IMG_2021",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396717463-qozkw",
+          "url": "https://lh3.googleusercontent.com/d/16R0C0aMjE6UfFzs0-vWkUyTqgez2yKd6=w2048",
+          "title": "IMG_2029",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "amenities": [
@@ -4179,5 +4209,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:04:55.423Z"
+  "updatedAt": "2026-08-22T11:05:19.119Z"
 }
