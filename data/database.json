@@ -107,7 +107,8 @@
           "caption": "",
           "mediaType": "image"
         }
-      ]
+      ],
+      "bookingCtaText": "Đặt Phòng Ngay"
     },
     {
       "id": "loc-2",
@@ -4220,5 +4221,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:12:48.056Z"
+  "updatedAt": "2026-08-22T11:12:51.424Z"
 }
