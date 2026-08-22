@@ -1467,16 +1467,9 @@
       ],
       "images": [
         {
-          "id": "img-gdrive-1787218903723-rm45n",
-          "url": "https://lh3.googleusercontent.com/d/1FUnQ_9Rd_a47uRcM8KuPjca65azHUlEB=w2048",
-          "title": "MRS09325",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218906267-rcgjw",
-          "url": "/data/gdrive/gdrive-12JQiRrEVcY7HLkJCB92H_OdfXb3sUnjB.jpg",
-          "title": "MRS09328",
+          "id": "img-gdrive-1787218910400-uebw9",
+          "url": "/data/gdrive/gdrive-1TDQWz4wwsJvB63NajewSZBQj6XNZEomu.jpg",
+          "title": "MRS09337",
           "caption": "",
           "mediaType": "image"
         },
@@ -1488,58 +1481,9 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787218910400-uebw9",
-          "url": "/data/gdrive/gdrive-1TDQWz4wwsJvB63NajewSZBQj6XNZEomu.jpg",
-          "title": "MRS09337",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218930533-h7gze",
-          "url": "/data/gdrive/gdrive-1qK41DKjnMKCDxDV10lK0uFHRp5bLzEuV.jpg",
-          "title": "MRS09340",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218931834-n4q0m",
-          "url": "/data/gdrive/gdrive-1kYKgxLZqpsG-RcAxrCodXcTfzVQPp5bY.jpg",
-          "title": "MRS09341",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218933507-z58g9",
-          "url": "/data/gdrive/gdrive-11594rhBw5vllj9VaxP4zuOwUX52mgkKw.jpg",
-          "title": "MRS09342",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218935142-zabel",
-          "url": "/data/gdrive/gdrive-1If2KdCHhCuRNYrqNoucU8QMTst6Z6M02.jpg",
-          "title": "MRS09343",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787218938299-e1b9w",
-          "url": "/data/gdrive/gdrive-1uBGCxf7fnFjKy4amZPB2CN4Wedse3Qff.jpg",
-          "title": "MRS09348",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787219016346-zg1ob",
-          "url": "/data/gdrive/gdrive-1Cq3BoSz4RAJCjGEKUf_HjAm6HiyQdzeF.jpg",
-          "title": "MRS09351",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787219018258-848vw",
-          "url": "/data/gdrive/gdrive-1F93JGgT0RukTfZp8wUhzCTlifq863wMM.jpg",
-          "title": "MRS09354",
+          "id": "img-gdrive-1787219078354-xk0vy",
+          "url": "/data/gdrive/gdrive-1-KvrMbTBKTRPtO3QX1601aIdwUgf2oGO.jpg",
+          "title": "MRS09492",
           "caption": "",
           "mediaType": "image"
         },
@@ -1561,6 +1505,34 @@
           "id": "img-gdrive-1787219024882-dm7o1",
           "url": "/data/gdrive/gdrive-1XxJQ8dBi74SShi-fRKRDqeWqlWPT2ukB.jpg",
           "title": "MRS09371",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218931834-n4q0m",
+          "url": "/data/gdrive/gdrive-1kYKgxLZqpsG-RcAxrCodXcTfzVQPp5bY.jpg",
+          "title": "MRS09341",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787218935142-zabel",
+          "url": "/data/gdrive/gdrive-1If2KdCHhCuRNYrqNoucU8QMTst6Z6M02.jpg",
+          "title": "MRS09343",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787219016346-zg1ob",
+          "url": "/data/gdrive/gdrive-1Cq3BoSz4RAJCjGEKUf_HjAm6HiyQdzeF.jpg",
+          "title": "MRS09351",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787219018258-848vw",
+          "url": "/data/gdrive/gdrive-1F93JGgT0RukTfZp8wUhzCTlifq863wMM.jpg",
+          "title": "MRS09354",
           "caption": "",
           "mediaType": "image"
         },
@@ -1645,13 +1617,6 @@
           "id": "img-gdrive-1787219076308-2weps",
           "url": "/data/gdrive/gdrive-16s0t5cR38Dy6o4mdGnh_dx9WlNf39Fnh.jpg",
           "title": "MRS09480",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787219078354-xk0vy",
-          "url": "/data/gdrive/gdrive-1-KvrMbTBKTRPtO3QX1601aIdwUgf2oGO.jpg",
-          "title": "MRS09492",
           "caption": "",
           "mediaType": "image"
         }
@@ -4229,5 +4194,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:13:38.042Z"
+  "updatedAt": "2026-08-22T11:15:51.764Z"
 }
