@@ -4035,30 +4035,62 @@
       "steps": [
         {
           "locationId": "loc-1787296884644",
-          "narrationScript": ""
+          "narrationScript": "Chào mừng quý khách đến với không gian trải nghiệm 3D của The Cliff Resort & Residences. Bắt đầu hành trình 'The Cliff Discovery Tour', chúng ta đang dừng chân tại khu vực Sảnh chính. Với thiết kế không gian mở, đón trọn gió biển và ánh nắng tự nhiên, đây là nơi tuyệt vời để quý khách tận hưởng sự chào đón nồng nhiệt nhất trước khi bước vào kỳ nghỉ trong mơ."
         },
         {
           "locationId": "loc-1",
-          "narrationScript": "Trước mặt quý khách là hồ bơi vô cực lớn nhất..."
+          "narrationScript": "Trước mặt quý khách là hồ bTrước mặt quý khách là hồ bơi vô cực lớn nhất và tuyệt đẹp của chúng tôi. Từ khu vực Azul Pool và các hạng phòng Sea View lân cận, quý khách có thể phóng tầm mắt ra đại dương mênh mông, tận hưởng làn nước trong xanh và thả hồn theo từng nhịp sóng vỗ.ơi vô cực lớn nhất..."
         },
         {
           "locationId": "loc-2",
-          "narrationScript": ""
+          "narrationScript": "Tiếp tục di chuyển, chúng ta đến với hạng phòng Duplex Ocean. Đây là lựa chọn hoàn hảo cho các gia đình hoặc nhóm bạn, với thiết kế thông tầng sang trọng, không gian sinh hoạt rộng rãi và ban công ngập tràn hơi thở của biển cả."
         },
         {
           "locationId": "loc-3",
-          "narrationScript": ""
+          "narrationScript": "Nếu quý khách yêu thích sự xanh mát, Azul Garden View chính là một khoảng trời bình yên. Được bao quanh bởi khu vườn nhiệt đới tươi tốt, nơi đây mang lại cảm giác thư thái và giao hòa trọn vẹn với thiên nhiên."
         },
         {
           "locationId": "loc-4a",
-          "narrationScript": ""
+          "narrationScript": "Xin giới thiệu khu vực Bungalow. Dù là hướng vườn hay sát biển, quý khách đều sở hữu một không gian hoàn toàn riêng tư, mộc mạc nhưng đầy đủ tiện nghi cao cấp. Chỉ vài bước chân, bạn đã có thể chạm đến bãi cát vàng."
         },
         {
           "locationId": "loc-4b",
+          "narrationScript": "Tuyệt tác nghỉ dưỡng tại The Cliff chính là các Villa Ocean Front. Các căn biệt thự sát biển này mang đến đẳng cấp thượng lưu với hồ bơi riêng, phòng khách sang trọng và tầm nhìn ôm trọn biển xanh ngay từ chiếc giường êm ái của bạn."
+        },
+        {
+          "locationId": "loc-5-6",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-7",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-8",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-9",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-10",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-11",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-12",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-13",
           "narrationScript": ""
         }
       ]
     }
   },
-  "updatedAt": "2026-08-22T06:53:07.133Z"
+  "updatedAt": "2026-08-22T10:50:48.920Z"
 }
