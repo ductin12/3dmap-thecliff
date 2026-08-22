@@ -64,8 +64,6 @@ const VideoSlidePlayer: React.FC<{
   title?: string;
   isFullscreen?: boolean;
 }> = ({ url, title, isFullscreen = false }) => {
-  const [useIframeFallback, setUseIframeFallback] = useState(false);
-
   // YouTube detection
   const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
   let ytId = '';
@@ -91,58 +89,22 @@ const VideoSlidePlayer: React.FC<{
 
   // Google Drive Video Handling
   if (gdriveId) {
-    if (useIframeFallback) {
-      return (
-        <div className="relative w-full h-full bg-black flex flex-col items-center justify-center">
-          <iframe
-            src={`https://drive.google.com/file/d/${gdriveId}/preview`}
-            title={title || "Google Drive Video"}
-            className="w-full h-full border-0"
-            allow="autoplay; fullscreen; encrypted-media"
-            allowFullScreen
-          />
-          <div className="absolute top-2.5 right-12 z-20">
-            <a
-              href={`https://drive.google.com/file/d/${gdriveId}/view?usp=sharing`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2.5 py-1 rounded-lg bg-black/60 hover:bg-black/80 text-white text-[10px] font-semibold backdrop-blur-md border border-white/20 flex items-center gap-1 shadow-md transition-all"
-            >
-              <span>Mở Drive</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </div>
-      );
-    }
-
     return (
-      <div className="relative w-full h-full bg-black flex items-center justify-center">
-        <video
-          key={gdriveId}
-          controls
-          playsInline
-          autoPlay
-          muted
-          loop
-          className="w-full h-full object-contain"
-          onError={() => {
-            console.warn("Direct video stream failed for Google Drive video, switching to iframe player...");
-            setUseIframeFallback(true);
-          }}
-        >
-          <source src={`https://drive.usercontent.google.com/download?id=${gdriveId}&export=download&authuser=0`} type="video/mp4" />
-          <source src={`https://drive.google.com/uc?export=download&id=${gdriveId}`} type="video/mp4" />
-          <source src={`https://lh3.googleusercontent.com/d/${gdriveId}`} type="video/mp4" />
-          Trình duyệt của bạn không hỗ trợ phát video này.
-        </video>
+      <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
+        <iframe
+          src={`https://drive.google.com/file/d/${gdriveId}/preview`}
+          title={title || "Google Drive Video"}
+          className="w-full h-full border-0 object-contain"
+          allow="autoplay; fullscreen; encrypted-media"
+          allowFullScreen
+        />
       </div>
     );
   }
 
   // Direct MP4 / WebM / Local video URL
   return (
-    <div className="relative w-full h-full bg-black flex items-center justify-center">
+    <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
       <video
         key={url}
         src={url}
@@ -609,19 +571,19 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 
       {/* Lightbox Fullscreen Popup with Slide Navigation */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-60 bg-black/95 flex items-center justify-center p-2 sm:p-4 animate-fadeIn select-none">
+        <div className="fixed inset-0 z-60 bg-black/95 flex items-center justify-center p-3 sm:p-6 animate-fadeIn select-none">
           {/* Close Button */}
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-70 backdrop-blur-md border border-white/20"
-            title="Đóng xem ảnh"
+            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/15 hover:bg-white/30 text-white transition-colors z-70 backdrop-blur-md border border-white/20 shadow-lg active:scale-95"
+            title="Đóng toàn màn hình"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Slide Counter in Fullscreen */}
           {slides.length > 1 && (
-            <div className="absolute top-4 left-4 z-70 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90">
+            <div className="absolute top-4 left-4 z-70 px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90 shadow-lg">
               {activeSlideIndex + 1} / {slides.length}
             </div>
           )}
@@ -633,7 +595,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                 e.stopPropagation();
                 handlePrevSlide();
               }}
-              className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
+              className="absolute left-2.5 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
               title="Ảnh/video trước"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -647,7 +609,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                 e.stopPropagation();
                 handleNextSlide();
               }}
-              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
+              className="absolute right-2.5 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center backdrop-blur-md border border-white/20 z-70 transition-all active:scale-95 shadow-xl"
               title="Ảnh/video tiếp theo"
             >
               <ChevronRight className="w-6 h-6" />
@@ -655,14 +617,14 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           )}
 
           {/* Main Fullscreen Media Content */}
-          <div className="relative w-full max-w-5xl aspect-video max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black">
+          <div className="relative w-full max-w-5xl h-[60vh] sm:h-[75vh] md:h-auto md:aspect-video max-h-[88vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black">
             {isMediaVideo(currentSlide) ? (
               <VideoSlidePlayer url={currentSlide.url} title={currentSlide.title || location.title} isFullscreen={true} />
             ) : (
               <img
                 src={currentSlide.url}
                 alt={currentSlide.title || location.title}
-                className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl"
+                className="max-w-full max-h-[88vh] object-contain rounded-xl shadow-2xl"
                 referrerPolicy="no-referrer"
               />
             )}
