@@ -4067,7 +4067,7 @@
         },
         {
           "locationId": "loc-1787287789943",
-          "narrationScript": ""
+          "narrationScript": "Xin giới thiệu khu vực Verde Condos. Nổi bật với thiết kế xanh mát và không gian sống tiện nghi, các căn hộ tại đây là sự kết hợp hoàn hảo giữa nhịp sống hiện đại và sự tĩnh lặng của thiên nhiên. Một lựa chọn tuyệt vời mang đến cho quý khách cảm giác ấm cúng, thoải mái như đang ở chính ngôi nhà của mình."
         },
         {
           "locationId": "loc-8",
@@ -4095,26 +4095,34 @@
         },
         {
           "locationId": "loc-15",
-          "narrationScript": ""
+          "narrationScript": "Chào mừng quý khách bước ra không gian bãi biển riêng tuyệt đẹp của The Cliff. Sở hữu dải cát trắng mịn màng và tiếng sóng vỗ rì rào, đây là nơi hoàn hảo để dạo bước thư giãn, đắm mình trong làn nước biển trong xanh hay tham gia các hoạt động thể thao đầy hứng khởi trên bãi biển Mũi Né."
         },
         {
           "locationId": "loc-1787297391697",
-          "narrationScript": ""
+          "narrationScript": "Mời quý khách dạo bước qua Lemon Tree Garden - khu vườn chanh ngập tràn sắc xanh và hương thơm dịu nhẹ. Không gian êm đềm, lãng mạn này là điểm check-in yêu thích của nhiều du khách, và cũng là nơi lý tưởng để tận hưởng sự bình yên, hít thở bầu không khí trong lành của miền nhiệt đới."
         },
         {
           "locationId": "loc-17",
-          "narrationScript": ""
+          "narrationScript": "Tiếp theo, chúng ta cùng ghé thăm Game Room. Được trang bị đa dạng các trò chơi giải trí như bida, bóng bàn và các máy game hiện đại, khu vực này là không gian tuyệt vời để các gia đình và nhóm bạn gắn kết, cùng nhau tạo nên những phút giây vui vẻ và tràn ngập tiếng cười."
+        },
+        {
+          "locationId": "loc-14",
+          "narrationScript": "Khu vực Aqua Garden là một điểm nhấn độc đáo, nơi sự thanh mát của nước hòa quyện cùng mảng xanh của cây cỏ. Một góc nhỏ bình yên để quý khách có thể ngồi lại, lắng nghe tiếng nước chảy róc rách và tìm thấy sự tĩnh tại trong tâm hồn."
+        },
+        {
+          "locationId": "loc-16",
+          "narrationScript": "Để duy trì thói quen rèn luyện sức khỏe ngay cả trong kỳ nghỉ, phòng Gym của chúng tôi luôn sẵn sàng phục vụ quý khách. Với hệ thống máy móc tập luyện hiện đại cùng không gian thoáng đãng, đây là nơi lý tưởng để nạp lại năng lượng và sự dẻo dai mỗi ngày."
         },
         {
           "locationId": "loc-18",
-          "narrationScript": ""
+          "narrationScript": "Trước khi kết thúc hành trình, mời quý khách ghé qua khu vực Cửa hàng lưu niệm (Shop). Tại đây, quý khách có thể tìm thấy những món quà thủ công tinh tế, trang phục dạo biển hay các đặc sản địa phương độc đáo để lưu giữ kỷ niệm hoặc làm quà tặng ý nghĩa cho người thân."
         },
         {
-          "locationId": "loc-18",
-          "narrationScript": "Cảm ơn quý khách đã đồng hành cùng 'The Cliff Discovery Tour'. Vẫn còn rất nhiều điều tuyệt vời như khu vui chơi Game Room, phòng Gym hay bãi biển riêng đang chờ quý khách trực tiếp khám phá. Hẹn gặp lại quý khách tại The Cliff Resort & Residences!"
+          "locationId": "loc-1787296884644",
+          "narrationScript": "Cảm ơn quý khách đã đồng hành cùng 'The Cliff Discovery Tour'. Vẫn còn rất nhiều điều tuyệt vời khác đang chờ quý khách trực tiếp khám phá. Hẹn gặp lại quý khách tại The Cliff Resort & Residences!"
         }
       ]
     }
   },
-  "updatedAt": "2026-08-22T10:53:23.043Z"
+  "updatedAt": "2026-08-22T10:55:04.855Z"
 }
