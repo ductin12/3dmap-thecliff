@@ -119,6 +119,26 @@ const VideoSlidePlayer: React.FC<{
   );
 };
 
+// Helper to get slide thumbnail
+function getSlideThumbnailUrl(slide?: { url?: string; mediaType?: string; title?: string }): string {
+  if (!slide || !slide.url) return '';
+  const isVideo = isMediaVideo(slide);
+  if (!isVideo) return slide.url;
+  
+  const isYouTube = slide.url.includes('youtube.com') || slide.url.includes('youtu.be');
+  if (isYouTube) {
+    const match = slide.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+    if (match) return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+  }
+  
+  const gdriveId = getGoogleDriveId(slide.url);
+  if (gdriveId) {
+    return `https://drive.google.com/thumbnail?id=${gdriveId}&sz=w800`;
+  }
+  
+  return slide.url;
+}
+
 export const LocationModal: React.FC<LocationModalProps> = ({
   location,
   onClose,
@@ -129,7 +149,9 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 }) => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const mediaContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Audio Narration States
   const [isPlaying, setIsPlaying] = useState(false);
@@ -142,6 +164,20 @@ export const LocationModal: React.FC<LocationModalProps> = ({
     setVoiceStyle(defaultVoiceStyle);
     setSpeechRate(defaultSpeechRate);
   }, [defaultVoiceStyle, defaultSpeechRate]);
+
+  // Listen to native fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFs = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+      setIsNativeFullscreen(isFs);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   // Stop audio and reset state when location changes or modal unmounts
   useEffect(() => {
@@ -177,6 +213,36 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 
   const handlePrevSlide = () => {
     setActiveSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  // Seamless Fullscreen Toggle: keeps video playing without reloading or restarting from 0:00
+  const handleToggleFullscreen = () => {
+    const isVideo = isMediaVideo(currentSlide);
+    if (isVideo && mediaContainerRef.current) {
+      const el = mediaContainerRef.current as any;
+      if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+        if (el.requestFullscreen) {
+          el.requestFullscreen().catch(() => {
+            setIsLightboxOpen(true);
+          });
+          return;
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen();
+          return;
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+          return;
+        } else if ((document as any).webkitExitFullscreen) {
+          (document as any).webkitExitFullscreen();
+          return;
+        }
+      }
+    }
+    
+    // For images or unsupported video browsers, open lightbox overlay
+    setIsLightboxOpen(true);
   };
 
   // Start or toggle AI audio speech narration directly
@@ -317,9 +383,20 @@ export const LocationModal: React.FC<LocationModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-5 md:space-y-6 custom-scrollbar">
           
           {/* SLIDE IMAGE CAROUSEL SECTION */}
-          <div className="relative group w-full aspect-video rounded-2xl overflow-hidden bg-black border border-gray-200 shadow-md flex items-center justify-center">
-            {isMediaVideo(currentSlide) ? (
-              <VideoSlidePlayer url={currentSlide.url} title={currentSlide.title || location.title} />
+          <div
+            ref={mediaContainerRef}
+            className={`relative group w-full aspect-video rounded-2xl overflow-hidden bg-black border border-gray-200 shadow-md flex items-center justify-center ${
+              isNativeFullscreen ? 'w-screen h-screen rounded-none border-none' : ''
+            }`}
+          >
+            {isLightboxOpen ? (
+              <img
+                src={getSlideThumbnailUrl(currentSlide)}
+                alt={currentSlide.title || location.title}
+                className="w-full h-full object-cover"
+              />
+            ) : isMediaVideo(currentSlide) ? (
+              <VideoSlidePlayer url={currentSlide.url} title={currentSlide.title || location.title} isFullscreen={isNativeFullscreen} />
             ) : (
               <img
                 src={currentSlide.url}
@@ -347,9 +424,9 @@ export const LocationModal: React.FC<LocationModalProps> = ({
               </>
             )}
 
-            {/* Lightbox Fullscreen Button */}
+            {/* Fullscreen Button */}
             <button
-              onClick={() => setIsLightboxOpen(true)}
+              onClick={handleToggleFullscreen}
               className="absolute top-2.5 right-2.5 w-8 h-8 md:w-9 md:h-9 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 shadow-md active:scale-95 z-10"
               title="Xem toàn màn hình"
             >
