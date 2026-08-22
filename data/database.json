@@ -3958,22 +3958,7 @@
         "Thanh toán thẻ/QR",
         "Đóng gói quà tặng"
       ],
-      "images": [
-        {
-          "id": "img-1787297391697-553",
-          "url": "https://lh3.googleusercontent.com/d/1J6NH7O7PTlN3EP52F74WQ5ujdK7ADk8M=w2048",
-          "title": "IMG_4570",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-1787297391697-477",
-          "url": "https://lh3.googleusercontent.com/d/127F-7xlO042MXM3xPbW3Txm7-Ned5h87=w2048",
-          "title": "IMG_4571",
-          "caption": "",
-          "mediaType": "image"
-        }
-      ],
+      "images": [],
       "bookingLink": "https://thecliffresort.com.vn/vuon-chanh-vang/",
       "bookingCtaText": "+ Xem chi tiết"
     }
@@ -4009,5 +3994,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:41:18.388Z"
+  "updatedAt": "2026-08-22T05:41:42.814Z"
 }
