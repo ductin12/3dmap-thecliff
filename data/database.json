@@ -4034,15 +4034,31 @@
       "estimatedDuration": "15 Phút",
       "steps": [
         {
-          "locationId": "loc-1",
-          "narrationScript": "Chào mừng quý khách đến với khu vực lưu trú Azul Sea View..."
+          "locationId": "loc-1787296884644",
+          "narrationScript": ""
         },
         {
-          "locationId": "loc-10",
+          "locationId": "loc-1",
           "narrationScript": "Trước mặt quý khách là hồ bơi vô cực lớn nhất..."
+        },
+        {
+          "locationId": "loc-2",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-3",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-4a",
+          "narrationScript": ""
+        },
+        {
+          "locationId": "loc-4b",
+          "narrationScript": ""
         }
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:45:15.248Z"
+  "updatedAt": "2026-08-22T06:51:34.656Z"
 }
