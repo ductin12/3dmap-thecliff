@@ -650,5 +650,54 @@ app.post("/api/gdrive/import", async (req, res) => {
   }
 });
 
+// GET /api/video-stream
+app.get("/api/video-stream", async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id || typeof id !== "string") {
+      return res.status(400).send("Missing video ID");
+    }
+
+    const driveStreamUrl = `https://drive.usercontent.google.com/download?id=${id}&export=download&authuser=0`;
+    const headers: Record<string, string> = {
+      "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    };
+    if (req.headers.range) {
+      headers["Range"] = req.headers.range;
+    }
+
+    const response = await fetch(driveStreamUrl, { headers });
+    if (!response.ok && response.status !== 206) {
+      const fallbackUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+      const fallbackRes = await fetch(fallbackUrl, { headers });
+      if (!fallbackRes.ok && fallbackRes.status !== 206) {
+        return res.redirect(`https://drive.google.com/file/d/${id}/preview`);
+      }
+      res.status(fallbackRes.status);
+      fallbackRes.headers.forEach((value, key) => {
+        if (key.toLowerCase() !== "content-disposition") {
+          res.setHeader(key, value);
+        }
+      });
+      res.setHeader("Content-Type", "video/mp4");
+      const arrayBuffer = await fallbackRes.arrayBuffer();
+      return res.send(Buffer.from(arrayBuffer));
+    }
+
+    res.status(response.status);
+    response.headers.forEach((value, key) => {
+      if (key.toLowerCase() !== "content-disposition") {
+        res.setHeader(key, value);
+      }
+    });
+    res.setHeader("Content-Type", "video/mp4");
+    const arrayBuffer = await response.arrayBuffer();
+    return res.send(Buffer.from(arrayBuffer));
+  } catch (error: any) {
+    console.error("Video stream error:", error);
+    return res.status(500).send(error.message);
+  }
+});
+
 export default app;
 

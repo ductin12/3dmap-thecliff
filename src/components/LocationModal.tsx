@@ -32,19 +32,32 @@ interface LocationModalProps {
 // Helper to check if a slide is a video
 function isMediaVideo(slide?: { url?: string; mediaType?: string }): boolean {
   if (!slide || !slide.url) return false;
+  // If explicitly set
   if (slide.mediaType === 'video') return true;
+  if (slide.mediaType === 'image') return false;
+
   const urlLower = slide.url.toLowerCase();
-  if (
-    urlLower.includes('youtube.com') ||
-    urlLower.includes('youtu.be') ||
-    urlLower.match(/\.(mp4|mov|avi|webm|mkv|wmv|flv|m4v|3gp)(\?|$)/) ||
-    urlLower.includes('drive.google.com') ||
-    urlLower.includes('googleusercontent.com')
-  ) {
-    if (!urlLower.match(/\.(jpg|jpeg|png|webp|gif|svg|heic)(\?|$)/)) {
-      return true;
-    }
+  
+  // YouTube URLs are always videos
+  if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+    return true;
   }
+  
+  // Explicit video extensions
+  if (urlLower.match(/\.(mp4|mov|avi|webm|mkv|wmv|flv|m4v|3gp)(\?|$)/)) {
+    return true;
+  }
+
+  // If it has image extension or Google image size parameter, it is an image
+  if (
+    urlLower.match(/\.(jpg|jpeg|png|webp|gif|svg|heic)(\?|$)/) ||
+    urlLower.includes('=w') ||
+    urlLower.includes('=s') ||
+    urlLower.includes('thumbnail?id=')
+  ) {
+    return false;
+  }
+  
   return false;
 }
 
@@ -64,6 +77,8 @@ const VideoSlidePlayer: React.FC<{
   title?: string;
   isFullscreen?: boolean;
 }> = ({ url, title, isFullscreen = false }) => {
+  const [useIframeFallback, setUseIframeFallback] = useState(false);
+
   // YouTube detection
   const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
   let ytId = '';
@@ -87,21 +102,44 @@ const VideoSlidePlayer: React.FC<{
 
   const gdriveId = getGoogleDriveId(url);
 
-  // Google Drive Video Handling (clipped top header bar so video is 100% centered with no Google title bar or Mở Drive button)
+  // Google Drive Video Handling: Native HTML5 video with direct/proxy stream, fallback to clean iframe
   if (gdriveId) {
+    if (useIframeFallback) {
+      return (
+        <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
+          <iframe
+            src={`https://drive.google.com/file/d/${gdriveId}/preview`}
+            title={title || "Google Drive Video"}
+            className="absolute inset-x-0 w-full border-0"
+            style={{
+              top: '-56px',
+              height: 'calc(100% + 56px)',
+            }}
+            allow="autoplay; fullscreen; encrypted-media"
+            allowFullScreen
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
-        <iframe
-          src={`https://drive.google.com/file/d/${gdriveId}/preview`}
-          title={title || "Google Drive Video"}
-          className="absolute inset-x-0 w-full border-0"
-          style={{
-            top: '-56px',
-            height: 'calc(100% + 56px)',
+        <video
+          key={gdriveId}
+          controls
+          playsInline
+          autoPlay
+          muted
+          loop
+          className="w-full h-full object-contain"
+          onError={() => {
+            setUseIframeFallback(true);
           }}
-          allow="autoplay; fullscreen; encrypted-media"
-          allowFullScreen
-        />
+        >
+          <source src={`/api/video-stream?id=${gdriveId}`} type="video/mp4" />
+          <source src={`https://drive.usercontent.google.com/download?id=${gdriveId}&export=download&authuser=0`} type="video/mp4" />
+          <source src={`https://drive.google.com/uc?export=download&id=${gdriveId}`} type="video/mp4" />
+        </video>
       </div>
     );
   }
