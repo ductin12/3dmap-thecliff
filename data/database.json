@@ -2085,6 +2085,13 @@
           "mediaType": "video"
         },
         {
+          "id": "img-gdrive-1787376263815-anrst",
+          "url": "https://drive.google.com/file/d/1FC08ZGGGEnms6RjqA5EPHvLKwMF6m7CM/preview",
+          "title": "Moments Beach &amp; Pools Couple FN",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
           "id": "img-gdrive-1787285397333-lkcl7",
           "url": "https://lh3.googleusercontent.com/d/1whBbCTbf-cBRORt88ZKwuCayhR192nfb=w2048",
           "title": "DJI_0025",
@@ -2916,13 +2923,6 @@
           "title": "MRV09997",
           "caption": "",
           "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787376263815-anrst",
-          "url": "https://drive.google.com/file/d/1FC08ZGGGEnms6RjqA5EPHvLKwMF6m7CM/preview",
-          "title": "Moments Beach &amp; Pools Couple FN",
-          "caption": "",
-          "mediaType": "video"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -4149,5 +4149,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:24:25.545Z"
+  "updatedAt": "2026-08-22T05:24:43.229Z"
 }
