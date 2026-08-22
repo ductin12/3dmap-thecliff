@@ -3927,6 +3927,13 @@
           "title": "MRV00214",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787377146898-xvevg",
+          "url": "https://drive.google.com/file/d/1CSK787dEbCRulAYO4vcVSHPvd7U8SmFB/preview",
+          "title": "OVERVIEW 2026_FN",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "amenities": [
@@ -4163,5 +4170,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:38:13.290Z"
+  "updatedAt": "2026-08-22T05:39:09.180Z"
 }
