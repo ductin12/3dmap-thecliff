@@ -1896,13 +1896,6 @@
       ],
       "images": [
         {
-          "id": "img-gdrive-1787397770160-pxzm4",
-          "url": "https://drive.google.com/file/d/14DIj4KazVl-8sxzBWoh_y7v_FS_9gZLf/preview",
-          "title": "Sunset Chill Out",
-          "caption": "",
-          "mediaType": "video"
-        },
-        {
           "id": "img-gdrive-1787397569933-8sxpf",
           "url": "https://lh3.googleusercontent.com/d/1tky-d7BB7dzLegPHmmqJ_1atn-qCG5L8=w2048",
           "title": "DSC05460 2",
@@ -2027,6 +2020,13 @@
           "title": "MRV05614",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787397821852-x0u3z",
+          "url": "https://drive.google.com/file/d/14DIj4KazVl-8sxzBWoh_y7v_FS_9gZLf/preview",
+          "title": "Sunset Chill Out",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/aqua-garden/",
@@ -4180,5 +4180,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:22:56.989Z"
+  "updatedAt": "2026-08-22T11:23:43.659Z"
 }
