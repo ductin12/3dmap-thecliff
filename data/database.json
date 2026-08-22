@@ -1467,6 +1467,13 @@
       ],
       "images": [
         {
+          "id": "img-gdrive-1787397398627-di2x2",
+          "url": "https://drive.google.com/file/d/1EGrQVwcdIzCkVE0R5cYt_SVmQusrHKtd/preview",
+          "title": "Zest spa - Your Escape at The Cliff  FN",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
           "id": "img-gdrive-1787218910400-uebw9",
           "url": "/data/gdrive/gdrive-1TDQWz4wwsJvB63NajewSZBQj6XNZEomu.jpg",
           "title": "MRS09337",
@@ -1619,13 +1626,6 @@
           "title": "MRS09480",
           "caption": "",
           "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787397398627-di2x2",
-          "url": "https://drive.google.com/file/d/1EGrQVwcdIzCkVE0R5cYt_SVmQusrHKtd/preview",
-          "title": "Zest spa - Your Escape at The Cliff  FN",
-          "caption": "",
-          "mediaType": "video"
         }
       ],
       "bookingCtaText": "Book Lịch Spa",
@@ -4201,5 +4201,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T11:16:40.022Z"
+  "updatedAt": "2026-08-22T11:16:50.234Z"
 }
