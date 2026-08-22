@@ -2923,6 +2923,13 @@
           "title": "MRV09997",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787376337700-jicoq",
+          "url": "https://drive.google.com/file/d/1-XSV-ck5oOHN2m_OXK31oIWqW5ZtGeXi/preview",
+          "title": "Reels Hoàng hôn bãi biển FN",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -4149,5 +4156,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:24:43.229Z"
+  "updatedAt": "2026-08-22T05:25:39.520Z"
 }
