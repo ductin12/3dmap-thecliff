@@ -4000,6 +4000,13 @@
           "title": "MRS09936",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787377507187-t1d60",
+          "url": "https://drive.google.com/file/d/1jIfGiT3x5gSqgzbSVbyQJeh3D6fT0rUL/preview",
+          "title": "MEMORY AT THE CLIFF RESORT",
+          "caption": "",
+          "mediaType": "video"
         }
       ],
       "bookingLink": "https://thecliffresort.com.vn/vuon-chanh-vang/",
@@ -4037,5 +4044,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:43:30.001Z"
+  "updatedAt": "2026-08-22T05:45:08.892Z"
 }
