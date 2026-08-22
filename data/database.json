@@ -460,6 +460,13 @@
           "mediaType": "video"
         },
         {
+          "id": "img-gdrive-1787376458276-ze3d4",
+          "url": "https://drive.google.com/file/d/1XDTJQutEzyAxW1xu2KkIXkVfPlKHLmOz/preview",
+          "title": "Reels POV Thức dậy tại Villa ",
+          "caption": "",
+          "mediaType": "video"
+        },
+        {
           "id": "img-1786513088287-1",
           "url": "https://thecliffresort.com.vn/wp-content/uploads/2025/12/villa-ocean-front-03-bedrooms_nen.png",
           "title": "VILLA OCEAN FRONT",
@@ -528,13 +535,6 @@
           "title": "VILLA OCEAN FRONT",
           "caption": "",
           "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787376458276-ze3d4",
-          "url": "https://drive.google.com/file/d/1XDTJQutEzyAxW1xu2KkIXkVfPlKHLmOz/preview",
-          "title": "Reels POV Thức dậy tại Villa ",
-          "caption": "",
-          "mediaType": "video"
         }
       ]
     },
@@ -4156,5 +4156,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T05:27:39.673Z"
+  "updatedAt": "2026-08-22T05:27:46.911Z"
 }
