@@ -1355,6 +1355,20 @@
           "title": "IMG_1899",
           "caption": "",
           "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396508396-k63x0",
+          "url": "https://lh3.googleusercontent.com/d/1X0YxXETmiC_ff_Rm87JF3ZhwrBD6NBLv=w2048",
+          "title": "DJI_0395",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787396508396-xhwvn",
+          "url": "https://lh3.googleusercontent.com/d/1O5mOOth3taFmZ_Wb0-y9aLlEaz3yKRYB=w2048",
+          "title": "DJI_0440",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -4138,5 +4152,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-22T10:59:39.806Z"
+  "updatedAt": "2026-08-22T11:01:50.377Z"
 }
