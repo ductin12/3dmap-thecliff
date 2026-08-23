@@ -1279,6 +1279,13 @@
           "mediaType": "image"
         },
         {
+          "id": "img-gdrive-1787483763466-36659",
+          "url": "https://lh3.googleusercontent.com/d/1s7ona7T1zuA4NJHk7zluex8bf05KhlKs=w2048",
+          "title": "DJI_0052",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
           "id": "img-gdrive-1787218655505-mvlv3",
           "url": "/data/gdrive/gdrive-1XDXEcS5puU6kLk8aumOu4lSMS-MNI6sd.jpg",
           "title": "IMG_8046",
@@ -1431,13 +1438,6 @@
           "title": "Reels",
           "caption": "",
           "mediaType": "video"
-        },
-        {
-          "id": "img-gdrive-1787483763466-36659",
-          "url": "https://lh3.googleusercontent.com/d/1s7ona7T1zuA4NJHk7zluex8bf05KhlKs=w2048",
-          "title": "DJI_0052",
-          "caption": "",
-          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -4250,5 +4250,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-23T11:16:05.303Z"
+  "updatedAt": "2026-08-23T11:16:23.699Z"
 }
