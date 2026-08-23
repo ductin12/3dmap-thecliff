@@ -1424,6 +1424,13 @@
           "title": "Reels",
           "caption": "",
           "mediaType": "video"
+        },
+        {
+          "id": "img-gdrive-1787483719136-zieav",
+          "url": "https://lh3.googleusercontent.com/d/1k71EvyzgGc9UpOjRYL7n-ub-Q6QGtlX0=w2048",
+          "title": "MRV05361",
+          "caption": "",
+          "mediaType": "image"
         }
       ],
       "bookingCtaText": "Liên Hệ Lễ Tân",
@@ -4236,5 +4243,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-23T11:12:05.403Z"
+  "updatedAt": "2026-08-23T11:15:20.763Z"
 }
