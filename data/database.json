@@ -2434,13 +2434,6 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787285397333-th2ru",
-          "url": "https://lh3.googleusercontent.com/d/13AE4b9D4ikFb0SfAly2qp4ZvM22xFeGd=w2048",
-          "title": "DSC00022",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
           "id": "img-gdrive-1787285397333-5s970",
           "url": "https://lh3.googleusercontent.com/d/1lUPMQzmtdy8K7tKgZuwKPWEWLRs1SzDV=w2048",
           "title": "DSC00027",
@@ -2448,16 +2441,16 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787285397333-ai92d",
-          "url": "https://lh3.googleusercontent.com/d/13vH4he-GkkYaQVsTVPML-jHUJTXc7jj4=w2048",
-          "title": "DSC00054",
+          "id": "img-gdrive-1787285397333-th2ru",
+          "url": "https://lh3.googleusercontent.com/d/13AE4b9D4ikFb0SfAly2qp4ZvM22xFeGd=w2048",
+          "title": "DSC00022",
           "caption": "",
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787285397333-5gf2b",
-          "url": "https://lh3.googleusercontent.com/d/1fRJniRvDVnaI4NAFpZQxgMr6zvxv-500=w2048",
-          "title": "DSC00423",
+          "id": "img-gdrive-1787285397333-ai92d",
+          "url": "https://lh3.googleusercontent.com/d/13vH4he-GkkYaQVsTVPML-jHUJTXc7jj4=w2048",
+          "title": "DSC00054",
           "caption": "",
           "mediaType": "image"
         },
@@ -2490,13 +2483,6 @@
           "mediaType": "image"
         },
         {
-          "id": "img-gdrive-1787285397333-e2l3k",
-          "url": "https://lh3.googleusercontent.com/d/17YFOacylACeX1r0t4N1s_Ec1KOKmfEON=w2048",
-          "title": "DSC02454",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
           "id": "img-gdrive-1787285397333-dl65p",
           "url": "https://lh3.googleusercontent.com/d/1gVTclHbbPAWPR5CXmwpMsYxODCSqNodW=w2048",
           "title": "DSC02324",
@@ -2511,9 +2497,23 @@
           "mediaType": "image"
         },
         {
+          "id": "img-gdrive-1787484540027-6uvvs",
+          "url": "https://lh3.googleusercontent.com/d/1AAs8RSrif1i5Y6HvlRNpAJlypUpH2xFa=w2048",
+          "title": "DSC01606mrv",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
           "id": "img-gdrive-1787285397333-ngdgu",
           "url": "https://lh3.googleusercontent.com/d/1j1CECBeXaYBDqyM_z8Y8elCgbQj2HgNY=w2048",
           "title": "DSC02460",
+          "caption": "",
+          "mediaType": "image"
+        },
+        {
+          "id": "img-gdrive-1787285397333-e2l3k",
+          "url": "https://lh3.googleusercontent.com/d/17YFOacylACeX1r0t4N1s_Ec1KOKmfEON=w2048",
+          "title": "DSC02454",
           "caption": "",
           "mediaType": "image"
         },
@@ -2731,13 +2731,6 @@
           "id": "img-gdrive-1787483940030-q7vr1",
           "url": "https://lh3.googleusercontent.com/d/1cgT8YuvWdWkqiDybq3lDjiA4eR3vYUMm=w2048",
           "title": "DSC02636",
-          "caption": "",
-          "mediaType": "image"
-        },
-        {
-          "id": "img-gdrive-1787484540027-6uvvs",
-          "url": "https://lh3.googleusercontent.com/d/1AAs8RSrif1i5Y6HvlRNpAJlypUpH2xFa=w2048",
-          "title": "DSC01606mrv",
           "caption": "",
           "mediaType": "image"
         }
@@ -4019,5 +4012,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-23T11:29:01.626Z"
+  "updatedAt": "2026-08-23T11:30:04.139Z"
 }
