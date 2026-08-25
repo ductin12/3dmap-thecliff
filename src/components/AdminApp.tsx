@@ -16,12 +16,13 @@ export const AdminApp: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   // States for AdminPanel to work standalone
   const [locations, setLocations] = useState<LocationItem[]>(INITIAL_LOCATIONS);
   const [resortConfig, setResortConfig] = useState<ResortConfig>(DEFAULT_RESORT_CONFIG);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  
+
   const [activeTab, setActiveTab] = useState<'panel' | 'users'>('panel');
 
   useEffect(() => {
@@ -33,11 +34,22 @@ export const AdminApp: React.FC = () => {
       localStorage.setItem('cliff_users', JSON.stringify(DEFAULT_USERS));
     }
 
-    const savedUser = sessionStorage.getItem('cliff_current_user');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }
-    
+    // Restore session from the server-side httpOnly cookie
+    fetch('/api/me', { credentials: 'include' })
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => {
+        if (data && data.user) {
+          setCurrentUser({
+            id: data.user.username,
+            username: data.user.username,
+            password: '',
+            role: data.user.role,
+            fullName: data.user.fullName,
+          });
+        }
+      })
+      .catch(() => { });
+
     // Load config and locations from API
     fetch('/api/data')
       .then(res => res.json())
@@ -53,23 +65,46 @@ export const AdminApp: React.FC = () => {
       .finally(() => setIsDataLoaded(true));
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      setCurrentUser(user);
-      sessionStorage.setItem('cliff_current_user', JSON.stringify(user));
-      setError('');
-    } else {
-      setError('Tài khoản hoặc mật khẩu không đúng (demo/demo)');
+    setIsLoggingIn(true);
+    setError('');
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.user) {
+        setCurrentUser({
+          id: data.user.username,
+          username: data.user.username,
+          password: '',
+          role: data.user.role,
+          fullName: data.user.fullName,
+        });
+        setPassword('');
+      } else {
+        setError(data.error || 'Tài khoản hoặc mật khẩu không đúng');
+      }
+    } catch (_e) {
+      setError('Không thể kết nối máy chủ. Vui lòng thử lại.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+    } catch (_e) {
+      // ignore network errors during logout
+    }
     setCurrentUser(null);
-    sessionStorage.removeItem('cliff_current_user');
   };
-  
+
   const handleSaveAllData = (newLocs: LocationItem[], newCfg: ResortConfig) => {
     setLocations(newLocs);
     setResortConfig(newCfg);
@@ -82,10 +117,11 @@ export const AdminApp: React.FC = () => {
     fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ locations: newLocs, config: newCfg })
     }).catch(e => console.error("Error saving data:", e));
   };
-  
+
   const handleResetToDefault = () => {
     setLocations(INITIAL_LOCATIONS);
     setResortConfig(DEFAULT_RESORT_CONFIG);
@@ -109,18 +145,18 @@ export const AdminApp: React.FC = () => {
             <h1 className="text-2xl font-serif font-bold text-[#1A365D]">Đăng nhập hệ thống</h1>
             <p className="text-gray-500 mt-2 text-sm">Quản lý sơ đồ 3D The Cliff Resort</p>
           </div>
-          
+
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
               <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 text-center">
                 {error}
               </div>
             )}
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none"
@@ -128,11 +164,11 @@ export const AdminApp: React.FC = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none"
@@ -140,12 +176,13 @@ export const AdminApp: React.FC = () => {
                 required
               />
             </div>
-            
-            <button 
+
+            <button
               type="submit"
-              className="w-full py-3 bg-[#1A365D] hover:bg-[#2A4365] text-white font-bold rounded-xl shadow-md transition-colors mt-2"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-[#1A365D] hover:bg-[#2A4365] text-white font-bold rounded-xl shadow-md transition-colors mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Đăng nhập
+              {isLoggingIn ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
           </form>
         </div>
@@ -161,14 +198,14 @@ export const AdminApp: React.FC = () => {
             <h1 className="font-serif font-bold text-[#1A365D] text-lg">Hệ Thống Quản Trị</h1>
             <div className="h-6 w-px bg-gray-200"></div>
             <nav className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={() => setActiveTab('panel')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'panel' ? 'bg-[#1A365D] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 Quản lý bản đồ
               </button>
               {(currentUser.role === 'admin' || currentUser.role === 'editor') && (
-                <button 
+                <button
                   onClick={() => setActiveTab('users')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-[#1A365D] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
                 >
@@ -177,20 +214,20 @@ export const AdminApp: React.FC = () => {
               )}
             </nav>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
               <UserIcon className="w-4 h-4 text-[#C5A059]" />
               <span className="font-medium">{currentUser.fullName}</span>
               <span className="text-xs uppercase bg-gray-200 px-1.5 py-0.5 rounded text-gray-700">{currentUser.role}</span>
             </div>
-            <button 
+            <button
               onClick={handleLogout}
               className="text-sm font-medium text-red-600 hover:text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
             >
               Đăng xuất
             </button>
-            <a 
+            <a
               href="/"
               className="text-sm font-medium text-blue-600 hover:text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
             >
@@ -199,7 +236,7 @@ export const AdminApp: React.FC = () => {
           </div>
         </div>
       </header>
-      
+
       <main className="max-w-7xl mx-auto py-8 px-4">
         {!isDataLoaded ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-16 flex flex-col items-center justify-center gap-4 text-[#1A365D]" style={{ minHeight: '60vh' }}>
@@ -208,13 +245,13 @@ export const AdminApp: React.FC = () => {
           </div>
         ) : activeTab === 'panel' ? (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden relative" style={{ minHeight: '80vh' }}>
-            <AdminPanel 
+            <AdminPanel
               locations={locations}
               resortConfig={resortConfig}
               onSaveAll={handleSaveAllData}
               onResetToDefault={handleResetToDefault}
-              onClose={() => {}} // Not needed in fullscreen
-              onStartPinCalibration={() => {}} // Calibrating might need the map view, which is tricky in full page without the map. We'll handle it.
+              onClose={() => { }} // Not needed in fullscreen
+              onStartPinCalibration={() => { }} // Calibrating might need the map view, which is tricky in full page without the map. We'll handle it.
               calibratingLocationId={null}
               isFullScreen={true}
               userRole={currentUser.role}

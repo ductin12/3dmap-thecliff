@@ -3,6 +3,14 @@ import path from "path";
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
+import {
+  requireAuth,
+  verifyLogin,
+  createSessionToken,
+  buildSessionCookie,
+  buildClearCookie,
+  getSessionFromRequest,
+} from "./lib/auth";
 
 dotenv.config();
 
@@ -14,6 +22,37 @@ async function startServer() {
 
   // API Endpoints for Data Persistence
   const dbPath = path.join(process.cwd(), "data", "database.json");
+
+  // POST /api/login — verify credentials server-side, issue httpOnly session cookie
+  app.post("/api/login", async (req, res) => {
+    try {
+      const { username, password } = req.body || {};
+      const session = await verifyLogin(username, password);
+      if (!session) {
+        return res.status(401).json({ error: "Tài khoản hoặc mật khẩu không đúng" });
+      }
+      const token = createSessionToken(session);
+      res.setHeader("Set-Cookie", buildSessionCookie(token));
+      return res.json({ success: true, user: session });
+    } catch (e: any) {
+      return res.status(500).json({ error: e.message || "Login failed" });
+    }
+  });
+
+  // POST /api/logout — clear session cookie
+  app.post("/api/logout", (_req, res) => {
+    res.setHeader("Set-Cookie", buildClearCookie());
+    return res.json({ success: true });
+  });
+
+  // GET /api/me — return current session, if any
+  app.get("/api/me", (req, res) => {
+    const session = getSessionFromRequest(req);
+    if (!session) return res.status(401).json({ error: "Not authenticated" });
+    return res.json({
+      user: { username: session.username, role: session.role, fullName: session.fullName },
+    });
+  });
 
   app.get("/api/data", async (_req, res) => {
     try {
@@ -28,14 +67,14 @@ async function startServer() {
     }
   });
 
-  app.post("/api/data", async (req, res) => {
+  app.post("/api/data", requireAuth, async (req, res) => {
     try {
       const fs = await import("fs");
       const { locations, config } = req.body;
       if (!locations || !config) {
         return res.status(400).json({ error: "Missing locations or config" });
       }
-      
+
       const dataToSave = { locations, config };
       fs.writeFileSync(dbPath, JSON.stringify(dataToSave, null, 2));
       return res.json({ success: true });
@@ -45,7 +84,7 @@ async function startServer() {
   });
 
   // API Endpoint to upload and save map background image
-  app.post("/api/upload-map", async (req, res) => {
+  app.post("/api/upload-map", requireAuth, async (req, res) => {
     try {
       const { base64Data } = req.body;
       if (!base64Data) {
@@ -62,9 +101,9 @@ async function startServer() {
       const buffer = Buffer.from(matches[2], 'base64');
       const filename = `map-bg-${Date.now()}.${ext}`;
       const filepath = path.join(process.cwd(), "data", filename);
-      
+
       fs.writeFileSync(filepath, buffer);
-      
+
       return res.json({ success: true, url: `/data/${filename}` });
     } catch (e: any) {
       console.error("Upload Error:", e);
@@ -166,17 +205,17 @@ Nội dung: ${text}`;
       // Fetch from actual TTS API using POST to avoid URL truncation
       const ttsUrl = `https://tts.thecliff.io.vn/stream`;
       const response = await fetch(ttsUrl, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ text, voice_id })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voice_id })
       });
 
       if (!response.ok) {
         throw new Error(`TTS API returned ${response.status}`);
       }
-      
+
       if (!response.body) {
-         throw new Error(`TTS API returned empty body`);
+        throw new Error(`TTS API returned empty body`);
       }
 
       // Stream the response to a file using native fetch Web Streams
@@ -185,7 +224,7 @@ Nội dung: ${text}`;
       const dest = fs.createWriteStream(filepath);
       // @ts-ignore
       const readableStream = Readable.fromWeb(response.body);
-      
+
       await pipeline(readableStream, dest);
 
       return res.json({ success: true, url: urlPath, cached: false });
@@ -219,9 +258,9 @@ Nội dung: ${text}`;
           console.log(`[TTS Scan] Generating/Updating audio for: ${id || text.substring(0, 30)}...`);
           const ttsUrl = `https://tts.thecliff.io.vn/stream`;
           const response = await fetch(ttsUrl, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ text, voice_id })
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, voice_id })
           });
 
           if (response.ok && response.body) {
@@ -230,7 +269,7 @@ Nội dung: ${text}`;
             const dest = fs.createWriteStream(filepath);
             // @ts-ignore
             const readableStream = Readable.fromWeb(response.body);
-            
+
             await pipeline(readableStream, dest);
             console.log(`[TTS Scan] Saved: ${filename}`);
           } else {
@@ -258,13 +297,13 @@ Nội dung: ${text}`;
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch page, status: ${response.status}`);
       }
 
       const html = await response.text();
-      
+
       // Extract const galleryItems = [...]
       const match = html.match(/const galleryItems\s*=\s*(\[.*?\]);/s);
       if (!match || !match[1]) {
@@ -274,17 +313,17 @@ Nội dung: ${text}`;
       // Instead of eval, we can use a safer approach but since the format is simple JS objects
       // We will parse it safely using regex to find src properties.
       const itemsString = match[1];
-      
+
       const images: string[] = [];
       let videoUrl: string | null = null;
-      
+
       // Extract {type: 'video', src: '...'} or {type: 'image', src: '...'}
       const regex = /\{[^}]*type:\s*'([^']+)'[^}]*src:\s*'([^']+)'/g;
       let m;
       while ((m = regex.exec(itemsString)) !== null) {
         const type = m[1];
         const src = m[2];
-        
+
         if (type === 'video' && !videoUrl) {
           // Keep only the first video
           videoUrl = src;
@@ -378,9 +417,9 @@ Nội dung: ${text}`;
             if (viewRes.ok) {
               const html = await viewRes.text();
               const titleMatch = html.match(/<meta\s+itemprop="name"\s+content="([^"]+)"/i) ||
-                                 html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
-                                 html.match(/<title>([^<]+?)(?:\s*-\s*Google Drive)?<\/title>/i) ||
-                                 html.match(/itemJson:\s*\[null,"([^"]+)"/);
+                html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
+                html.match(/<title>([^<]+?)(?:\s*-\s*Google Drive)?<\/title>/i) ||
+                html.match(/itemJson:\s*\[null,"([^"]+)"/);
               if (titleMatch && titleMatch[1]) {
                 fileName = titleMatch[1].trim();
               }
@@ -390,13 +429,13 @@ Nội dung: ${text}`;
               const hasVideoMime = html.includes("video/mp4") || html.includes("video/") || html.includes("type=\"video");
               isVideo = hasVideoExt || hasVideoMime;
             }
-          } catch (_e) {}
+          } catch (_e) { }
 
           const item = {
             id: singleId,
             name: fileName,
             type: isVideo ? "video" : "image",
-            thumbnailUrl: isVideo 
+            thumbnailUrl: isVideo
               ? `https://drive.google.com/thumbnail?id=${singleId}&sz=w400`
               : `https://lh3.googleusercontent.com/d/${singleId}=w400`,
             downloadUrl: isVideo
@@ -420,7 +459,7 @@ Nội dung: ${text}`;
       }
 
       console.log(`[GDrive Scan] Scanning folder ID: ${folderId}`);
-      
+
       // Fetch Google Drive embedded view
       const scanUrl = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
       let scanResponse = await fetch(scanUrl, {
@@ -459,7 +498,7 @@ Nội dung: ${text}`;
             id,
             name,
             type: isVideo ? "video" : "image",
-            thumbnailUrl: isVideo 
+            thumbnailUrl: isVideo
               ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
               : `https://lh3.googleusercontent.com/d/${id}=w400`,
             downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
@@ -484,7 +523,7 @@ Nội dung: ${text}`;
               id,
               name,
               type: isVideo ? "video" : "image",
-              thumbnailUrl: isVideo 
+              thumbnailUrl: isVideo
                 ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
                 : `https://lh3.googleusercontent.com/d/${id}=w400`,
               downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
@@ -518,7 +557,7 @@ Nội dung: ${text}`;
   });
 
   // API Endpoint: Import Selected Files from Google Drive
-  app.post("/api/gdrive/import", async (req, res) => {
+  app.post("/api/gdrive/import", requireAuth, async (req, res) => {
     try {
       const { items } = req.body;
       if (!items || !Array.isArray(items) || items.length === 0) {

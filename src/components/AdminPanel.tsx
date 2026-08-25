@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { LocationItem, ResortConfig, CategoryType, SlideImage, TourConfig } from '../types';
 import { AdminTourTab } from './AdminTourTab';
 import { WordPressEmbedContent } from './WordPressEmbedContent';
-import { 
-  X, 
-  Plus, 
-  Trash2, 
-  Save, 
-  MapPin, 
-  Upload, 
-  RotateCcw, 
-  Download, 
-  Lock, 
-  Unlock, 
+import {
+  X,
+  Plus,
+  Trash2,
+  Save,
+  MapPin,
+  Upload,
+  RotateCcw,
+  Download,
+  Lock,
+  Unlock,
   Sparkles,
   Check,
   Image as ImageIcon,
@@ -31,7 +31,8 @@ import {
   FolderOpen,
   FileImage,
   Layers,
-  Film
+  Film,
+  CheckCircle2
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -60,20 +61,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<'locations' | 'slides' | 'settings' | 'tour' | 'wordpress' | 'backup'>('locations');
-  
+
   // Active selected location ID for editing
   const [selectedLocId, setSelectedLocId] = useState<string>(locations[0]?.id || '');
 
   // Local state for edits
   const [locList, setLocList] = useState<LocationItem[]>(locations);
   const [cfg, setCfg] = useState<ResortConfig>(resortConfig);
-  
+
   const [scrapeRoomUrl, setScrapeRoomUrl] = useState('');
   const [isScrapingRoom, setIsScrapingRoom] = useState(false);
 
   const [savedSuccess, setSavedSuccess] = useState(false);
-  const [ttsVoices, setTtsVoices] = useState<{id: string, name: string}[]>([]);
-  
+  const [ttsVoices, setTtsVoices] = useState<{ id: string, name: string }[]>([]);
+
   // Drag and Drop State for Slides
   const [draggedSlideIdx, setDraggedSlideIdx] = useState<number | null>(null);
 
@@ -119,7 +120,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     fetch('/api/status')
       .then(res => res.json())
       .then(data => setStorageInfo(data))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   React.useEffect(() => {
@@ -144,18 +145,68 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setLocList(updated);
   };
 
+  // Highlights & Amenities State
+  const [newHighlightInput, setNewHighlightInput] = useState('');
+  const [newAmenityInput, setNewAmenityInput] = useState('');
+
+  const handleAddHighlight = (textToAdd?: string) => {
+    const text = (textToAdd !== undefined ? textToAdd : newHighlightInput).trim();
+    if (!text || !currentLoc) return;
+    const currentHighlights = currentLoc.highlights || [];
+    if (!currentHighlights.includes(text)) {
+      handleUpdateCurrentLoc('highlights', [...currentHighlights, text]);
+    }
+    if (textToAdd === undefined) setNewHighlightInput('');
+  };
+
+  const handleUpdateHighlight = (index: number, value: string) => {
+    if (!currentLoc) return;
+    const currentHighlights = [...(currentLoc.highlights || [])];
+    currentHighlights[index] = value;
+    handleUpdateCurrentLoc('highlights', currentHighlights);
+  };
+
+  const handleDeleteHighlight = (index: number) => {
+    if (!currentLoc) return;
+    const currentHighlights = (currentLoc.highlights || []).filter((_, i) => i !== index);
+    handleUpdateCurrentLoc('highlights', currentHighlights);
+  };
+
+  const handleAddAmenity = (textToAdd?: string) => {
+    const text = (textToAdd !== undefined ? textToAdd : newAmenityInput).trim();
+    if (!text || !currentLoc) return;
+    const currentAmenities = currentLoc.amenities || [];
+    if (!currentAmenities.includes(text)) {
+      handleUpdateCurrentLoc('amenities', [...currentAmenities, text]);
+    }
+    if (textToAdd === undefined) setNewAmenityInput('');
+  };
+
+  const handleUpdateAmenity = (index: number, value: string) => {
+    if (!currentLoc) return;
+    const currentAmenities = [...(currentLoc.amenities || [])];
+    currentAmenities[index] = value;
+    handleUpdateCurrentLoc('amenities', currentAmenities);
+  };
+
+  const handleDeleteAmenity = (index: number) => {
+    if (!currentLoc) return;
+    const currentAmenities = (currentLoc.amenities || []).filter((_, i) => i !== index);
+    handleUpdateCurrentLoc('amenities', currentAmenities);
+  };
+
   const handleAddSlideImage = (url: string, title?: string, mediaType?: 'image' | 'video') => {
     if (!currentLoc || !url) return;
-    
+
     // Auto-detect mediaType if not explicitly provided
     let detectedMediaType = mediaType || 'image';
     if (!mediaType) {
-       const urlLower = url.toLowerCase();
-       if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be') || urlLower.match(/\.(mp4|webm|ogg)$/)) {
-         detectedMediaType = 'video';
-       } else if (urlLower.startsWith('data:video/')) {
-         detectedMediaType = 'video';
-       }
+      const urlLower = url.toLowerCase();
+      if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be') || urlLower.match(/\.(mp4|webm|ogg)$/)) {
+        detectedMediaType = 'video';
+      } else if (urlLower.startsWith('data:video/')) {
+        detectedMediaType = 'video';
+      }
     }
 
     const newSlide: SlideImage = {
@@ -183,9 +234,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const trimmed = inputUrl.trim();
 
     // Detect Google Drive Folder or File URL
-    const isDriveUrl = 
-      trimmed.includes('drive.google.com') || 
-      trimmed.includes('/folders/') || 
+    const isDriveUrl =
+      trimmed.includes('drive.google.com') ||
+      trimmed.includes('/folders/') ||
       trimmed.includes('/file/d/') ||
       trimmed.includes('drive.google.com/open?id=');
 
@@ -318,6 +369,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       const res = await fetch('/api/gdrive/import', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ items: itemsToImport }),
       });
       const data = await res.json();
@@ -494,6 +546,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       fetch('/api/upload-map', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ base64Data: compressedDataUrl })
       })
         .then(res => res.json())
@@ -504,7 +557,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             onSaveAll(locList, serverCfg);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
 
       alert("Đã cập nhật và lưu ảnh bản đồ mới thành công!");
     } catch (error: any) {
@@ -564,44 +617,44 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   const handleSaveAll = async () => {
     onSaveAll(locList, cfg);
-    
+
     // Pre-generate audio ONLY for changed/new locations and tour steps
     const textsToGenerate: { id: string; text: string }[] = [];
-    
+
     // Collect location narrations (only if text changed)
     locList.forEach(loc => {
       if (loc.description) {
-         const newText = loc.description || '';
-         
-         const oldLoc = locations.find(l => l.id === loc.id);
-         let oldText = '';
-         if (oldLoc && oldLoc.description) {
-           oldText = oldLoc.description;
-         }
-         
-         if (!oldLoc || newText !== oldText) {
-           textsToGenerate.push({ id: loc.id, text: newText });
-         }
+        const newText = loc.description || '';
+
+        const oldLoc = locations.find(l => l.id === loc.id);
+        let oldText = '';
+        if (oldLoc && oldLoc.description) {
+          oldText = oldLoc.description;
+        }
+
+        if (!oldLoc || newText !== oldText) {
+          textsToGenerate.push({ id: loc.id, text: newText });
+        }
       }
     });
-    
+
     // Collect tour step narrations (only if script changed)
     cfg.tourConfig?.steps?.forEach(step => {
-       if (step.narrationScript) {
-          const oldStep = resortConfig.tourConfig?.steps?.find(s => s.locationId === step.locationId);
-          if (!oldStep || oldStep.narrationScript !== step.narrationScript) {
-            textsToGenerate.push({ id: `tour-${step.locationId}`, text: step.narrationScript });
-          }
-       }
+      if (step.narrationScript) {
+        const oldStep = resortConfig.tourConfig?.steps?.find(s => s.locationId === step.locationId);
+        if (!oldStep || oldStep.narrationScript !== step.narrationScript) {
+          textsToGenerate.push({ id: `tour-${step.locationId}`, text: step.narrationScript });
+        }
+      }
     });
 
     const defaultVoiceStyle = cfg.defaultVoiceStyle || 'female_ai';
     if (defaultVoiceStyle !== 'web_natural' && textsToGenerate.length > 0) {
       // Send changed items to backend for background TTS generation
       fetch('/api/tts/scan', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ texts: textsToGenerate, voice_id: defaultVoiceStyle })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texts: textsToGenerate, voice_id: defaultVoiceStyle })
       }).catch(e => console.warn('Failed to start background TTS scan', e));
     }
 
@@ -642,8 +695,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   return (
     <div className={isFullScreen ? "w-full h-full flex flex-col bg-white" : "fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/50 backdrop-blur-sm animate-fadeIn"}>
-    <div className={isFullScreen ? "relative w-full h-full flex flex-col text-[#2D3748] max-w-6xl mx-auto" : "relative w-full max-w-5xl h-[90vh] bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#2D3748]"}>
-        
+      <div className={isFullScreen ? "relative w-full h-full flex flex-col text-[#2D3748] max-w-6xl mx-auto" : "relative w-full max-w-5xl h-[90vh] bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#2D3748]"}>
+
         {/* Admin Header Bar */}
         <div className="flex items-center justify-between px-6 py-4 bg-[#FDFCFB] border-b border-gray-100">
           <div className="flex items-center gap-3">
@@ -685,7 +738,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </span>
             )}
 
-            
+
             <button
               onClick={handleExportJSON}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1A365D] hover:bg-[#2A4365] text-white font-bold text-xs shadow-md transition-all"
@@ -727,49 +780,43 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         <div className="flex items-center gap-2 px-6 py-3 bg-[#F7FAFC] border-b border-gray-100 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('locations')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'locations' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'locations' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             📍 Quản Lý Khu Vực & Ghim Pin
           </button>
           <button
             onClick={() => setActiveTab('slides')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'slides' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'slides' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             🖼️ Quản Lý Slide Ảnh Chi Tiết
           </button>
           <button
             onClick={() => setActiveTab('tour')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'tour' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'tour' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             🗺️ Tour Tham Quan Gợi Ý
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'settings' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'settings' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             ⚙️ Cấu Hình Resort & Thời Tiết
           </button>
           <button
             onClick={() => setActiveTab('wordpress')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'wordpress' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'wordpress' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             💻 Tích Hợp WordPress
           </button>
           <button
             onClick={() => setActiveTab('backup')}
-            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'backup' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
-            }`}
+            className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'backup' ? 'bg-[#1A365D] text-white shadow-sm' : 'bg-white hover:bg-gray-100 text-gray-600 border border-gray-200'
+              }`}
           >
             💾 Backup
           </button>
@@ -777,11 +824,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
         {/* Tab Content Body */}
         <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
-          
+
           {/* TAB 1: LOCATION & PIN MANAGER */}
           {activeTab === 'locations' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
+
               {/* Left Column: Location Selection List */}
               <div className="space-y-3 bg-[#F7FAFC] p-4 rounded-2xl border border-gray-100">
                 <div className="flex items-center justify-between">
@@ -799,11 +846,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <div
                       key={loc.id}
                       onClick={() => setSelectedLocId(loc.id)}
-                      className={`p-2.5 rounded-xl border text-xs cursor-pointer flex items-center justify-between transition-all ${
-                        selectedLocId === loc.id
+                      className={`p-2.5 rounded-xl border text-xs cursor-pointer flex items-center justify-between transition-all ${selectedLocId === loc.id
                           ? 'bg-[#1A365D] border-[#1A365D] text-white font-bold shadow-xs'
                           : 'bg-white border-gray-200 hover:bg-gray-100 text-gray-700'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2 truncate">
                         <span className={`px-1.5 py-0.5 rounded font-extrabold text-[10px] ${selectedLocId === loc.id ? 'bg-[#C5A059] text-white' : 'bg-red-500 text-white'}`}>
@@ -839,11 +885,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           onStartPinCalibration(currentLoc.id);
                           onClose();
                         }}
-                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                          calibratingLocationId === currentLoc.id
+                        className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${calibratingLocationId === currentLoc.id
                             ? 'bg-[#C5A059] text-white animate-bounce'
                             : 'bg-[#F7FAFC] hover:bg-gray-200 text-[#1A365D] border border-gray-200'
-                        }`}
+                          }`}
                         title="Click vào hình map để định vị điểm ghim X%, Y%"
                       >
                         <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
@@ -988,7 +1033,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         </label>
                         <span className="text-[10px] text-amber-800 font-medium">Tùy chỉnh nhãn nút khi khách bấm xem chi tiết</span>
                       </div>
-                      
+
                       <input
                         type="text"
                         value={currentLoc.bookingCtaText || ''}
@@ -1011,11 +1056,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             key={preset}
                             type="button"
                             onClick={() => handleUpdateCurrentLoc('bookingCtaText', preset)}
-                            className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
-                              currentLoc.bookingCtaText === preset
+                            className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${currentLoc.bookingCtaText === preset
                                 ? 'bg-[#1A365D] text-white'
                                 : 'bg-white hover:bg-amber-100 text-[#1A365D] border border-amber-200'
-                            }`}
+                              }`}
                           >
                             + {preset}
                           </button>
@@ -1032,6 +1076,213 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       onChange={(e) => handleUpdateCurrentLoc('description', e.target.value)}
                       className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs text-[#2D3748] focus:outline-none focus:border-[#1A365D]"
                     />
+                  </div>
+
+                  {/* Điểm Nổi Bật Đặc Quyền (Highlights) Management */}
+                  <div className="p-4 bg-white rounded-2xl border border-gray-200 space-y-3 shadow-xs">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                      <label className="block text-[#1A365D] font-bold text-xs flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>Điểm Nổi Bật Đặc Quyền (Highlights)</span>
+                      </label>
+                      <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                        {currentLoc.highlights?.length || 0} điểm nổi bật
+                      </span>
+                    </div>
+
+                    <p className="text-gray-500 text-[11px]">
+                      Các gạch đầu dòng đặc quyền nổi bật hiển thị kèm icon tick xanh trong bảng chi tiết khu vực.
+                    </p>
+
+                    {/* Highlights List */}
+                    <div className="space-y-2 max-h-56 overflow-y-auto custom-scrollbar pr-1">
+                      {currentLoc.highlights && currentLoc.highlights.length > 0 ? (
+                        currentLoc.highlights.map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-2 p-2 bg-[#F7FAFC] rounded-xl border border-gray-200 group">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <input
+                              type="text"
+                              value={item}
+                              onChange={(e) => handleUpdateHighlight(idx, e.target.value)}
+                              className="flex-1 bg-transparent text-xs font-medium text-[#2D3748] outline-none"
+                              placeholder="Nhập nội dung điểm nổi bật..."
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteHighlight(idx)}
+                              className="p-1 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                              title="Xóa mục này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-4 text-gray-400 text-xs italic bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                          Chưa có điểm nổi bật nào. Hãy thêm ở bên dưới.
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Add New Highlight Input */}
+                    <div className="flex gap-2 pt-1">
+                      <input
+                        type="text"
+                        value={newHighlightInput}
+                        onChange={(e) => setNewHighlightInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddHighlight();
+                          }
+                        }}
+                        placeholder="Nhập điểm nổi bật mới (nhấn Enter hoặc bấm Thêm)..."
+                        className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-[#2D3748] focus:bg-white focus:border-[#1A365D] outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleAddHighlight()}
+                        className="px-4 py-2 bg-[#1A365D] hover:bg-[#2A4365] text-white font-bold rounded-xl text-xs transition-colors shrink-0 flex items-center gap-1"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Thêm
+                      </button>
+                    </div>
+
+                    {/* Quick Presets for Highlights */}
+                    <div className="space-y-1 pt-1">
+                      <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Gợi ý nhanh (Click để thêm):</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          'Tầm nhìn trực diện biển & hồ bơi',
+                          'Ban công riêng thoáng đãng',
+                          'Nội thất gỗ & mây tre cao cấp',
+                          'Bồn tắm nằm sang trọng',
+                          'Cách sảnh chính 10m',
+                          'Diện tích > 1000m² tràn bờ',
+                          'Pool Bar chìm dưới nước',
+                          'Ghế nằm tắm nắng cao cấp',
+                          'Thực đơn hải sản tươi sống',
+                          'Không gian mở view biển',
+                          'Check-in riêng tư'
+                        ].map((preset) => (
+                          <button
+                            key={preset}
+                            type="button"
+                            onClick={() => handleAddHighlight(preset)}
+                            className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-gray-200 text-gray-600 transition-colors"
+                          >
+                            + {preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tiện Nghi & Dịch Vụ Đi Kèm (Amenities) Management */}
+                  <div className="p-4 bg-white rounded-2xl border border-gray-200 space-y-3 shadow-xs">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                      <label className="block text-[#1A365D] font-bold text-xs flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                        <span>Tiện Nghi & Dịch Vụ Đi Kèm (Amenities)</span>
+                      </label>
+                      <span className="text-[10px] bg-amber-50 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-200">
+                        {currentLoc.amenities?.length || 0} tiện nghi
+                      </span>
+                    </div>
+
+                    <p className="text-gray-500 text-[11px]">
+                      Danh sách các thẻ tag tiện ích (Wifi, Điều hòa, Smart TV, Hồ bơi, Minibar, v.v.).
+                    </p>
+
+                    {/* Amenities Badges List */}
+                    <div className="flex flex-wrap gap-2 min-h-12 p-2.5 bg-[#F7FAFC] rounded-xl border border-gray-200">
+                      {currentLoc.amenities && currentLoc.amenities.length > 0 ? (
+                        currentLoc.amenities.map((amenity, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 shadow-2xs group hover:border-[#C5A059]"
+                          >
+                            <span>✨ {amenity}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteAmenity(idx)}
+                              className="text-gray-400 hover:text-red-500 rounded-full p-0.5 transition-colors"
+                              title="Xóa tiện nghi này"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ))
+                      ) : (
+                        <div className="w-full text-center py-2 text-gray-400 text-xs italic">
+                          Chưa có tiện nghi nào. Hãy thêm ở bên dưới.
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Add New Amenity Input */}
+                    <div className="flex gap-2 pt-1">
+                      <input
+                        type="text"
+                        value={newAmenityInput}
+                        onChange={(e) => setNewAmenityInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddAmenity();
+                          }
+                        }}
+                        placeholder="Nhập tên tiện nghi mới (nhấn Enter hoặc bấm Thêm)..."
+                        className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-[#2D3748] focus:bg-white focus:border-[#1A365D] outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleAddAmenity()}
+                        className="px-4 py-2 bg-[#C5A059] hover:bg-[#B38E47] text-white font-bold rounded-xl text-xs transition-colors shrink-0 flex items-center gap-1"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Thêm Tiện Nghi
+                      </button>
+                    </div>
+
+                    {/* Quick Presets for Amenities */}
+                    <div className="space-y-1 pt-1">
+                      <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Gợi ý chọn nhanh (1 click):</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          'Wifi miễn phí',
+                          'Điều hòa',
+                          'Bồn tắm nằm',
+                          'Smart TV 55 inch',
+                          'Minibar',
+                          'Ban công biển',
+                          'Máy sấy tóc',
+                          'Két an toàn',
+                          'Khăn tắm biển',
+                          'Áo choàng tắm',
+                          'Hồ bơi riêng',
+                          'Phục vụ ăn tại phòng',
+                          'Trà & Cà phê miễn phí',
+                          'Dép đi trong phòng'
+                        ].map((preset) => {
+                          const isAlreadyAdded = (currentLoc.amenities || []).includes(preset);
+                          return (
+                            <button
+                              key={preset}
+                              type="button"
+                              disabled={isAlreadyAdded}
+                              onClick={() => handleAddAmenity(preset)}
+                              className={`px-2 py-0.5 rounded-md text-[10px] font-medium transition-colors border ${
+                                isAlreadyAdded
+                                  ? 'bg-amber-100/50 text-amber-800 border-amber-200 cursor-default opacity-60'
+                                  : 'bg-gray-100 hover:bg-amber-50 hover:text-amber-800 hover:border-amber-200 border-gray-200 text-gray-600'
+                              }`}
+                            >
+                              {isAlreadyAdded ? `✓ ${preset}` : `+ ${preset}`}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1096,11 +1347,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         input.value = '';
                       }
                     }}
-                    className={`px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1.5 justify-center shadow-md transition-all ${
-                      isScanningDrive 
-                        ? 'bg-[#1A365D]/80 cursor-wait' 
+                    className={`px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1.5 justify-center shadow-md transition-all ${isScanningDrive
+                        ? 'bg-[#1A365D]/80 cursor-wait'
                         : 'bg-[#1A365D] hover:bg-[#122642]'
-                    }`}
+                      }`}
                   >
                     {isScanningDrive ? (
                       <>
@@ -1119,7 +1369,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                   <span>Hỗ trợ: Link ảnh trực tiếp (JPG, PNG, WebP), video YouTube và <strong>Thư mục Google Drive</strong> (tự động quét & chọn số lượng ảnh/video để lưu vào data).</span>
                 </div>
-                
+
                 {/* Scrape from Website Row */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-1 border-t border-gray-100 pt-3">
                   <input
@@ -1132,9 +1382,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <button
                     onClick={handleScrapeRoomUrl}
                     disabled={isScrapingRoom}
-                    className={`px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1 justify-center shadow-md transition-all ${
-                      isScrapingRoom ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C5A059] hover:bg-[#B38E47]'
-                    }`}
+                    className={`px-5 py-2 rounded-xl text-white font-bold text-xs flex items-center gap-1 justify-center shadow-md transition-all ${isScrapingRoom ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C5A059] hover:bg-[#B38E47]'
+                      }`}
                   >
                     {isScrapingRoom ? (
                       <span className="flex items-center gap-2">
@@ -1167,83 +1416,83 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       const match = img.url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|lh3\.googleusercontent\.com\/d\/)([a-zA-Z0-9_-]+)/);
                       if (match) gdriveId = match[1];
                     }
-                    
-                    return (
-                    <div
-                      key={img.id || idx}
-                      draggable
-                      onDragStart={(e) => {
-                        setDraggedSlideIdx(idx);
-                        e.dataTransfer.effectAllowed = 'move';
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.dataTransfer.dropEffect = 'move';
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        if (draggedSlideIdx === null || draggedSlideIdx === idx) return;
-                        const newImages = [...currentLoc.images];
-                        const draggedImage = newImages[draggedSlideIdx];
-                        newImages.splice(draggedSlideIdx, 1);
-                        newImages.splice(idx, 0, draggedImage);
-                        handleUpdateCurrentLoc('images', newImages);
-                        setDraggedSlideIdx(null);
-                      }}
-                      className={`relative group rounded-2xl overflow-hidden bg-white border shadow-sm flex flex-col cursor-move transition-all ${draggedSlideIdx === idx ? 'opacity-50 border-dashed border-[#1A365D]' : 'border-gray-200'}`}
-                    >
-                      <div className="w-full h-44 overflow-hidden bg-gray-900 relative flex items-center justify-center">
-                        {isVideo ? (
-                           isYouTube && ytId ? (
-                             <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="YouTube Video" className="w-full h-full object-cover" />
-                           ) : isGoogleDrive && gdriveId ? (
-                             <img 
-                               src={`https://drive.google.com/thumbnail?id=${gdriveId}&sz=w400`} 
-                               alt="Google Drive Video" 
-                               className="w-full h-full object-cover" 
-                             />
-                           ) : (
-                             <video src={img.url} className="w-full h-full object-cover" muted />
-                           )
-                        ) : (
-                          <img
-                            src={img.url}
-                            alt={img.title || `Slide ${idx + 1}`}
-                            className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
-                          />
-                        )}
-                        {isVideo && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none">
-                            <Video className="w-10 h-10 text-white drop-shadow-md" />
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="p-3 bg-[#FDFCFB] flex-1 space-y-1.5 text-xs">
-                        <span className="text-[10px] uppercase font-bold text-[#C5A059]">Slide #{idx + 1} {isVideo && '- VIDEO'}</span>
-                        <input
-                          type="text"
-                          value={img.title || ''}
-                          onChange={(e) => {
-                            const updatedImages = currentLoc.images.map(i => i.id === img.id ? { ...i, title: e.target.value } : i);
-                            handleUpdateCurrentLoc('images', updatedImages);
-                          }}
-                          placeholder="Tiêu đề ảnh..."
-                          className="w-full px-2 py-1 bg-white border border-gray-200 rounded text-[#2D3748]"
-                        />
-                      </div>
 
-                      <button
-                        onClick={() => handleDeleteSlideImage(img.id)}
-                        className="absolute top-2 right-2 p-2 rounded-xl bg-white/90 hover:bg-red-600 hover:text-white text-gray-700 transition-colors shadow-sm"
-                        title="Xóa slide ảnh này"
+                    return (
+                      <div
+                        key={img.id || idx}
+                        draggable
+                        onDragStart={(e) => {
+                          setDraggedSlideIdx(idx);
+                          e.dataTransfer.effectAllowed = 'move';
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = 'move';
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          if (draggedSlideIdx === null || draggedSlideIdx === idx) return;
+                          const newImages = [...currentLoc.images];
+                          const draggedImage = newImages[draggedSlideIdx];
+                          newImages.splice(draggedSlideIdx, 1);
+                          newImages.splice(idx, 0, draggedImage);
+                          handleUpdateCurrentLoc('images', newImages);
+                          setDraggedSlideIdx(null);
+                        }}
+                        className={`relative group rounded-2xl overflow-hidden bg-white border shadow-sm flex flex-col cursor-move transition-all ${draggedSlideIdx === idx ? 'opacity-50 border-dashed border-[#1A365D]' : 'border-gray-200'}`}
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  );
-                })
+                        <div className="w-full h-44 overflow-hidden bg-gray-900 relative flex items-center justify-center">
+                          {isVideo ? (
+                            isYouTube && ytId ? (
+                              <img src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`} alt="YouTube Video" className="w-full h-full object-cover" />
+                            ) : isGoogleDrive && gdriveId ? (
+                              <img
+                                src={`https://drive.google.com/thumbnail?id=${gdriveId}&sz=w400`}
+                                alt="Google Drive Video"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <video src={img.url} className="w-full h-full object-cover" muted />
+                            )
+                          ) : (
+                            <img
+                              src={img.url}
+                              alt={img.title || `Slide ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                          )}
+                          {isVideo && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none">
+                              <Video className="w-10 h-10 text-white drop-shadow-md" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="p-3 bg-[#FDFCFB] flex-1 space-y-1.5 text-xs">
+                          <span className="text-[10px] uppercase font-bold text-[#C5A059]">Slide #{idx + 1} {isVideo && '- VIDEO'}</span>
+                          <input
+                            type="text"
+                            value={img.title || ''}
+                            onChange={(e) => {
+                              const updatedImages = currentLoc.images.map(i => i.id === img.id ? { ...i, title: e.target.value } : i);
+                              handleUpdateCurrentLoc('images', updatedImages);
+                            }}
+                            placeholder="Tiêu đề ảnh..."
+                            className="w-full px-2 py-1 bg-white border border-gray-200 rounded text-[#2D3748]"
+                          />
+                        </div>
+
+                        <button
+                          onClick={() => handleDeleteSlideImage(img.id)}
+                          className="absolute top-2 right-2 p-2 rounded-xl bg-white/90 hover:bg-red-600 hover:text-white text-gray-700 transition-colors shadow-sm"
+                          title="Xóa slide ảnh này"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div className="col-span-full py-12 text-center text-gray-400 text-xs">
                     Chưa có hình ảnh slide cho khu vực này. Hãy dán URL hoặc tải ảnh lên.
@@ -1303,7 +1552,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     placeholder="Nhập đường dẫn URL ảnh bản đồ, link Google Drive hoặc bấm Tải ảnh từ máy"
                     className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[#2D3748] focus:bg-white focus:border-[#1A365D] outline-none text-xs"
                   />
-                  
+
                   <label className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1A365D] hover:bg-[#2A4365] text-white font-bold cursor-pointer transition-all shadow-xs shrink-0">
                     <Upload className="w-4 h-4 text-[#C5A059]" />
                     <span>Tải ảnh từ máy tính</span>
@@ -1322,11 +1571,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <span>Xem trước ảnh nền bản đồ hiện tại:</span>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-md text-gray-600 font-mono">
-                        {cfg.mapImageBg?.startsWith('data:') 
-                          ? 'Ảnh Tải Lên (Data URL Tối Ưu)' 
-                          : cfg.mapImageBg?.startsWith('/') 
-                          ? 'Sơ Đồ Vector Local (/cliff-map.svg)' 
-                          : 'Đường Dẫn URL Trực Tiếp / CDN'}
+                        {cfg.mapImageBg?.startsWith('data:')
+                          ? 'Ảnh Tải Lên (Data URL Tối Ưu)'
+                          : cfg.mapImageBg?.startsWith('/')
+                            ? 'Sơ Đồ Vector Local (/cliff-map.svg)'
+                            : 'Đường Dẫn URL Trực Tiếp / CDN'}
                       </span>
                       {cfg.mapImageBg && cfg.mapImageBg !== '/cliff-map.svg' && (
                         <button
@@ -1451,7 +1700,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       )}
                     </select>
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                     </div>
                   </div>
                 </div>
@@ -1469,11 +1718,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         key={rate}
                         type="button"
                         onClick={() => setCfg({ ...cfg, defaultSpeechRate: rate })}
-                        className={`flex-1 py-1.5 px-2 rounded-lg border text-[10px] font-bold transition-all text-center ${
-                          (cfg.defaultSpeechRate ?? 1.0) === rate
+                        className={`flex-1 py-1.5 px-2 rounded-lg border text-[10px] font-bold transition-all text-center ${(cfg.defaultSpeechRate ?? 1.0) === rate
                             ? 'bg-[#1A365D] text-white border-[#1A365D] shadow-xs'
                             : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                        }`}
+                          }`}
                       >
                         {label}
                       </button>
@@ -1489,7 +1737,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <Music className="w-4 h-4 text-[#C5A059]" />
                     <span>Cấu Hình Âm Thanh & Nhạc Nền Resort (Ambient Sound)</span>
                   </label>
-                  
+
                   {/* Enable/Disable Toggle */}
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
@@ -1544,11 +1792,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <button
                       type="button"
                       onClick={() => setCfg({ ...cfg, ambientMusicUrl: '' })}
-                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${
-                        !cfg.ambientMusicUrl || cfg.ambientMusicUrl.trim() === ''
+                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${!cfg.ambientMusicUrl || cfg.ambientMusicUrl.trim() === ''
                           ? 'bg-[#1A365D] text-white border-[#1A365D] shadow-xs'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       <span>🌊 Mặc Định (Tiếng Sóng Biển 3D)</span>
                     </button>
@@ -1556,11 +1803,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <button
                       type="button"
                       onClick={() => setCfg({ ...cfg, ambientMusicUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' })}
-                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${
-                        cfg.ambientMusicUrl === 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'
+                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${cfg.ambientMusicUrl === 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'
                           ? 'bg-[#C5A059] text-white border-[#C5A059] shadow-xs'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       <Music className="w-3.5 h-3.5 text-amber-600" />
                       <span>🎹 Piano Resort Thu Cút (Chill Piano)</span>
@@ -1569,11 +1815,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <button
                       type="button"
                       onClick={() => setCfg({ ...cfg, ambientMusicUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' })}
-                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${
-                        cfg.ambientMusicUrl === 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3'
+                      className={`px-3 py-1.5 rounded-xl border font-bold transition-all flex items-center gap-1.5 ${cfg.ambientMusicUrl === 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3'
                           ? 'bg-[#C5A059] text-white border-[#C5A059] shadow-xs'
                           : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       <Headphones className="w-3.5 h-3.5 text-blue-600" />
                       <span>🌴 Tropical Acoustic Lounge</span>
@@ -1633,7 +1878,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <span className="block font-bold text-gray-700 text-[11px]">
                     Tùy Chọn Lớp Phủ Thời Tiết Bản Đồ (Map Visual Overlay):
                   </span>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
                       {
@@ -1678,11 +1923,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           key={p.id}
                           type="button"
                           onClick={() => setCfg({ ...cfg, activeWeatherOverlay: p.id as any })}
-                          className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
-                            isSelected
+                          className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${isSelected
                               ? 'border-[#C5A059] bg-amber-50/70 text-[#1A365D] font-bold shadow-xs'
                               : 'border-gray-200 bg-gray-50/50 text-gray-700 hover:bg-gray-100'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center justify-between text-xs mb-0.5">
                             <span className="font-bold">{p.label}</span>
@@ -1702,10 +1946,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
           {/* TAB: TOUR MANAGEMENT */}
           {activeTab === 'tour' && (
-            <AdminTourTab 
-              tourConfig={cfg.tourConfig} 
-              locations={locList} 
-              onUpdate={(newConfig) => setCfg({ ...cfg, tourConfig: newConfig })} 
+            <AdminTourTab
+              tourConfig={cfg.tourConfig}
+              locations={locList}
+              onUpdate={(newConfig) => setCfg({ ...cfg, tourConfig: newConfig })}
             />
           )}
 
@@ -1981,11 +2225,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           key={img.id || idx}
                           onClick={() => toggleDriveItemSelection(img.id)}
                           title={`Bấm để ${isSelected ? 'bỏ chọn' : 'chọn'} ${img.name}`}
-                          className={`group relative rounded-xl overflow-hidden border-2 aspect-square bg-gray-100 cursor-pointer select-none transition-all duration-150 transform active:scale-95 ${
-                            isSelected
+                          className={`group relative rounded-xl overflow-hidden border-2 aspect-square bg-gray-100 cursor-pointer select-none transition-all duration-150 transform active:scale-95 ${isSelected
                               ? 'border-emerald-500 ring-2 ring-emerald-400/40 shadow-sm opacity-100'
                               : 'border-gray-200 opacity-40 hover:opacity-85 hover:border-gray-400 grayscale'
-                          }`}
+                            }`}
                         >
                           <img
                             src={img.thumbnailUrl}
@@ -1993,7 +2236,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             className="w-full h-full object-cover"
                             loading="lazy"
                           />
-                          
+
                           {/* Top-Right Checkbox Badge */}
                           <div className="absolute top-1.5 right-1.5">
                             {isSelected ? (
@@ -2028,11 +2271,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           key={vid.id || idx}
                           onClick={() => toggleDriveItemSelection(vid.id)}
                           title={`Bấm để ${isSelected ? 'bỏ chọn' : 'chọn'} ${vid.name}`}
-                          className={`group relative rounded-xl overflow-hidden border-2 aspect-square bg-gray-900 cursor-pointer select-none transition-all duration-150 transform active:scale-95 ${
-                            isSelected
+                          className={`group relative rounded-xl overflow-hidden border-2 aspect-square bg-gray-900 cursor-pointer select-none transition-all duration-150 transform active:scale-95 ${isSelected
                               ? 'border-amber-500 ring-2 ring-amber-400/40 shadow-sm opacity-100'
                               : 'border-gray-200 opacity-40 hover:opacity-85 hover:border-gray-400 grayscale'
-                          }`}
+                            }`}
                         >
                           <img
                             src={vid.thumbnailUrl}
@@ -2104,11 +2346,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     type="button"
                     disabled={isImportingDrive || totalSelected === 0}
                     onClick={handleConfirmDriveImport}
-                    className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-md transition-all ${
-                      isImportingDrive || totalSelected === 0
+                    className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-md transition-all ${isImportingDrive || totalSelected === 0
                         ? 'bg-gray-400 cursor-not-allowed'
                         : 'bg-[#1A365D] hover:bg-[#122642] cursor-pointer'
-                    }`}
+                      }`}
                   >
                     {isImportingDrive ? (
                       <>

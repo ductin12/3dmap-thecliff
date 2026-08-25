@@ -4,6 +4,14 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import crypto from "crypto";
 import fs from "fs";
+import {
+  requireAuth,
+  verifyLogin,
+  createSessionToken,
+  buildSessionCookie,
+  buildClearCookie,
+  getSessionFromRequest,
+} from "../lib/auth";
 
 dotenv.config();
 
@@ -30,15 +38,14 @@ app.get("/api/health", (_req, res) => {
 app.get("/api/status", async (_req, res) => {
   const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-  
+
   let kvConnected = false;
   let kvError = null;
   if (kvUrl && kvToken) {
     try {
       const testRes = await fetch(kvUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
           Authorization: `Bearer ${kvToken}`,
           'Content-Type': 'application/json'
         },
@@ -60,8 +67,38 @@ app.get("/api/status", async (_req, res) => {
     has_kv_configured: !!(kvUrl && kvToken),
     kv_connected: kvConnected,
     kv_error: kvError,
-    has_github_token: !!ghToken,
-    active_driver: kvConnected ? 'Vercel KV / Upstash Redis' : (ghToken ? 'GitHub API Sync' : 'Local / Browser Cache')
+    active_driver: kvConnected ? 'Vercel KV / Upstash Redis' : 'Local / Browser Cache'
+  });
+});
+
+// POST /api/login — verify credentials server-side, issue httpOnly session cookie
+app.post("/api/login", async (req, res) => {
+  try {
+    const { username, password } = req.body || {};
+    const session = await verifyLogin(username, password);
+    if (!session) {
+      return res.status(401).json({ error: "Tài khoản hoặc mật khẩu không đúng" });
+    }
+    const token = createSessionToken(session);
+    res.setHeader("Set-Cookie", buildSessionCookie(token));
+    return res.json({ success: true, user: session });
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message || "Login failed" });
+  }
+});
+
+// POST /api/logout — clear session cookie
+app.post("/api/logout", (_req, res) => {
+  res.setHeader("Set-Cookie", buildClearCookie());
+  return res.json({ success: true });
+});
+
+// GET /api/me — return current session, if any
+app.get("/api/me", (req, res) => {
+  const session = getSessionFromRequest(req);
+  if (!session) return res.status(401).json({ error: "Not authenticated" });
+  return res.json({
+    user: { username: session.username, role: session.role, fullName: session.fullName },
   });
 });
 
@@ -74,7 +111,7 @@ async function getCloudData(): Promise<any | null> {
     try {
       const res = await fetch(kvUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
           Authorization: `Bearer ${kvToken}`,
           'Content-Type': 'application/json'
         },
@@ -119,7 +156,7 @@ async function saveCloudData(dataToSave: any): Promise<{ savedToCloud: boolean; 
     try {
       const res = await fetch(kvUrl, {
         method: 'POST',
-        headers: { 
+        headers: {
           Authorization: `Bearer ${kvToken}`,
           'Content-Type': 'application/json'
         },
@@ -136,48 +173,7 @@ async function saveCloudData(dataToSave: any): Promise<{ savedToCloud: boolean; 
     }
   }
 
-  // 2. GitHub REST API Auto-Commit
-  const ghToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
-  const ghRepo = process.env.GITHUB_REPO || 'ductin12/3dmap-thecliff';
-  if (ghToken) {
-    try {
-      const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data/database.json`, {
-        headers: {
-          Authorization: `Bearer ${ghToken}`,
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'TheCliff3DMap-Sync'
-        }
-      });
-      let sha = '';
-      if (getRes.ok) {
-        const fileInfo = await getRes.json();
-        sha = fileInfo.sha;
-      }
-
-      const contentBase64 = Buffer.from(JSON.stringify(dataToSave, null, 2)).toString('base64');
-      const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data/database.json`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${ghToken}`,
-          Accept: 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'TheCliff3DMap-Sync'
-        },
-        body: JSON.stringify({
-          message: 'chore: update resort database from Admin Panel',
-          content: contentBase64,
-          sha: sha || undefined
-        })
-      });
-      if (putRes.ok) {
-        return { savedToCloud: true, driver: 'GitHub Auto-Commit' };
-      }
-    } catch (e) {
-      console.warn("GitHub commit error:", e);
-    }
-  }
-
-  // 3. JSONBin.io
+  // 2. JSONBin.io
   const jsonBinId = process.env.JSONBIN_BIN_ID;
   const jsonBinKey = process.env.JSONBIN_API_KEY;
   if (jsonBinId && jsonBinKey) {
@@ -222,7 +218,7 @@ app.get("/api/data", async (_req, res) => {
 });
 
 // POST /api/data
-app.post("/api/data", async (req, res) => {
+app.post("/api/data", requireAuth, async (req, res) => {
   try {
     const { locations, config } = req.body;
     if (!locations || !config) {
@@ -238,12 +234,12 @@ app.post("/api/data", async (req, res) => {
       if (fs.existsSync(path.dirname(dbPath))) {
         fs.writeFileSync(dbPath, JSON.stringify(dataToSave, null, 2));
       }
-    } catch (_e) {}
+    } catch (_e) { }
 
-    return res.json({ 
-      success: true, 
-      cloud: cloudResult.savedToCloud, 
-      driver: cloudResult.driver || 'local-file' 
+    return res.json({
+      success: true,
+      cloud: cloudResult.savedToCloud,
+      driver: cloudResult.driver || 'local-file'
     });
   } catch (e: any) {
     return res.status(500).json({ error: e.message || "Failed to save data" });
@@ -251,7 +247,7 @@ app.post("/api/data", async (req, res) => {
 });
 
 // POST /api/upload-map
-app.post("/api/upload-map", async (req, res) => {
+app.post("/api/upload-map", requireAuth, async (req, res) => {
   try {
     const { base64Data } = req.body;
     if (!base64Data) {
@@ -267,11 +263,11 @@ app.post("/api/upload-map", async (req, res) => {
     const buffer = Buffer.from(matches[2], 'base64');
     const filename = `map-bg-${Date.now()}.${ext}`;
     const filepath = path.join(process.cwd(), "data", filename);
-    
+
     try {
       fs.writeFileSync(filepath, buffer);
-    } catch (_e) {}
-    
+    } catch (_e) { }
+
     return res.json({ success: true, url: `/data/${filename}` });
   } catch (e: any) {
     console.error("Upload Error:", e);
@@ -314,7 +310,7 @@ Nội dung: ${text}`;
       if (textResponse.text && textResponse.text.trim()) {
         optimizedScript = textResponse.text.trim();
       }
-    } catch (_err) {}
+    } catch (_err) { }
 
     return res.json({
       success: true,
@@ -350,9 +346,9 @@ app.post("/api/tts/generate", async (req, res) => {
 
     const ttsUrl = `https://tts.thecliff.io.vn/stream`;
     const response = await fetch(ttsUrl, {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ text, voice_id })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, voice_id })
     });
 
     if (!response.ok) {
@@ -379,7 +375,7 @@ app.post("/api/scrape-room", async (req, res) => {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       }
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch page, status: ${response.status}`);
     }
@@ -393,13 +389,13 @@ app.post("/api/scrape-room", async (req, res) => {
     const itemsString = match[1];
     const images: string[] = [];
     let videoUrl: string | null = null;
-    
+
     const regex = /\{[^}]*type:\s*'([^']+)'[^}]*src:\s*'([^']+)'/g;
     let m;
     while ((m = regex.exec(itemsString)) !== null) {
       const type = m[1];
       const src = m[2];
-      
+
       if (type === 'video' && !videoUrl) {
         videoUrl = src;
       } else if (type === 'image' && images.length < 10) {
@@ -482,9 +478,9 @@ app.post("/api/gdrive/scan", async (req, res) => {
           if (viewRes.ok) {
             const html = await viewRes.text();
             const titleMatch = html.match(/<meta\s+itemprop="name"\s+content="([^"]+)"/i) ||
-                               html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
-                               html.match(/<title>([^<]+?)(?:\s*-\s*Google Drive)?<\/title>/i) ||
-                               html.match(/itemJson:\s*\[null,"([^"]+)"/);
+              html.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i) ||
+              html.match(/<title>([^<]+?)(?:\s*-\s*Google Drive)?<\/title>/i) ||
+              html.match(/itemJson:\s*\[null,"([^"]+)"/);
             if (titleMatch && titleMatch[1]) {
               fileName = titleMatch[1].trim();
             }
@@ -502,7 +498,7 @@ app.post("/api/gdrive/scan", async (req, res) => {
           id: singleId,
           name: fileName,
           type: isVideo ? "video" : "image",
-          thumbnailUrl: isVideo 
+          thumbnailUrl: isVideo
             ? `https://drive.google.com/thumbnail?id=${singleId}&sz=w400`
             : `https://lh3.googleusercontent.com/d/${singleId}=w400`,
           downloadUrl: isVideo
@@ -561,7 +557,7 @@ app.post("/api/gdrive/scan", async (req, res) => {
           id,
           name,
           type: isVideo ? "video" : "image",
-          thumbnailUrl: isVideo 
+          thumbnailUrl: isVideo
             ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
             : `https://lh3.googleusercontent.com/d/${id}=w400`,
           downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
@@ -585,7 +581,7 @@ app.post("/api/gdrive/scan", async (req, res) => {
             id,
             name,
             type: isVideo ? "video" : "image",
-            thumbnailUrl: isVideo 
+            thumbnailUrl: isVideo
               ? `https://drive.google.com/thumbnail?id=${id}&sz=w400`
               : `https://lh3.googleusercontent.com/d/${id}=w400`,
             downloadUrl: `https://drive.google.com/uc?export=download&id=${id}`,
@@ -617,7 +613,7 @@ app.post("/api/gdrive/scan", async (req, res) => {
 });
 
 // POST /api/gdrive/import
-app.post("/api/gdrive/import", async (req, res) => {
+app.post("/api/gdrive/import", requireAuth, async (req, res) => {
   try {
     const { items } = req.body;
     if (!items || !Array.isArray(items) || items.length === 0) {
