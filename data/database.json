@@ -3914,7 +3914,7 @@
     "defaultVoiceStyle": "Phạm Tuyên",
     "defaultSpeechRate": 1,
     "autoSyncWeather": true,
-    "activeWeatherOverlay": "auto",
+    "activeWeatherOverlay": "none",
     "weatherStationLat": 10.9329,
     "weatherStationLng": 108.1017,
     "tourConfig": {
@@ -4012,5 +4012,5 @@
       ]
     }
   },
-  "updatedAt": "2026-08-23T11:30:04.139Z"
+  "updatedAt": "2026-08-25T02:21:38.331Z"
 }
