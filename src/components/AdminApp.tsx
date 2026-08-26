@@ -26,13 +26,33 @@ export const AdminApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'panel' | 'users'>('panel');
 
   useEffect(() => {
-    const savedUsers = localStorage.getItem('cliff_users');
-    if (savedUsers) {
-      setUsers(JSON.parse(savedUsers));
-    } else {
-      setUsers(DEFAULT_USERS);
-      localStorage.setItem('cliff_users', JSON.stringify(DEFAULT_USERS));
-    }
+    // Load users from server first (source of truth), fallback to localStorage
+    fetch('/api/users', { credentials: 'include' })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data.users) && data.users.length > 0) {
+          setUsers(data.users);
+          localStorage.setItem('cliff_users', JSON.stringify(data.users));
+        } else {
+          // Fallback to localStorage or defaults
+          const savedUsers = localStorage.getItem('cliff_users');
+          if (savedUsers) {
+            try { setUsers(JSON.parse(savedUsers)); } catch (_e) { setUsers(DEFAULT_USERS); }
+          } else {
+            setUsers(DEFAULT_USERS);
+            localStorage.setItem('cliff_users', JSON.stringify(DEFAULT_USERS));
+          }
+        }
+      })
+      .catch(() => {
+        const savedUsers = localStorage.getItem('cliff_users');
+        if (savedUsers) {
+          try { setUsers(JSON.parse(savedUsers)); } catch (_e) { setUsers(DEFAULT_USERS); }
+        } else {
+          setUsers(DEFAULT_USERS);
+          localStorage.setItem('cliff_users', JSON.stringify(DEFAULT_USERS));
+        }
+      });
 
     // Restore session from the server-side httpOnly cookie
     fetch('/api/me', { credentials: 'include' })
@@ -132,6 +152,13 @@ export const AdminApp: React.FC = () => {
   const saveUsers = (newUsers: User[]) => {
     setUsers(newUsers);
     localStorage.setItem('cliff_users', JSON.stringify(newUsers));
+    // Also persist to server so all devices share the same user list
+    fetch('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ users: newUsers }),
+    }).catch(e => console.warn('Could not sync users to server:', e));
   };
 
   if (!currentUser) {

@@ -75,6 +75,35 @@ app.get("/api/status", async (_req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body || {};
+    if (!username || !password) {
+      return res.status(400).json({ error: "Thiếu tên đăng nhập hoặc mật khẩu" });
+    }
+
+    // 1. Check against multi-user list stored in database (cloud or local)
+    let dbUsers: any[] = [];
+    try {
+      const cloudData = await getCloudData();
+      const rawData = cloudData || (fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, "utf-8")) : null);
+      if (rawData && Array.isArray(rawData.users)) {
+        dbUsers = rawData.users;
+      }
+    } catch (_e) {}
+
+    if (dbUsers.length > 0) {
+      const found = dbUsers.find((u: any) => u.username === username);
+      if (found && found.password && found.password === password) {
+        const session = { username: found.username, role: found.role || "admin", fullName: found.fullName || found.username };
+        const token = createSessionToken(session);
+        res.setHeader("Set-Cookie", buildSessionCookie(token));
+        return res.json({ success: true, user: session });
+      }
+      if (found) {
+        // User found but wrong password
+        return res.status(401).json({ error: "Tài khoản hoặc mật khẩu không đúng" });
+      }
+    }
+
+    // 2. Fallback: check against single admin credential (env vars / default admin/admin)
     const session = await verifyLogin(username, password);
     if (!session) {
       return res.status(401).json({ error: "Tài khoản hoặc mật khẩu không đúng" });
@@ -84,6 +113,43 @@ app.post("/api/login", async (req, res) => {
     return res.json({ success: true, user: session });
   } catch (e: any) {
     return res.status(500).json({ error: e.message || "Login failed" });
+  }
+});
+
+// GET /api/users — list all users (admin only)
+app.get("/api/users", requireAuth, async (_req, res) => {
+  try {
+    const cloudData = await getCloudData();
+    const rawData = cloudData || (fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, "utf-8")) : null);
+    const users = (rawData && Array.isArray(rawData.users)) ? rawData.users : [];
+    // Never send passwords to client
+    return res.json({ users: users.map((u: any) => ({ ...u, password: undefined })) });
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/users — save full user list (admin only)
+app.post("/api/users", requireAuth, async (req, res) => {
+  try {
+    const { users } = req.body;
+    if (!Array.isArray(users)) return res.status(400).json({ error: "Missing users array" });
+
+    // Read existing data to merge
+    const cloudData = await getCloudData();
+    const existingData = cloudData || (fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath, "utf-8")) : {});
+    const dataToSave = { ...existingData, users, updatedAt: new Date().toISOString() };
+
+    await saveCloudData(dataToSave);
+    try {
+      if (fs.existsSync(path.dirname(dbPath))) {
+        fs.writeFileSync(dbPath, JSON.stringify(dataToSave, null, 2));
+      }
+    } catch (_e) {}
+
+    return res.json({ success: true, count: users.length });
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message });
   }
 });
 
