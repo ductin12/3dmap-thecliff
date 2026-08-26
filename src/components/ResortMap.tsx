@@ -487,9 +487,11 @@ export const ResortMap: React.FC<ResortMapProps> = ({
                       </span>
                       <h4 className="font-serif font-bold text-xs truncate text-[#1A365D]">{loc.title}</h4>
                     </div>
-                    <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
-                      {loc.subtitle || loc.description}
-                    </p>
+                    {(loc.subtitle || (loc.description && loc.description !== 'Nhập thông tin chi tiết khu vực tại đây...')) && (
+                      <p className="text-[10px] text-gray-500 line-clamp-2 leading-snug">
+                        {loc.subtitle || loc.description}
+                      </p>
+                    )}
                     <div className="mt-2 text-[10px] font-bold text-[#1A365D] flex items-center justify-between border-t border-gray-100 pt-1.5">
                       <span>Nhấp để xem chi tiết →</span>
                       {loc.openingHours && <span className="text-gray-400 font-normal">{loc.openingHours}</span>}

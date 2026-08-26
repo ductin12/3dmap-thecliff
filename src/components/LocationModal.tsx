@@ -335,6 +335,30 @@ export const LocationModal: React.FC<LocationModalProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const isDescriptionValid = (desc?: string): boolean => {
+    if (!desc) return false;
+    const trimmed = desc.trim();
+    return trimmed.length > 0 && trimmed !== 'Nhập thông tin chi tiết khu vực tại đây...';
+  };
+
+  const hasDescription = isDescriptionValid(location.description);
+
+  const validHighlights = (location.highlights || []).filter(
+    (h) => typeof h === 'string' && h.trim().length > 0 && !h.trim().startsWith('Tiện ích nổi bật')
+  );
+
+  const validAmenities = (location.amenities || []).filter(
+    (a) => typeof a === 'string' && a.trim().length > 0
+  );
+
+  const hasOpeningHours = Boolean(location.openingHours && location.openingHours.trim());
+  const hasCapacity = Boolean(location.capacity && location.capacity.trim());
+  const hasViewType = Boolean(location.viewType && location.viewType.trim());
+  const hasDistance = Boolean(location.distanceFromLobby && location.distanceFromLobby.trim());
+  const hasContactExt = Boolean(location.contactExt && location.contactExt.trim());
+
+  const hasAnySpecs = hasOpeningHours || hasCapacity || hasViewType || hasDistance || hasContactExt;
+
   const getCtaText = () => {
     if (location.bookingCtaText && location.bookingCtaText.trim() !== '') {
       return location.bookingCtaText;
@@ -382,8 +406,9 @@ export const LocationModal: React.FC<LocationModalProps> = ({
 
           <div className="flex items-center gap-2">
             {/* Audio Guide Quick Toggle Button */}
-            <button
-              onClick={handleTogglePlayAudio}
+            {hasDescription && (
+              <button
+                onClick={handleTogglePlayAudio}
               className={`p-2.5 rounded-xl transition-all border shadow-xs ${
                 isPlaying
                   ? 'bg-amber-500 text-white border-amber-500 shadow-md animate-pulse'
@@ -401,6 +426,7 @@ export const LocationModal: React.FC<LocationModalProps> = ({
                 <Volume2 className="w-4 h-4 text-[#C5A059]" />
               )}
             </button>
+            )}
 
             {/* Share Link Button */}
             <button
@@ -542,93 +568,109 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           )}
 
           {/* Key Specs Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 md:gap-3 p-3.5 md:p-4 rounded-2xl bg-[#F7FAFC] border border-gray-100">
-            {location.openingHours && (
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 font-bold shrink-0">
-                  <Clock className="w-4 h-4 text-amber-600" />
+          {hasAnySpecs && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 md:gap-3 p-3.5 md:p-4 rounded-2xl bg-[#F7FAFC] border border-gray-100">
+              {hasOpeningHours && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 font-bold shrink-0">
+                    <Clock className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Giờ hoạt động</p>
+                    <p className="text-xs font-bold text-[#1A365D]">{location.openingHours}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Giờ hoạt động</p>
-                  <p className="text-xs font-bold text-[#1A365D]">{location.openingHours}</p>
-                </div>
-              </div>
-            )}
+              )}
 
-            {location.capacity && (
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold shrink-0">
-                  <Users className="w-4 h-4 text-blue-600" />
+              {hasCapacity && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold shrink-0">
+                    <Users className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Sức chứa</p>
+                    <p className="text-xs font-bold text-[#1A365D]">{location.capacity}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Sức chứa</p>
-                  <p className="text-xs font-bold text-[#1A365D]">{location.capacity}</p>
-                </div>
-              </div>
-            )}
+              )}
 
-            {location.viewType && (
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold shrink-0">
-                  <Eye className="w-4 h-4 text-emerald-600" />
+              {hasViewType && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold shrink-0">
+                    <Eye className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Hướng nhìn</p>
+                    <p className="text-xs font-bold text-[#1A365D]">{location.viewType}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Hướng nhìn</p>
-                  <p className="text-xs font-bold text-[#1A365D]">{location.viewType}</p>
-                </div>
-              </div>
-            )}
+              )}
 
-            {location.distanceFromLobby && (
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 font-bold shrink-0">
-                  <Navigation className="w-4 h-4 text-purple-600" />
+              {hasDistance && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 font-bold shrink-0">
+                    <Navigation className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Vị trí từ Sảnh</p>
+                    <p className="text-xs font-bold text-[#1A365D]">{location.distanceFromLobby}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Vị trí từ Sảnh</p>
-                  <p className="text-xs font-bold text-[#1A365D]">{location.distanceFromLobby}</p>
+              )}
+
+              {hasContactExt && (
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600 font-bold shrink-0">
+                    <Phone className="w-4 h-4 text-rose-600" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Liên hệ nội bộ</p>
+                    <p className="text-xs font-bold text-[#1A365D]">{location.contactExt}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
           {/* Description */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold text-[#1A365D] uppercase tracking-widest flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#C5A059]" />
-                <span>Mô Tả Chi Tiết Khu Vực</span>
-              </h3>
+          {hasDescription && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-[#1A365D] uppercase tracking-widest flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                  <span>Mô Tả Chi Tiết Khu Vực</span>
+                </h3>
 
-              <button
-                type="button"
-                onClick={handleTogglePlayAudio}
-                className={`text-[11px] font-bold flex items-center gap-1 transition-colors ${
-                  isPlaying ? 'text-amber-600 font-extrabold animate-pulse' : 'text-[#C5A059] hover:underline'
-                }`}
-              >
-                {isLoadingAudio ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Volume2 className="w-3.5 h-3.5" />
-                )}
-                <span>{isPlaying ? 'Dừng đọc' : 'Nghe đọc AI'}</span>
-              </button>
+                <button
+                  type="button"
+                  onClick={handleTogglePlayAudio}
+                  className={`text-[11px] font-bold flex items-center gap-1 transition-colors ${
+                    isPlaying ? 'text-amber-600 font-extrabold animate-pulse' : 'text-[#C5A059] hover:underline'
+                  }`}
+                >
+                  {isLoadingAudio ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Volume2 className="w-3.5 h-3.5" />
+                  )}
+                  <span>{isPlaying ? 'Dừng đọc' : 'Nghe đọc AI'}</span>
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-600 leading-relaxed bg-[#FDFCFB] p-4 rounded-2xl border border-gray-100 shadow-xs">
+                {location.description}
+              </p>
             </div>
-
-            <p className="text-sm text-gray-600 leading-relaxed bg-[#FDFCFB] p-4 rounded-2xl border border-gray-100 shadow-xs">
-              {location.description}
-            </p>
-          </div>
+          )}
 
           {/* Highlights List */}
-          {location.highlights && location.highlights.length > 0 && (
+          {validHighlights.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs font-bold text-[#1A365D] uppercase tracking-widest">
                 Điểm Nổi Bật Đặc Quyền
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {location.highlights.map((item, idx) => (
+                {validHighlights.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-[#F7FAFC] border border-gray-100">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span className="text-xs text-gray-700 font-medium">{item}</span>
@@ -639,13 +681,13 @@ export const LocationModal: React.FC<LocationModalProps> = ({
           )}
 
           {/* Amenities Badges */}
-          {location.amenities && location.amenities.length > 0 && (
+          {validAmenities.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 Tiện Nghi & Dịch Vụ Đi Kèm
               </h3>
               <div className="flex flex-wrap gap-2">
-                {location.amenities.map((amenity, idx) => (
+                {validAmenities.map((amenity, idx) => (
                   <span
                     key={idx}
                     className="px-3 py-1 rounded-lg bg-[#F7FAFC] border border-gray-200 text-xs font-medium text-gray-700"

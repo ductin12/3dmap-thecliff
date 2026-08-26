@@ -572,12 +572,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       id: newId,
       code: `${locList.length + 1}`,
       title: "Khu vực mới",
-      subtitle: "Mô tả ngắn khu vực mới",
+      subtitle: "",
       category: "accommodation",
       x: 50,
       y: 50,
-      description: "Nhập thông tin chi tiết khu vực tại đây...",
-      highlights: ["Tiện ích nổi bật 1", "Tiện ích nổi bật 2"],
+      description: "",
+      highlights: [],
       images: [
         {
           id: `img-${Date.now()}`,
@@ -585,7 +585,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           title: "Khu vực mới"
         }
       ],
-      amenities: ["Wifi", "Máy lạnh"]
+      amenities: []
     };
 
     setLocList([...locList, newLocation]);
