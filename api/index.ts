@@ -11,7 +11,7 @@ import {
   buildSessionCookie,
   buildClearCookie,
   getSessionFromRequest,
-} from "../lib/auth";
+} from "../lib/auth.js";
 
 dotenv.config();
 

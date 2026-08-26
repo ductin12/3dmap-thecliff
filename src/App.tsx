@@ -19,7 +19,7 @@ export default function App() {
   const { hours: initHours, minutes: initMinutes } = getVietnamHoursAndMinutes();
   const initialLightingMode = getVietnamLightingMode(initHours, initMinutes);
 
-  // Load initial locations from server or local cache
+  // Load initial state from localStorage as instant cache (shown before API responds)
   const [locations, setLocations] = useState<LocationItem[]>(() => {
     try {
       const cached = localStorage.getItem('cliff_resort_locations_v2');
@@ -37,39 +37,32 @@ export default function App() {
   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    // Server/cloud data ALWAYS wins — localStorage is only a fallback for offline/error
     fetch('/api/data')
       .then(res => {
         if (!res.ok) throw new Error("No data on server");
         return res.json();
       })
       .then(data => {
-        const localLocs = localStorage.getItem('cliff_resort_locations_v2');
-        const localCfg = localStorage.getItem('cliff_resort_config_v2');
-
-        if (localLocs) {
-          try {
-            setLocations(JSON.parse(localLocs));
-          } catch(e) {
-            if (data && data.locations) setLocations(data.locations);
-          }
-        } else if (data && data.locations) {
+        if (data && data.locations) {
           setLocations(data.locations);
+          // Keep localStorage in sync so next cold load is instant
+          try { localStorage.setItem('cliff_resort_locations_v2', JSON.stringify(data.locations)); } catch (_e) {}
         }
 
-        if (localCfg) {
-          try {
-            setResortConfig(JSON.parse(localCfg));
-          } catch(e) {
-            if (data && data.config) setResortConfig(data.config);
-          }
-        } else if (data && data.config) {
+        if (data && data.config) {
           if (!data.config.mapImageBg || data.config.mapImageBg.includes('photo-1540555700478')) {
             data.config.mapImageBg = DEFAULT_RESORT_CONFIG.mapImageBg;
           }
           setResortConfig(data.config);
+          // Keep localStorage in sync
+          try { localStorage.setItem('cliff_resort_config_v2', JSON.stringify(data.config)); } catch (_e) {}
         }
       })
-      .catch(e => console.log("Using default configuration."))
+      .catch(_e => {
+        // API unreachable — keep using localStorage cache silently
+        console.log("API unavailable, using cached data.");
+      })
       .finally(() => setIsDataLoaded(true));
   }, []);
 
