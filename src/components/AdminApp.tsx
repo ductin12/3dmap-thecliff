@@ -27,24 +27,38 @@ export const AdminApp: React.FC = () => {
 
   useEffect(() => {
     // Load users from server first (source of truth), fallback to localStorage
+    const syncLocalToServer = (localUsers: User[]) => {
+      fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ users: localUsers }),
+      }).catch(() => {});
+    };
+
     fetch('/api/users', { credentials: 'include' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data && Array.isArray(data.users) && data.users.length > 0) {
+          // Server has users → use as source of truth
           setUsers(data.users);
           localStorage.setItem('cliff_users', JSON.stringify(data.users));
         } else {
-          // Fallback to localStorage or defaults
+          // Server empty → migrate from localStorage to server
           const savedUsers = localStorage.getItem('cliff_users');
+          let localUsers: User[] = DEFAULT_USERS;
           if (savedUsers) {
-            try { setUsers(JSON.parse(savedUsers)); } catch (_e) { setUsers(DEFAULT_USERS); }
+            try { localUsers = JSON.parse(savedUsers); } catch (_e) { localUsers = DEFAULT_USERS; }
           } else {
-            setUsers(DEFAULT_USERS);
             localStorage.setItem('cliff_users', JSON.stringify(DEFAULT_USERS));
           }
+          setUsers(localUsers);
+          // Auto-sync local users up to server (migration)
+          syncLocalToServer(localUsers);
         }
       })
       .catch(() => {
+        // API unreachable → use localStorage
         const savedUsers = localStorage.getItem('cliff_users');
         if (savedUsers) {
           try { setUsers(JSON.parse(savedUsers)); } catch (_e) { setUsers(DEFAULT_USERS); }
